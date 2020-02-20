@@ -2,6 +2,15 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+class App extends React.Component {
+  render() {
+    return (
+      <button onClick="chooseFile()">Choose a file</button>
+    )
+  }
+}
+
+/* THIS IS AN ALTERNATE METHOD IN CREATING REACT COMPONENTS. I CHOSE TO USE A DIFFERENT METHOD ABOVE
 function App() {
   return (
     <div className="App">
@@ -21,6 +30,6 @@ function App() {
       </header>
     </div>
   );
-}
+}*/
 
 export default App;
