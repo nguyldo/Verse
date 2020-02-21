@@ -23,5 +23,6 @@ urlpatterns = [
     path('', include('dataParser.urls')),
 ]
 
+# Not sure why I had to include this but we need this during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

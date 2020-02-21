@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# MEDIA_ROOT and MEDIA_URL are for creating directories to save our data locally
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
