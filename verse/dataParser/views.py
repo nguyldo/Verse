@@ -28,6 +28,6 @@ def upload(request):
 
         # IMPLEMENTATION FOUND HERE: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
         with zipfile.ZipFile(zipfileLocation, "r") as zip_ref:
-            zip_ref.extractall(fss.location + "/" +  "/zippedFiles/" + uploadedFile.name)
+            zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + uploadedFile.name[:-4])
 
     return render(request, "upload.html")
