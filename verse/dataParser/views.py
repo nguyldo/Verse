@@ -15,7 +15,11 @@ def upload(request):
 
     # WHEN A FILE IS UPLOADED, A POST REQUEST IS MADE AND THIS CODE IS RUN #
     if request.method == "POST":
-        uploadedFile = request.FILES["document"] # 
+
+        try:
+            uploadedFile = request.FILES["document"]
+        except:
+            return render(request, "upload.html")
         
         # print(uploadedFile.read())
         # print(uploadedFile.read().decode("utf-8"))  <-- THIS LINE PRINTS OUT THE UPLOADED FILE

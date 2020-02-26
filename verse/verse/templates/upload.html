@@ -7,6 +7,24 @@
 <!DOCTYPE html>
 <html>
     <body>
+    <h1>Upload Page</h1>
+    <label for="data-type">Choose a data type:</label>
+    <select type="menu" name="data-type" id="data-type">
+        <option value="facebook">FaceBook</option>
+        <option value="google">Google</option>
+        <option value="apple">Apple</option>
+    </select>
+    <p>
+        
+    </p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="document" id="document">
+        <button type="submit" onclick="checkType()">Upload!</button>
+        <button type="button" onclick="clearUpload()">Remove Upload</button>
+    </form>
+    </body>
+
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script language="javascript" type="text/javascript">
         
@@ -15,14 +33,28 @@
             var input = $("#document");
             input.replaceWith(input.val('').clone(true));
         }
+        function checkType() {
+            var filename = document.getElementById("document").value;
+            var data = document.getElementById("data-type").value;
+            if (data.includes("facebook")) {
+                if (!filename.includes("facebook")) {
+                    alert("You are not uploading facebook data!");
+                    clearUpload();
+                }
+            }
+            else if (data.includes("google")) {
+                if (!filename.includes("takeout")) {
+                    alert("You are not uploading google data!");
+                    clearUpload();
+                }
+            }
+            else {
+                if (!filename.includes("apple")) {
+                    alert("You are not uploading apple data!");
+                    clearUpload();
+                }
+            }
+        }
     </script>
-    <h1>Upload Page</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="document" id="document">
-        <button type="submit">Upload!</button>
-        <button type="button" onclick="clearUpload()">Remove Upload</button>
-    </form>
-    </body>
     
 </html>
