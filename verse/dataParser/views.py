@@ -31,6 +31,8 @@ def upload(request):
         fss.save(uploadedFile.name, uploadedFile)
         zipfileLocation = fss.location + "/" + uploadedFile.name
 
+        #TODO: implement progress bar on frontend
+
         # IMPLEMENTATION FOUND HERE: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
         with zipfile.ZipFile(zipfileLocation, "r") as zip_ref:
             zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + uploadedFile.name[:-4])
