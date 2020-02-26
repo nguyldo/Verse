@@ -16,7 +16,11 @@ def upload(request):
 
     # WHEN A FILE IS UPLOADED, A POST REQUEST IS MADE AND THIS CODE IS RUN #
     if request.method == "POST":
-        uploadedFile = request.FILES["document"] # 
+
+        try:
+            uploadedFile = request.FILES["document"]
+        except:
+            return render(request, "upload.html")
         
         # print(uploadedFile.read())
         # print(uploadedFile.read().decode("utf-8"))  <-- THIS LINE PRINTS OUT THE UPLOADED FILE
@@ -29,6 +33,6 @@ def upload(request):
 
         # IMPLEMENTATION FOUND HERE: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
         with zipfile.ZipFile(zipfileLocation, "r") as zip_ref:
-            zip_ref.extractall(fss.location + "/" +  "/zippedFiles/" + uploadedFile.name)
+            zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + uploadedFile.name[:-4])
 
     return render(request, "upload.html")
