@@ -30,8 +30,14 @@ def upload(request):
         fss.save(uploadedFile.name, uploadedFile)
         zipfileLocation = fss.location + "/" + uploadedFile.name
 
+        # find name of company
+        nameOfCompany = ""
+        if uploadedFile.name.find("facebook") >= 0:
+            nameOfCompany = "facebook"
+        # as more parsers are added, more companies will be accounted for here
+
         # IMPLEMENTATION FOUND HERE: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
         with zipfile.ZipFile(zipfileLocation, "r") as zip_ref:
-            zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + uploadedFile.name[:-4])
+            zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + nameOfCompany + "/" + uploadedFile.name[:-4])
 
     return render(request, "upload.html")
