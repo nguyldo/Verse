@@ -23,7 +23,12 @@
         <button type="submit" onclick="checkType()">Upload</button>
         <button type="button" onclick="clearUpload()">Delete Upload</button>
     </form>
+    {% load static %}
+
+    <a href="{% static 'facebook_tutorial.pdf' %}">Link to facebook tutorial</a>
+    <!--
     <a href="https://drive.google.com/file/d/1fQPsknv3G_hxiGKkyOeUYXfTrBU3qYbL/view?usp=sharing">Tutorial to download your Facebook data</a>
+    -->
     </body>
 
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
