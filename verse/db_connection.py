@@ -40,6 +40,7 @@ def main():
                                         posts text,
                                         other_posts text,
                                         profile_info text,
+                                        profile_history text,
                                         advertisers text
                                     ); """
 

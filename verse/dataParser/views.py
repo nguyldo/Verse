@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.core.files.storage import FileSystemStorage, default_storage
+from dataParser import facebookParser
+
+
 # from django.contrib messages
 import zipfile # this module allows us to easily unzip items
 #from pprint import pprint
@@ -45,5 +48,7 @@ def upload(request):
             zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + nameOfCompany + "/" + uploadedFile.name[:-4])
 
         default_storage.delete(uploadedFile.name)
+
+        facebookParser.parseFacebookData("facebook-jacksonoriez")
 
     return render(request, "upload.html")
