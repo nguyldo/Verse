@@ -49,6 +49,15 @@ def upload(request):
 
         default_storage.delete(uploadedFile.name)
 
-        facebookParser.parseFacebookData("facebook-jacksonoriez")
+        counter = 0
+        for i in uploadedFile.name:
+            counter = counter + 1
+            if i == 'f' :
+                break
+            
+        counter = counter - 1
+        fileName = uploadedFile.name[counter:-4]
+
+        facebookParser.parseFacebookData(fileName)
 
     return render(request, "upload.html")
