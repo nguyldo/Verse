@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.template import Context, loader
 from django.core.files.storage import FileSystemStorage, default_storage
 from dataParser import facebookParser
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
 
 
 # from django.contrib messages
@@ -14,6 +17,12 @@ import zipfile # this module allows us to easily unzip items
 def index(request):
     template = loader.get_template("index.html")
     return HttpResponse(template.render())
+
+@api_view(["GET"])
+def testApi(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
 
 def upload(request):
 
