@@ -32,6 +32,25 @@ def jsonFileToString(pathName, rootDir, fileOfInterest):
 
     return key, value
 
+# Function to grab the websites from the off-facebook activity file.
+# returns a list of sites
+def getWebsites(fileName):
+    jsonStr = open(fileName).read()
+    data = json.loads(jsonStr)
+    
+    sites = []
+    for app in data["off_facebook_activity"]:
+        for key in app:
+            if key == "name":
+                site = app[key]
+                for i in site:
+                    if i == '.':
+                        sites.append(site)
+                        break
+    return sites
+    
+                    
+
 # Function to extract json data from the root directory of facebook data 
 # and input into a dictionary
 def parseFacebookData(facebookMediaRoot): 
@@ -66,6 +85,7 @@ def parseFacebookData(facebookMediaRoot):
         info = 'no profile file'
         history = 'no profile history file' 
         ad = 'no advertiser data file' 
+        off_facebook = 'no off facebook data'
         
         for root, dirs, files in walklevel(pathName, level=1):
             # from https://stackoverflow.com/a/7253830
@@ -76,14 +96,25 @@ def parseFacebookData(facebookMediaRoot):
             # directory contents as value 
             # to dictionary
             if any(rootDir in category for category in rootCategoriesOfInterest):
-                print(rootDir + ": ")
+                #print(rootDir + ": ")
 
                 if rootDir == "ads_and_businesses":
-                    fileOfInterest = "advertisers_who_uploaded_a_contact_list_with_your_information.json"
+                    fileOfInterest1 = "advertisers_who_uploaded_a_contact_list_with_your_information.json"
 
-                    key, value = jsonFileToString(pathName, rootDir, fileOfInterest)
-                    Dict[key] = value
-                    ad = pathName + "/" + fileOfInterest
+                    key1, value1 = jsonFileToString(pathName, rootDir, fileOfInterest1)
+                    Dict[key1] = value1
+                    ad = pathName + "/" + fileOfInterest1
+
+                    fileOfInterest2 = "your_off-facebook_activity.json"
+
+                    fileName = pathName + "/" + rootDir + "/" + fileOfInterest2
+
+                    sites = getWebsites(fileName)
+                    
+                    Dict["Number of Websites"] = len(sites)
+                    Dict["List of Websites"] = sites
+                    
+                    off_facebook = pathName + "/" + fileOfInterest2
 
                 elif rootDir == "posts":
                     fileOfInterest1 = "other_people's_posts_to_your_timeline.json"
@@ -106,19 +137,20 @@ def parseFacebookData(facebookMediaRoot):
                     key2, value2 = jsonFileToString(pathName, rootDir, fileOfInterest2)
                     Dict[key2] = value2
                     history = pathName + "/" + fileOfInterest2
+                
 
         if conn is not None:
-            sql_insert = """INSERT INTO facebook ( id, posts, other_posts, profile_info, profile_history, advertisers ) 
-                            VALUES ( ?, ?, ?, ?, ?, ?);"""
+            sql_insert = """INSERT INTO facebook ( id, posts, other_posts, profile_info, profile_history, advertisers, off_facebook ) 
+                            VALUES ( ?, ?, ?, ?, ?, ?, ?);"""
 
             try:
                 c = conn.cursor()
                 with conn:
-                    data_tuple = (int(unique_id), str(post), str(other_post), str(info), str(history), str(ad))
+                    data_tuple = (int(unique_id), str(post), str(other_post), str(info), str(history), str(ad), str(off_facebook))
                     c.execute(sql_insert, data_tuple)
                     # print the contents of the database
-                    c.execute("SELECT * FROM facebook")
-                    print(c.fetchall())
+                    # c.execute("SELECT * FROM facebook")
+                    # print(c.fetchall())
                     # delete contents of the database
                     c.execute("DELETE FROM facebook")
             except Error as e:

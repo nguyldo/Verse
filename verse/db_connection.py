@@ -40,7 +40,8 @@ def main():
                                         other_posts text,
                                         profile_info text,
                                         profile_history text,
-                                        advertisers text
+                                        advertisers text,
+                                        off_facebook text
                                     ); """
 
  
