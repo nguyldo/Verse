@@ -24,12 +24,18 @@ export default class Upload extends Component {
 
     }
     
-    uploadFile(e)
-    {
+    uploadFacebook(e) {
         let file = this.state.file
 
         let formData = new FormData();
         formData.append("file", file);
+        if (file == null) {
+          alert("nothing uploaded")
+          return
+        } else if (!file.name.includes("facebook")) {
+          alert("no facebook data entered")
+          return
+        }
         formData.append("filename", file.name)
 
         
@@ -53,15 +59,83 @@ export default class Upload extends Component {
         this.setState({str:data});
         }*/
     }
+
+    uploadGoogle(e) {
+      let file = this.state.file
+
+      let formData = new FormData();
+      formData.append("file", file);
+      if (file == null) {
+        alert("nothing uploaded")
+        return
+      } else if (!file.name.includes("takeout")) {
+        alert("no google data entered")
+        return
+      }
+      alert(file.name)
+      formData.append("filename", file.name)
+
+      
+      axios({
+          url: "http://localhost:8000/upload/",
+          method: "POST",
+          data: formData
+      })
+
+      console.log(file);
+      for (let vals of formData.values()) {
+          console.log("Test: " + vals);
+      }
+    }
+
+    uploadApple(e) {
+      let file = this.state.file
+
+      let formData = new FormData();
+      formData.append("file", file);
+      if (file == null) {
+        alert("nothing uploaded")
+        return
+      } else if (!file.name.includes("takeout")) {
+        alert("no apple data entered")
+        return
+      }
+      formData.append("filename", file.name)
+
+    
+      axios({
+        url: "http://localhost:8000/upload/",
+        method: "POST",
+        data: formData
+      })
+
+      console.log(file);
+      for (let vals of formData.values()) {
+        console.log("Test: " + vals);
+      }
+    }
   
     render() {
       return(
         <div>
             <h1>Upload file</h1>
-            <form>
+            <body>
+              <p>Facebook</p>
+              <form>
                 <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                <button type="button" onClick={(e)=>this.uploadFile(e)}>Upload</button>
-            </form>
+                <button type="button" onClick={(e)=>this.uploadFacebook(e)}>Upload</button>
+              </form>
+              <p>Google</p>
+              <form>
+                <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
+                <button type="button" onClick={(e)=>this.uploadGoogle(e)}>Upload</button>
+              </form>
+              <p>Apple</p>
+              <form>
+                <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
+                <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
+              </form>
+            </body>
         </div>
       )
     }

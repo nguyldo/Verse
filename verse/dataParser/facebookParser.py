@@ -116,6 +116,10 @@ def parseFacebookData(facebookMediaRoot):
                     
                     off_facebook = pathName + "/" + fileOfInterest2
 
+                    #print(len(sites))
+                    #for i in sites:
+                    #    print(i)
+
                 elif rootDir == "posts":
                     fileOfInterest1 = "other_people's_posts_to_your_timeline.json"
                     key1, value1 = jsonFileToString(pathName, rootDir, fileOfInterest1)
