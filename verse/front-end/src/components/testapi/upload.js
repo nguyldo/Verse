@@ -7,12 +7,27 @@ export default class Upload extends Component {
       super(props);
       this.state = {
         file: null,
+        num: "",
+        sites: [],
       };
-      //this.loadApi = this.loadApi.bind(this);
     }
-  
-    componentWillMount() {
-      //this.loadApi();
+
+    // shuffles and array, taken from 
+    // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+    
+      while (0 !== currentIndex) {
+    
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+    
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+    
+      return array;
     }
 
     handleFile(e) {
@@ -24,7 +39,7 @@ export default class Upload extends Component {
 
     }
     
-    uploadFacebook(e) {
+    async uploadFacebook(e) {
         let file = this.state.file
 
         let formData = new FormData();
@@ -39,25 +54,33 @@ export default class Upload extends Component {
         formData.append("filename", file.name)
 
         
-        axios({
+        const promise = await axios({
             url: "http://localhost:8000/upload/",
             method: "POST",
             data: formData
         })
+
+        const status = promise.status;
+        if (status===200) {
+          const data = promise.data.num;
+          const websites = promise.data.sites;
+          this.setState({num:data, sites:websites});
+        }
 
         console.log(file);
         for (let vals of formData.values()) {
             console.log("Test: " + vals);
         }
 
-        /*
-        const promise = await axios.get("http://localhost:8000/testapi/");
-        const status = promise.status;
-        if(status===200)
-        {
-        const data = promise.data.data;
-        this.setState({str:data});
-        }*/
+        this.shuffle(this.state.sites);
+
+        var sel = document.getElementById('listBox');
+        for (var i = 0; i < this.state.sites.length; i++) {
+          var opt = document.createElement('option');
+          opt.innerHTML = this.state.sites[i];
+          opt.value = this.state.sites[i];
+          sel.appendChild(opt);
+        }
     }
 
     uploadGoogle(e) {
@@ -135,6 +158,8 @@ export default class Upload extends Component {
                 <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
                 <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
               </form>
+              <p>{this.state.num}</p>
+              <select id="listBox" size="5"></select>
             </body>
         </div>
       )

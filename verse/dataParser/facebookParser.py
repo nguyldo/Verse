@@ -162,6 +162,7 @@ def parseFacebookData(facebookMediaRoot):
         
         #print("\n\n\nDictionary\n")
         #print(Dict["posts>your_posts_1"])
+        return Dict
 
     else: print("path does not exist")
 

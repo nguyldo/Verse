@@ -70,7 +70,9 @@ def upload(request):
         counter = counter - 1
         fileName = uploadedFile.name[counter:-4]
 
-        facebookParser.parseFacebookData(fileName)
+        Dict = facebookParser.parseFacebookData(fileName)
 
-    return Response(status=status.HTTP_200_OK, data={"Success :)"})
+    num = Dict["Number of Websites"]
+    sites = Dict["List of Websites"]
+    return Response(status=status.HTTP_200_OK, data={"num": num, "sites": sites})
     # return render(request, "upload.html
