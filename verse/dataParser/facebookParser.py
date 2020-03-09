@@ -37,9 +37,9 @@ def getDirSizeInGB(rootPathName):
 
 # Function: extract json data and load into dictionary
 # Return: dictionary with json loaded
-def jsonToDictionary(rootPathName, rootDir, fileOfInterest):
-    # Ex: "facebook-lisasilmii" + "/" + "posts" + "/" + "your_posts_1.json"
-    filePath = rootPathName + "/" + rootDir + "/" + fileOfInterest
+def jsonToDictionary(dirPath, fileName):
+    # Ex: "facebook-lisasilmii/posts" + "/" + "your_posts_1.json"
+    filePath = dirPath + "/" + fileName
 
     # Load json into dictionary
     with open(filePath) as jsonFile:
@@ -51,19 +51,18 @@ def jsonToDictionary(rootPathName, rootDir, fileOfInterest):
 #   and input into a dictionary
 #
 # Return: dictionary
-def parseFacebookData(facebookMediaRoot): 
+def parseFacebookData(facebookDataDumpName): 
     # Define dictionary to map json data to
     Dict = {}
 
     # Define tuple to store root directory names of interest
     rootCategoriesOfInterest = ("about_you", "ads_and_businesses", "apps_and_websites", 
-                                "likes_and_reactions", "posts", 
+                                "friends", "likes_and_reactions", "other_activity", "posts", 
                                 "profile_information", "security_and_login_information")
 
     # Parse through facebook media root directory
-    pathVerseFacebookMedia = "../media/unzippedFiles/facebook/"
-    if(path.exists(pathVerseFacebookMedia)):
-        rootPathName = pathVerseFacebookMedia + facebookMediaRoot
+    rootPathName = "../media/unzippedFiles/facebook/" + facebookDataDumpName
+    if path.exists(rootPathName):
 
         # Get total size
         Dict["totalSizeInGB"] = getDirSizeInGB(rootPathName)
@@ -71,126 +70,165 @@ def parseFacebookData(facebookMediaRoot):
         # Extract json data
         for root, dirs, files in walklevel(rootPathName, level=1):
             # from https://stackoverflow.com/a/7253830
-            rootDir = root.rsplit('/', 1)[-1]
+            categoryDirName = root.rsplit('/', 1)[-1]
             
             # if category is valid,
             # add data of interest to dictionary
-            if any(rootDir in category for category in rootCategoriesOfInterest):
-
-                if rootDir == "about_you":
-                    # US 6.1
+            dirPath = rootPathName + "/" + categoryDirName
+            if any(categoryDirName in category for category in rootCategoriesOfInterest) and path.exists(dirPath):
+                if categoryDirName == "about_you":
+                    # ----- US 6.1 -----
                     file_peer_group = "friend_peer_group.json"
-                    data_peer_group = jsonToDictionary(rootPathName, rootDir, file_peer_group)
+                    data_peer_group = jsonToDictionary(dirPath, file_peer_group)
 
-                    key_peer_group = file_peer_group[:-5]
+                    # user friend group category
+                    key_peer_group = "friend_peer_group"
                     val_peer_group = data_peer_group["friend_peer_group"]
-                    
                     Dict[key_peer_group] = val_peer_group
 
-                elif rootDir == "ads_and_businesses":
-                    # US 6.8
+                elif categoryDirName == "ads_and_businesses":
+                    # ----- US 6.8 -----
                     file_off_facebook_activity = "your_off-facebook_activity.json"
-                    data_off_facebook_activity = jsonToDictionary(rootPathName, rootDir, file_off_facebook_activity)
+                    data_off_facebook_activity = jsonToDictionary(dirPath, file_off_facebook_activity)
 
+                    # overall json superset of off facebook activity
+                    key_list_off_facebook_activity = "off_facebook_activity"
+                    val_list_off_facebook_activity = data_off_facebook_activity["off_facebook_activity"]
+                    Dict[key_list_off_facebook_activity] = val_list_off_facebook_activity
+
+                    # count of off facebook business with data
                     key_ct_off_facebook_activity = "num_businesses_off_facebook"
                     val_ct_off_facebook_activity = len(data_off_facebook_activity["off_facebook_activity"])
                     Dict[key_ct_off_facebook_activity] = val_ct_off_facebook_activity
 
-                    #from https://stackoverflow.com/a/56163468
+                    # list of off facebook businesses with data
+                    # from https://stackoverflow.com/a/56163468
                     list_businesses_off_facebook = [item.get("name") for item in data_off_facebook_activity["off_facebook_activity"]]
 
                     key_list_businesses_off_facebook = "businesses_off_facebook"
                     val_list_businesses_off_facebook = list_businesses_off_facebook
                     Dict[key_list_businesses_off_facebook] = val_list_businesses_off_facebook
 
-                    # US 6.10
-                    key_list_off_facebook_activity = "off_facebook_activity"
-                    val_list_off_facebook_activity = data_off_facebook_activity["off_facebook_activity"]
-                    Dict[key_list_off_facebook_activity] = val_list_off_facebook_activity
-
-                    # US 6.9
+                    # ----- US 6.9 -----
                     file_advs = "advertisers_who_uploaded_a_contact_list_with_your_information.json"
-                    data_advs = jsonToDictionary(rootPathName, rootDir, file_advs)
+                    data_advs = jsonToDictionary(dirPath, file_advs)
 
+                    # list of advertisers with your contact info
                     key_advs = file_advs[:-5]
                     val_advs = data_advs["custom_audiences"]
                     Dict[key_advs] = val_advs
 
-                elif rootDir == "apps_and_websites":
+                elif categoryDirName == "apps_and_websites":
+                    # ----- US 6.5 & 6.6 -----
                     file_apps_websites = "apps_and_websites.json"
-                    data_apps_websites = jsonToDictionary(rootPathName, rootDir, file_apps_websites)
+                    data_apps_websites = jsonToDictionary(dirPath, file_apps_websites)
 
-                    # US 6.5
+                    # count of apps/websites that you used facebook to login
                     key_ct_apps_websites = "num_apps_and_websites_logged_into_with_facebook"
                     val_ct_apps_websties = len(data_apps_websites["installed_apps"])
                     Dict[key_ct_apps_websites] = val_ct_apps_websties
 
-                    # US 6.6
+                    # list of apps/websites that you used facebook to login 
                     key_list_apps_websites = "apps_and_websites_logged_into_with_facebook"
                     val_list_apps_websites = data_apps_websites["installed_apps"]
                     Dict[key_list_apps_websites] = val_list_apps_websites
-                    
-                elif rootDir == "likes_and_reactions":
-                    file_reactions = "posts_and_comments.json"
-                    data_reactions = jsonToDictionary(rootPathName, rootDir, file_reactions)
 
-                    # US 6.4
+                elif categoryDirName == "friends":
+                    # ----- US 6.10 -----
+                    file_friends = "friends.json"
+                    data_friends = jsonToDictionary(dirPath, file_friends)
+
+                    # count of facebook friends
+                    key_ct_friends = "num_friends"
+                    val_ct_friends = len(data_friends["friends"])
+                    Dict[key_ct_friends] = val_ct_friends
+
+                    # list of facebook friends
+                    list_friends = [item.get("name") for item in data_friends["friends"]]
+
+                    key_friends = "friends"
+                    val_friends = list_friends
+                    Dict[key_friends] = val_friends
+                    
+                elif categoryDirName == "likes_and_reactions":
+                    # ----- US 6.4 -----
+                    file_reactions = "posts_and_comments.json"
+                    data_reactions = jsonToDictionary(dirPath, file_reactions)
+
+                    # overall json superset of reactions
                     key_reactions = "reactions"
                     val_reactions = data_reactions["reactions"]
                     Dict[key_reactions] = val_reactions
 
-                elif rootDir == "posts":
-                    # US 6.3
-                    file_others_posts = "other_people's_posts_to_your_timeline.json"
-                    data_others_posts = jsonToDictionary(rootPathName, rootDir, file_others_posts)
+                elif categoryDirName == "other_activity":
+                    # ----- US 6.10 -----
+                    file_pokes = "pokes.json"
+                    data_pokes = jsonToDictionary(dirPath, file_pokes)
 
+                    # count of pokes
+                    key_ct_pokes = "num_pokes"
+                    val_ct_pokes = len(data_pokes["pokes"]["activity_log_data"])
+                    Dict[key_ct_pokes] = val_ct_pokes
+
+                    # overall json superset of pokes
+                    key_pokes = "pokes"
+                    val_pokes = data_pokes["pokes"]["activity_log_data"]
+                    Dict[key_pokes]=val_pokes
+
+                elif categoryDirName == "posts":
+                    # ----- US 6.3 -----
+                    file_others_posts = "other_people's_posts_to_your_timeline.json"
+                    data_others_posts = jsonToDictionary(dirPath, file_others_posts)
+
+                    # overall json superset of others posts
                     key_others_posts = file_others_posts[:-5]
                     val_others_posts = data_others_posts["wall_posts_sent_to_you"]["activity_log_data"]
                     Dict[key_others_posts] = val_others_posts
 
-                    # US 6.3
+                    # ----- US 6.3 -----
                     file_your_posts = "your_posts_1.json"
-                    data_your_posts = jsonToDictionary(rootPathName, rootDir, file_your_posts)
+                    data_your_posts = jsonToDictionary(dirPath, file_your_posts)
 
+                    # overall json superset of your posts
                     key_your_posts = file_your_posts[:-5]
                     val_your_posts = data_your_posts
                     Dict[key_your_posts] = val_your_posts
                     
-                elif rootDir == "profile_information":
-                    # your profile info
+                elif categoryDirName == "profile_information":
+                    # ----- US 6.1 -----
                     file_profile_info = "profile_information.json"
-                    data_profile_info = jsonToDictionary(rootPathName, rootDir, file_profile_info)
+                    data_profile_info = jsonToDictionary(dirPath, file_profile_info)
 
-                    #entire entry
+                    # overall json superset of your profile info
                     key_profile_info = file_profile_info[:-5]
                     val_profile_info = data_profile_info["profile"]
                     Dict[key_profile_info] = val_profile_info
 
-                    # US 6.1
+                    # your name
                     key_name = "name"
                     val_name = data_profile_info["profile"]["name"]["full_name"]
                     Dict[key_name] = val_name
 
-                    # your profile info update history
+                    # ----- US 6.10 -----
                     file_profile_update_history = "profile_update_history.json"
-                    data_profile_update_history = jsonToDictionary(rootPathName, rootDir, file_profile_update_history)
+                    data_profile_update_history = jsonToDictionary(dirPath, file_profile_update_history)
 
-                    #entire entry
+                    # overall json superset of your profile update history
                     key_profile_update_history = file_profile_update_history[:-5]
                     val_profile_update_history = data_profile_update_history["profile_updates"]
                     Dict[key_profile_update_history] = val_profile_update_history
 
-                elif rootDir == "security_and_login_information":
+                elif categoryDirName == "security_and_login_information":
+                    # ----- US 6.2 -----
                     file_logins_logouts = "logins_and_logouts.json"
-                    data_logins_logouts = jsonToDictionary(rootPathName, rootDir, file_logins_logouts)
+                    data_logins_logouts = jsonToDictionary(dirPath, file_logins_logouts)
 
-                    # US 6.2
+                    # overall json superset of login and logouts
                     key_logins_logouts = file_logins_logouts[:5]
                     val_logins_logouts = data_logins_logouts["account_accesses"]
                     Dict[key_logins_logouts] = val_logins_logouts
 
                 else: print("category not found")
-
 
     else: print("path does not exist")
 
@@ -200,7 +238,6 @@ def main():
     root = "facebook-lisasilmii"
     facebookData = parseFacebookData(root)
 
-    #print(facebookData["ads_and_businesses>advertisers_who_uploaded_a_contact_list_with_your_information"])
 
 if __name__ == "__main__":
     main()
