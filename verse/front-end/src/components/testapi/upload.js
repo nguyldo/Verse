@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import axios from "axios";
+import $ from "jquery";
+import jsPDF from "jspdf";
 
 export default class Upload extends Component {
     constructor(props) {
@@ -137,7 +139,22 @@ export default class Upload extends Component {
         console.log("Test: " + vals);
       }
     }
-  
+
+    exportPDF(e) {
+        let pdf = new jsPDF();
+        let htmlDiv = $("#visualcontent").html();
+        let specialEventHandlers = {
+            "#elementH": function(element, handler) {
+                return true;
+            }
+        }
+        pdf.fromHTML(htmlDiv, 15, 15, {
+            "width": 170,
+            "elementHandlers": specialEventHandlers
+        })
+        pdf.save("visuals.pdf");
+    }  
+
     render() {
       return(
         <div>
@@ -158,8 +175,13 @@ export default class Upload extends Component {
                 <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
                 <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
               </form>
-              <p>{this.state.num}</p>
-              <select id="listBox" size="5"></select>
+              <button onClick={(e)=>this.exportPDF(e)}>Export to PDF</button>
+              <div id="visualcontent">
+                <p>{this.state.num}</p>
+                <select id="listBox" size="5"></select>
+                <p>Hello</p>
+              </div>
+              <div id="eventH"></div>
             </body>
         </div>
       )
