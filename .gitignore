@@ -1,3 +1,8 @@
+
+# PIPFILE LOCK #
+Pipfile
+Pipfile.lock
+
 # Django #
 *.log
 *.pot

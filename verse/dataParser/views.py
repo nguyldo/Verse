@@ -4,19 +4,30 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.core.files.storage import FileSystemStorage, default_storage
-from dataParser import facebookParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
 import zipfile 
-from dataParser.facebookAnalyzer import getUserName
+#from dataParser.facebookAnalyzer import getUserName
+from dataParser import facebookParser, facebookAnalyzer
 
 # Create your views here.
 
 def index(request):
     template = loader.get_template("index.html")
     return HttpResponse(template.render())
+
+@api_view(["GET"])
+def testApi(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_UserNameAPI(request):
+    name = facebookAnalyzer.getUserName()
+    print(name)
+    return Response(status=status.HTTP_200_OK, data={"name": name})
 
 def upload(request):
 
@@ -52,47 +63,15 @@ def upload(request):
 
         default_storage.delete(uploadedFile.name)
 
+        counter = 0
+        for i in uploadedFile.name:
+            counter = counter + 1
+            if i == 'f' :
+                break
+            
+        counter = counter - 1
+        fileName = uploadedFile.name[counter:-4]
+
+        facebookParser.parseFacebookData(fileName)
+
     return render(request, "upload.html")
-
-# ---------- API Endpoints for Data from Facebook Analyzer ----------
-
-@api_view(["GET"])
-def facebook_UserNameAPI(request):
-    name = getUserName()
-    print(name)
-    return Response(status=status.HTTP_200_OK, data={"name": name})
-
-@api_view(["GET"])
-def facebook_LoginLocationsAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
-@api_view(["GET"])
-def facebook_PostsAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
-@api_view(["GET"])
-def facebook_ReactionsAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
-@api_view(["GET"])
-def facebook_IndirectWebsiteLoginsAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
-@api_view(["GET"])
-def facebook_OffFacebookActivityAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
-@api_view(["GET"])
-def facebook_FriendsAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
-@api_view(["GET"])
-def facebook_PokesAPI(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})

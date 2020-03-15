@@ -1,9 +1,8 @@
 import sqlite3 as lite
 
-conn = lite.connect('pythonsqlite.db')
-cur = conn.cursor()
-
 def main():
+    conn = lite.connect('../pythonsqlite.db')
+    cur = conn.cursor()
     with conn:
         cur.execute("SELECT * FROM facebook")
         print(cur.fetchall())
