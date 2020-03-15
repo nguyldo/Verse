@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 from os import path
 import string
@@ -61,7 +63,7 @@ def parseFacebookData(facebookDataDumpName):
                                 "profile_information", "security_and_login_information")
 
     # Parse through facebook media root directory
-    rootPathName = "../media/unzippedFiles/facebook/" + facebookDataDumpName
+    rootPathName = "./media/unzippedFiles/facebook/" + facebookDataDumpName
     if path.exists(rootPathName):
 
         # Get total size
@@ -235,9 +237,8 @@ def parseFacebookData(facebookDataDumpName):
     return Dict
 
 def main():
-    root = "facebook-lisasilmii"
-    facebookData = parseFacebookData(root)
-
+    data = parseFacebookData("facebook-lisasilmii")
+    print(data["name"])
 
 if __name__ == "__main__":
     main()

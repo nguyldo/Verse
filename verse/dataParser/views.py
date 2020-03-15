@@ -1,10 +1,16 @@
+#!/usr/bin/env python3
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.core.files.storage import FileSystemStorage, default_storage
-# from django.contrib messages
-import zipfile # this module allows us to easily unzip items
-#from pprint import pprint
+from dataParser import facebookParser
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
+
+import zipfile 
+from dataParser.facebookAnalyzer import getUserName
 
 # Create your views here.
 
@@ -47,3 +53,46 @@ def upload(request):
         default_storage.delete(uploadedFile.name)
 
     return render(request, "upload.html")
+
+# ---------- API Endpoints for Data from Facebook Analyzer ----------
+
+@api_view(["GET"])
+def facebook_UserNameAPI(request):
+    name = getUserName()
+    print(name)
+    return Response(status=status.HTTP_200_OK, data={"name": name})
+
+@api_view(["GET"])
+def facebook_LoginLocationsAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_PostsAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_ReactionsAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_IndirectWebsiteLoginsAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_OffFacebookActivityAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_FriendsAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
+
+@api_view(["GET"])
+def facebook_PokesAPI(request):
+    str = "This request worked :))"
+    return Response(status=status.HTTP_200_OK, data={"data": str})
