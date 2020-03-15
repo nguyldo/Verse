@@ -5,6 +5,7 @@ import json
 from pprint import pprint
 import sqlite3 as lite 
 from sqlite3 import Error
+from random import randint
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
@@ -93,7 +94,7 @@ def parseFacebookData(facebookDataDumpName):
         except Error as e:
             print(e)
 
-        unique_id = '0' 
+        unique_id = str(randint(0, 100))
         peer_group = 'no peer_group info'
         apps_and_websites = 'no app and web info'
         friends = 'no friend info'
