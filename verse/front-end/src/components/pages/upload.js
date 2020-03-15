@@ -160,26 +160,34 @@ export default class Upload extends Component {
         <div>
             <h1>Upload file</h1>
             <body>
-              <p>Facebook</p>
-              <form>
-                <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                <button type="button" onClick={(e)=>this.uploadFacebook(e)}>Upload</button>
-              </form>
-              <p>Google</p>
-              <form>
-                <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                <button type="button" onClick={(e)=>this.uploadGoogle(e)}>Upload</button>
-              </form>
-              <p>Apple</p>
-              <form>
-                <input type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
-              </form>
+              <div class="uploadoption">
+                <p>Facebook</p>
+                <form>
+                  <label for="facebookupload" class="customupload">Choose a file</label>
+                  <input id="facebookupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
+                  <button type="button" onClick={(e)=>this.uploadFacebook(e)}>Upload</button>
+                </form>
+              </div>
+              <div class="uploadoption">
+                <p>Google</p>
+                <form>
+                  <label for="googleupload" class="customupload">Choose a file</label>
+                  <input id="googleupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
+                  <button type="button" onClick={(e)=>this.uploadGoogle(e)}>Upload</button>
+                </form>
+              </div>
+              <div class="uploadoption">
+                <p>Apple</p>
+                <form>
+                  <label for="appleupload" class="customupload">Choose a file</label>
+                  <input id="appleupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
+                  <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
+                </form>
+              </div>
               <button onClick={(e)=>this.exportPDF(e)}>Export to PDF</button>
               <div id="visualcontent">
                 <p>{this.state.num}</p>
                 <select id="listBox" size="5"></select>
-                <p>Hello</p>
               </div>
               <div id="eventH"></div>
             </body>
