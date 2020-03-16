@@ -67,9 +67,7 @@ def getWebsites(fileName):
                     if i == '.':
                         sites.append(site)
                         break
-    return sites
-    
-                    
+    return sites       
 
 # Function to extract json data from the root directory of facebook data 
 # and input into a dictionary
@@ -83,17 +81,10 @@ def parseFacebookData(facebookDataDumpName):
                                 "profile_information", "security_and_login_information")
 
     # Parse through facebook media root directory
-<<<<<<< HEAD
     rootPathName = "./media/unzippedFiles/facebook/" + facebookDataDumpName
-=======
-    rootPathName = "media/unzippedFiles/facebook/" + facebookDataDumpName
-    # print(rootPathName)
->>>>>>> 3affdb562780b286fc7fefd5da237944bec2a01f
     if path.exists(rootPathName):
 
-        # Get total size
-        Dict["totalSizeInGB"] = getDirSizeInGB(rootPathName)
-
+        # Initialize DB attributes
         conn = None
         try:
             conn = lite.connect(r"pythonsqlite.db")
@@ -113,6 +104,9 @@ def parseFacebookData(facebookDataDumpName):
         profile_history = 'no profile history file' 
         advertisers = 'no advertiser data file' 
         off_facebook = 'no off facebook data'
+
+        # Get total size
+        Dict["totalSizeInGB"] = getDirSizeInGB(rootPathName)
         
         # Extract json data
         for root, dirs, files in walklevel(rootPathName, level=1):
@@ -188,8 +182,6 @@ def parseFacebookData(facebookDataDumpName):
 
                     apps_and_websites = dirPath + "/" + file_apps_websites
 
-
-
                 elif categoryDirName == "friends":
                     # ----- US 6.10 -----
                     file_friends = "friends.json"
@@ -260,21 +252,19 @@ def parseFacebookData(facebookDataDumpName):
                     data_your_posts = jsonToDictionary(dirPath, file_your_posts)
 
                     # overall json superset of your posts
-                    key_your_posts = file_your_posts[:-5]
+                    key_your_posts = "your_posts"
                     val_your_posts = data_your_posts
                     Dict[key_your_posts] = val_your_posts
 
                     posts = dirPath + "/" + file_your_posts
 
-
-                    
                 elif categoryDirName == "profile_information":
                     # ----- US 6.1 -----
                     file_profile_info = "profile_information.json"
                     data_profile_info = jsonToDictionary(dirPath, file_profile_info)
 
                     # overall json superset of your profile info
-                    key_profile_info = file_profile_info[:-5]
+                    key_profile_info = "profile_information"
                     val_profile_info = data_profile_info["profile"]
                     Dict[key_profile_info] = val_profile_info
 
@@ -290,13 +280,11 @@ def parseFacebookData(facebookDataDumpName):
                     data_profile_update_history = jsonToDictionary(dirPath, file_profile_update_history)
 
                     # overall json superset of your profile update history
-                    key_profile_update_history = file_profile_update_history[:-5]
+                    key_profile_update_history = "profile_update_history"
                     val_profile_update_history = data_profile_update_history["profile_updates"]
                     Dict[key_profile_update_history] = val_profile_update_history
 
                     profile_history = dirPath + "/" + file_profile_update_history
-
-
 
                 elif categoryDirName == "security_and_login_information":
                     # ----- US 6.2 -----
@@ -304,7 +292,7 @@ def parseFacebookData(facebookDataDumpName):
                     data_logins_logouts = jsonToDictionary(dirPath, file_logins_logouts)
 
                     # overall json superset of login and logouts
-                    key_logins_logouts = file_logins_logouts[:5]
+                    key_logins_logouts = "logins_and_logouts"
                     val_logins_logouts = data_logins_logouts["account_accesses"]
                     Dict[key_logins_logouts] = val_logins_logouts
 
@@ -312,6 +300,7 @@ def parseFacebookData(facebookDataDumpName):
 
                 else: print("category not found")
         
+        # Insert into DB
         if conn is not None:
             sql_insert = """INSERT INTO facebook ( 
                                 id, 
@@ -353,25 +342,12 @@ def parseFacebookData(facebookDataDumpName):
                     c.execute(sql_insert, data_tuple)
                     # print data
                     c.execute("SELECT * FROM facebook")
-                    print(c.fetchall())
+                    #print(c.fetchall())
                     # delete data
                     c.execute("DELETE FROM facebook")
             except Error as e:
                 print(e)    
             
-
     else: print("path does not exist")
 
     return Dict
-
-def main():
-<<<<<<< HEAD
-    data = parseFacebookData("facebook-lisasilmii")
-    print(data["name"])
-=======
-    root = "facebook-jacksonoriez"
-    parseFacebookData(root)
->>>>>>> 3affdb562780b286fc7fefd5da237944bec2a01f
-
-if __name__ == "__main__":
-    main()

@@ -9,8 +9,12 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 import zipfile 
-#from dataParser.facebookAnalyzer import getUserName
-from dataParser import facebookParser, facebookAnalyzer
+
+from dataParser import facebookParser
+from dataParser import facebookAnalyzer
+
+#from facebookParser import parseFacebookData
+#from facebookAnalyzer import getDataGroups
 
 # Create your views here.
 
@@ -24,10 +28,9 @@ def testApi(request):
     return Response(status=status.HTTP_200_OK, data={"data": str})
 
 @api_view(["GET"])
-def facebook_UserNameAPI(request):
-    name = facebookAnalyzer.getUserName()
-    print(name)
-    return Response(status=status.HTTP_200_OK, data={"name": name})
+def facebook_dataGroupAPI(request):
+    dg = facebookAnalyzer.getDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
 
 def upload(request):
 
@@ -72,6 +75,7 @@ def upload(request):
         counter = counter - 1
         fileName = uploadedFile.name[counter:-4]
 
+        #facebookParser.parseFacebookData(fileName)
         facebookParser.parseFacebookData(fileName)
 
     return render(request, "upload.html")
