@@ -13,7 +13,7 @@ export default class Header extends Component {
     render() {
       return(
         <div>
-            <Link to="/" id="link"><h1 id="header">Verse</h1></Link>
+            <Link to="/" id="link"><h1 id="header">VERSE</h1></Link>
         </div>
       )
     }
