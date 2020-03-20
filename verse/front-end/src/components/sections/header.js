@@ -2,9 +2,9 @@ import React, { Component } from "react";
 
 import axios from "axios";
 import {Link} from "react-router-dom";
-import Header from "./../sections/header.js";
+import "./../../css/header.css";
 
-export default class Main extends Component {
+export default class Header extends Component {
 
     constructor(props) {
       super(props);
@@ -13,8 +13,7 @@ export default class Main extends Component {
     render() {
       return(
         <div>
-            <Header />
-            <Link to="/upload" className="link">Go to uploads</Link>
+            <Link to="/" id="link"><h1 id="header">Verse</h1></Link>
         </div>
       )
     }

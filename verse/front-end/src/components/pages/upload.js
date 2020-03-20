@@ -4,6 +4,7 @@ import axios from "axios";
 import $ from "jquery";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Header from "./../sections/header.js";
 
 export default class Upload extends Component {
     constructor(props) {
@@ -172,6 +173,7 @@ export default class Upload extends Component {
     render() {
       return(
         <div>
+            <Header />
             <h1>Upload file</h1>
             <body>
               <div class="uploadoption">
