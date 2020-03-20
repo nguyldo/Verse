@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import $ from "jquery";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default class Upload extends Component {
     constructor(props) {
@@ -141,6 +142,7 @@ export default class Upload extends Component {
     }
 
     exportPDF(e) {
+        /*
         let pdf = new jsPDF();
         let htmlDiv = $("#visualcontent").html();
         let specialEventHandlers = {
@@ -153,6 +155,18 @@ export default class Upload extends Component {
             "elementHandlers": specialEventHandlers
         })
         pdf.save("visuals.pdf");
+        */
+       html2canvas(document.getElementById("visualcontent"), {scale: 1}).then(canvas => {
+         //document.body.appendChild(canvas);
+         //let image = canvas.toDataURL("visuals/jpg");
+         let dwnld = document.createElement("a");
+         dwnld.download = "visuals";
+         dwnld.href = canvas.toDataURL();
+         dwnld.click();
+         //window.location.href = image;
+
+       });
+       
     }  
 
     render() {
