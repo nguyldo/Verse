@@ -40,4 +40,8 @@ def getDataGroups():
     # ----- US 6.10 -----
     Dict["master_linegraph"] = [data["friends"], data["num_friends"], data["num_pokes"], data["pokes"], data["profile_update_history"]]
 
+    #write analyzed data dictionary to json file
+    with open('analyzedFacebookData.json', 'w') as fp:
+    json.dump(Dict, fp)
+
     return Dict
