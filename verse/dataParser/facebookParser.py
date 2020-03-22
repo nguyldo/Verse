@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
+import os
 import string
-import json
-from pprint import pprint
 import sqlite3 as lite 
 from sqlite3 import Error
 from random import randint
@@ -38,7 +37,7 @@ def parseFacebookData(facebookDataDumpName):
 
     # Parse through facebook media root directory
     rootPathName = "./media/unzippedFiles/facebook/" + facebookDataDumpName
-    if path.exists(rootPathName):
+    if os.path.exists(rootPathName):
 
         # Initialize DB attributes
         conn = None
@@ -72,11 +71,11 @@ def parseFacebookData(facebookDataDumpName):
             # if category is valid,
             # add data of interest to dictionary
             dirPath = rootPathName + "/" + categoryDirName
-            if any(categoryDirName in category for category in rootCategoriesOfInterest) and path.exists(dirPath):
+            if any(categoryDirName in category for category in rootCategoriesOfInterest) and os.path.exists(dirPath):
                 if categoryDirName == "about_you":
                     # ----- US 6.1 -----
                     file_peer_group = "friend_peer_group.json"
-                    data_peer_group = genericParser.jsonToDictionary(dirPath, file_peer_group)
+                    data_peer_group = genericParser.jsonToDict(dirPath + "/" + file_peer_group)
 
                     # user friend group category
                     key_peer_group = "friend_peer_group"
@@ -88,7 +87,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "ads_and_businesses":
                     # ----- US 6.8 -----
                     file_off_facebook_activity = "your_off-facebook_activity.json"
-                    data_off_facebook_activity = genericParser.jsonToDictionary(dirPath, file_off_facebook_activity)
+                    data_off_facebook_activity = genericParser.jsonToDict(dirPath + "/" + file_off_facebook_activity)
 
                     # overall json superset of off facebook activity
                     key_list_off_facebook_activity = "off_facebook_activity"
@@ -112,7 +111,7 @@ def parseFacebookData(facebookDataDumpName):
 
                     # ----- US 6.9 -----
                     file_advs = "advertisers_who_uploaded_a_contact_list_with_your_information.json"
-                    data_advs = genericParser.jsonToDictionary(dirPath, file_advs)
+                    data_advs = genericParser.jsonToDict(dirPath + "/" + file_advs)
 
                     # list of advertisers with your contact info
                     key_advs = file_advs[:-5]
@@ -124,7 +123,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "apps_and_websites":
                     # ----- US 6.5 & 6.6 -----
                     file_apps_websites = "apps_and_websites.json"
-                    data_apps_websites = genericParser.jsonToDictionary(dirPath, file_apps_websites)
+                    data_apps_websites = genericParser.jsonToDict(dirPath + "/" + file_apps_websites)
 
                     # count of apps/websites that you used facebook to login
                     key_ct_apps_websites = "num_apps_and_websites_logged_into_with_facebook"
@@ -141,7 +140,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "friends":
                     # ----- US 6.10 -----
                     file_friends = "friends.json"
-                    data_friends = genericParser.jsonToDictionary(dirPath, file_friends)
+                    data_friends = genericParser.jsonToDict(dirPath + "/" + file_friends)
 
                     # count of facebook friends
                     key_ct_friends = "num_friends"
@@ -160,7 +159,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "likes_and_reactions":
                     # ----- US 6.4 -----
                     file_reactions = "posts_and_comments.json"
-                    data_reactions = genericParser.jsonToDictionary(dirPath, file_reactions)
+                    data_reactions = genericParser.jsonToDict(dirPath + "/" + file_reactions)
 
                     # overall json superset of reactions
                     key_reactions = "reactions"
@@ -172,7 +171,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "other_activity":
                     # ----- US 6.10 -----
                     file_pokes = "pokes.json"
-                    data_pokes = genericParser.jsonToDictionary(dirPath, file_pokes)
+                    data_pokes = genericParser.jsonToDict(dirPath + "/" + file_pokes)
 
                     # count of pokes
                     key_ct_pokes = "num_pokes"
@@ -194,7 +193,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "posts":
                     # ----- US 6.3 -----
                     file_others_posts = "other_people's_posts_to_your_timeline.json"
-                    data_others_posts = genericParser.jsonToDictionary(dirPath, file_others_posts)
+                    data_others_posts = genericParser.jsonToDict(dirPath + "/" + file_others_posts)
 
                     # overall json superset of others posts
                     key_others_posts = file_others_posts[:-5]
@@ -205,7 +204,7 @@ def parseFacebookData(facebookDataDumpName):
 
                     # ----- US 6.3 -----
                     file_your_posts = "your_posts_1.json"
-                    data_your_posts = genericParser.jsonToDictionary(dirPath, file_your_posts)
+                    data_your_posts = genericParser.jsonToDict(dirPath + "/" + file_your_posts)
 
                     # overall json superset of your posts
                     key_your_posts = "your_posts"
@@ -217,7 +216,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "profile_information":
                     # ----- US 6.1 -----
                     file_profile_info = "profile_information.json"
-                    data_profile_info = genericParser.jsonToDictionary(dirPath, file_profile_info)
+                    data_profile_info = genericParser.jsonToDict(dirPath + "/" + file_profile_info)
 
                     # overall json superset of your profile info
                     key_profile_info = "profile_information"
@@ -233,7 +232,7 @@ def parseFacebookData(facebookDataDumpName):
 
                     # ----- US 6.10 -----
                     file_profile_update_history = "profile_update_history.json"
-                    data_profile_update_history = genericParser.jsonToDictionary(dirPath, file_profile_update_history)
+                    data_profile_update_history = genericParser.jsonToDict(dirPath + "/" + file_profile_update_history)
 
                     # overall json superset of your profile update history
                     key_profile_update_history = "profile_update_history"
@@ -245,7 +244,7 @@ def parseFacebookData(facebookDataDumpName):
                 elif categoryDirName == "security_and_login_information":
                     # ----- US 6.2 -----
                     file_logins_logouts = "logins_and_logouts.json"
-                    data_logins_logouts = genericParser.jsonToDictionary(dirPath, file_logins_logouts)
+                    data_logins_logouts = genericParser.jsonToDict(dirPath + "/" + file_logins_logouts)
 
                     # overall json superset of login and logouts
                     key_logins_logouts = "logins_and_logouts"
@@ -307,7 +306,13 @@ def parseFacebookData(facebookDataDumpName):
     else: print("path does not exist")
 
     #write parsed data dictionary to json file
-    with open('parsedFacebookData.json', 'w') as fp:
-    json.dump(Dict, fp)
+    genericParser.dictToJson(Dict, 'media/processedData/facebook/' + facebookDataDumpName + '/parsedFacebookData.json')
 
     return Dict
+
+#def main():
+#    root = "facebook-lisasilmii"
+#    parseFacebookData(root)
+
+#if __name__ == "__main__":
+#    main() 
