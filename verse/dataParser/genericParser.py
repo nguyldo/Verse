@@ -54,10 +54,10 @@ def dictToJson(Dict, filePath):
 def csvToDict(filePath, fieldNames):
     Dict = {}
 
-    data = pd.read_csv(filePath)
+    df = pd.read_csv(filePath)
 
     for field in fieldNames:
-        Dict[field] = data.field
+        Dict[field] = df[field]
 
     return Dict
     

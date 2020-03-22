@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+import os
 import string
 import json
-from pprint import pprint
-from dataParser import genericParser
+import zipfile
+#from dataParser import genericParser
+import genericParser
 
 def parseAppleData(appleDataDumpName):
     # Define dictionary to map json data to
@@ -12,12 +14,14 @@ def parseAppleData(appleDataDumpName):
     rootCategoriesOfInterest = ("Apple ID account and device information", 
                                 "Apple Media Services information", 
                                 "Apple Pay activity",
-                                "Game Center",
-                                "Marketing communications")
+                                "Game Center")
+                                #"Marketing communications")
 
     # Parse through apple media root directory
-    rootPathName = "./media/unzippedFiles/apple/" + facebookDataDumpName
-    if path.exists(rootPathName):
+    #rootPathName = "./media/unzippedFiles/apple/" + appleDataDumpName
+    rootPathName = "../media/unzippedFiles/apple/" + appleDataDumpName
+
+    if os.path.exists(rootPathName):
 
         # Get total size
         Dict["totalSizeInGB"] = genericParser.getDirSizeInGB(rootPathName)
@@ -30,37 +34,69 @@ def parseAppleData(appleDataDumpName):
             # if category is valid,
             # add data of interest to dictionary
             dirPath = rootPathName + "/" + categoryDirName
-            if any(categoryDirName in category for category in rootCategoriesOfInterest) and path.exists(dirPath):
+            if any(categoryDirName in category for category in rootCategoriesOfInterest) and os.path.exists(dirPath):
+
                 if categoryDirName == "Apple ID account and device information":
                     # -----  -----
                     file_account_info = "Apple ID Account Information.csv"
-                    #data_account_info = TODO: csv file parsing
+                    fieldNames = ("Apple ID Number", "First Name", "Last Name", "Official Address")
+                    data_account_info = genericParser.csvToDict(dirPath + "/" + file_account_info, fieldNames)
+
 
                     key_apple_id = "apple_id_number"
+                    val_apple_id = data_account_info["Apple ID Number"][0]
+                    Dict[key_apple_id] = val_apple_id
 
                     key_name = "name"
+                    val_name = data_account_info["First Name"][0] + " " + data_account_info["Last Name"][0]
+                    Dict[key_name] = val_name
 
-                    key_address - "address"
+                    key_address = "address"
+                    val_address = data_account_info["Official Address"][0]
+                    Dict[key_address] = val_address
 
-                elif categoryDirName == "Apple Media Services information":
                     # -----  -----
                     file_devices = "Apple ID Device Information.csv"
-                    #data_devices = TODO: csv file parsing
+                    fieldNames = ("Device Name", "Device Added Date", "Device Serial Number", "Device Last Heartbeat IP")
+                    data_devices = genericParser.csvToDict(dirPath + "/" + file_devices, fieldNames)
+
 
                     key_device_name = "device_name"
-
-                    key_device_serial = "device_serial_number"
+                    val_device_name = data_devices["Device Name"]
+                    Dict[key_device_name] = val_device_name
 
                     key_device_added_date = "device_added_date"
+                    val_device_added_date = data_devices["Device Added Date"]
+                    Dict[key_device_added_date] = val_device_added_date
+
+                    key_device_serial = "device_serial_number"
+                    val_device_serial = data_devices["Device Serial Number"]
+                    Dict[key_device_serial] = val_device_serial
 
                     key_device_last_heartbeat_IP_addr = "device_last_heartbeat_IP_addr"
+                    val_device_last_heartbeat_IP_addr = data_devices["Device Last Heartbeat IP"]
+                    Dict[key_device_last_heartbeat_IP_addr] = val_device_last_heartbeat_IP_addr
 
+                elif categoryDirName == "Apple Media Services information":
+                    zipPath = dirPath + "/" + "Apple_Media_Services.zip"
+                    with zipfile.ZipFile(zipPath, "r") as zip_ref:
+                        zip_ref.extractall(dirPath)
+                    
                     # -----  -----
-                    file_recent_tracks = "Apple Music - Recently Played Tracks.csv"
-                    #data_recent_tracks = TODO: csv file parsing
+                    file_recent_tracks = "Apple_Media_Services/Apple Music Activity/Apple Music - Recently Played Tracks.csv"
+                    fieldNames = ("Last Modified", "Track Description")
+                    data_recent_tracks = genericParser.csvToDict(dirPath + "/" + file_recent_tracks, fieldNames)
+
 
                     key_recently_played = "apple_music_recently_played"
-                    #include title, artist, date
+                    artist = data_recent_tracks["Track Description"].str.split(" - ").str[0]
+                    title = data_recent_tracks["Track Description"].str.split(" - ").str[1]               
+                    date = data_recent_tracks["Last Modified"]
+
+                    val_recently_played = list(zip(artist, title, date))
+                    #TODO: convert to dict 
+
+                    print(val_recently_played)
 
                     #-----  -----
                     file_likes_dislikes = "Apple Music Likes and Dislikes.csv"
@@ -79,13 +115,13 @@ def parseAppleData(appleDataDumpName):
 
                     #-----  -----
                     file_library_activity = "Apple Music Library Activity.json"
-                    #data_library_activity = genericParser.jsonToDictionary(dirPath, file_library_activity)
+                    #data_library_activity = genericParser.jsonToDict(dirPath, file_library_activity)
 
                     key_library_activity = "apple_music_library_activity"
 
                     #-----  -----
                     file_library_tracks = "Apple Music Library Tracks.json"
-                    #data_library_tracks = genericParser.jsonToDictionary(dirPath, file_library_tracks)
+                    #data_library_tracks = genericParser.jsonToDict(dirPath, file_library_tracks)
 
                     key_library_tracks = "apple_music_library_tracks"
 
@@ -106,20 +142,20 @@ def parseAppleData(appleDataDumpName):
                 elif categoryDirName == "Game Center":
                     # -----  -----
                     file_game_center = "Game Center Data.json"
-                    data_game_center = genericParser.jsonToDictionary(dirPath, file_game_center)
+                    data_game_center = genericParser.jsonToDict(dirPath + "/" + file_game_center)
 
                     key_games = "games"
                     
-                elif categoryDirName == "Marketing communications":
+                #elif categoryDirName == "Marketing communications":
                     # -----  -----
                     
-                else: print("category not found") 
+                else: 
+                    print("category not found") 
             
-    else: print("path does not exist")
+    else: print("given root path does not exist")
 
     #write parsed data dictionary to json file
-    #with open('parsedAppleData.json', 'w') as fp:
-    #json.dump(Dict, fp)
+
 
     return Dict
 
