@@ -1,5 +1,8 @@
 import os
-from os import path
+import csv
+import pandas as pd #parse csv
+import json
+
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
@@ -34,12 +37,27 @@ def getDirSizeInGB(rootPathName):
 
 # Function: extract json data and load into dictionary
 # Return: dictionary with json loaded
-def jsonToDictionary(dirPath, fileName):
-    # Ex: "facebook-lisasilmii/posts" + "/" + "your_posts_1.json"
-    filePath = dirPath + "/" + fileName
-
-    # Load json into dictionary
+def jsonToDict(filePath):
     with open(filePath) as jsonFile:
         data = json.load(jsonFile)
 
     return data
+
+# Function: output contents of dictionary into a json file
+# Return: null
+def dictToJson(Dict, filePath):
+    with open(filePath, 'w') as fp:
+        json.dump(Dict, fp)
+
+# Function extract csv data and load into dictionary
+# Return: dictionary with csv loaded
+def csvToDict(filePath, fieldNames):
+    Dict = {}
+
+    data = pd.read_csv(filePath)
+
+    for field in fieldNames:
+        Dict[field] = data.field
+
+    return Dict
+    
