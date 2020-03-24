@@ -45,9 +45,25 @@ def jsonToDict(filePath):
 
 # Function: output contents of dictionary into a json file
 # Return: null
-def dictToJson(Dict, filePath):
-    with open(filePath, 'w') as fp:
-        json.dump(Dict, fp)
+def dictToJsonFile(Dict, filePath):
+    splitFilePath = filePath.split('/')
+    print(splitFilePath)
+
+    #create directories if they don't exist
+    for i in range(1, len(splitFilePath)):
+        path = '/'.join(splitFilePath[0:i])
+
+        if not os.path.exists(path):
+            print("make dir " + path)
+            os.makedirs(path)
+        else: print(path + " exists")
+
+    #write to file
+    try: 
+        with open(filePath, 'w') as fp:
+            json.dump(Dict, fp)
+    except IOError:
+        print("File not found or path incorrect: " + filePath)
 
 # Function extract csv data and load into dictionary
 # Return: dictionary with csv loaded

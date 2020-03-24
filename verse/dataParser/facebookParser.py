@@ -306,7 +306,7 @@ def parseFacebookData(facebookDataDumpName):
     else: print("path does not exist")
 
     #write parsed data dictionary to json file
-    genericParser.dictToJson(Dict, 'media/processedData/facebook/' + facebookDataDumpName + '/parsedFacebookData.json')
+    genericParser.dictToJsonFile(Dict, '../media/processedData/facebook/' + facebookDataDumpName + '/parsedFacebookData.json')
 
     return Dict
 
