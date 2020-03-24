@@ -31,6 +31,11 @@ def testApi(request):
 def facebook_dataGroupAPI(request):
     dg = facebookAnalyzer.getDataGroups()
     return Response(status=status.HTTP_200_OK, data={"dg": dg})
+    
+@api_view(["GET"])
+def apple_dataGroupAPI(request):
+    dg = appleAnalyzer.getDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
 
 def upload(request):
 

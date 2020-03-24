@@ -6,6 +6,8 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('upload/', views.upload, name='upload'),
-    path('dataGroups/', views.facebook_dataGroupAPI, name='facebook_dataGroupAPI'),
+    path('facebookDataGroups/', views.facebook_dataGroupAPI, name='facebook_dataGroupAPI'),
+    path('appleDataGroups/', views.apple_dataGroupAPI, name='apple_dataGroupAPI'),
+
     path('testapi/', views.testApi, name='testApi')
 ]
