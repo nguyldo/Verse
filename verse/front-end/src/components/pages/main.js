@@ -12,9 +12,13 @@ export default class Main extends Component {
   
     render() {
       return(
-        <div>
+        <div id="mainpage">
             <Header />
-            <Link to="/upload" className="link">Go to uploads</Link>
+            <h1>Welcome to Verse!</h1>
+            <h3>Verse slogan here...</h3>
+            <br></br>
+
+            <Link to="/upload" id="uploadslink">Analyze my data!</Link>
         </div>
       )
     }

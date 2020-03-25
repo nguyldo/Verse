@@ -14,7 +14,8 @@ export default class Upload extends Component {
         file: null,
         num: "",
         sites: [],
-        facebookData: {}
+        facebookData: {},
+        facebookButton: "Choose a file..."
       };
     }
 
@@ -42,6 +43,8 @@ export default class Upload extends Component {
         console.log(e.target.files[0], "12345");
 
         this.setState({file: e.target.files[0]})
+
+        this.setState({facebookButton: e.target.files[0].name});
 
     }
     
@@ -172,7 +175,7 @@ export default class Upload extends Component {
 
        });
        
-    }  
+    }
 
     render() {
       return(
@@ -183,7 +186,7 @@ export default class Upload extends Component {
               <div class="uploadoption">
                 <p>Facebook</p>
                 <form>
-                  <label for="facebookupload" class="customupload">Choose a file</label>
+                  <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
                   <input id="facebookupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
                   <button type="button" onClick={(e)=>this.uploadFacebook(e)}>Upload</button>
                 </form>
