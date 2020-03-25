@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import axios from "axios";
+import {Link} from "react-router-dom";
 import $ from "jquery";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -13,6 +14,7 @@ export default class Upload extends Component {
         file: null,
         num: "",
         sites: [],
+        facebookData: {}
       };
     }
 
@@ -69,7 +71,9 @@ export default class Upload extends Component {
           const data = promise.data.num;
           const websites = promise.data.sites;
           this.setState({num:data, sites:websites});
+          this.setState({facebookData: promise.data});
         }
+
 
         console.log(file);
         for (let vals of formData.values()) {
@@ -77,14 +81,14 @@ export default class Upload extends Component {
         }
 
         this.shuffle(this.state.sites);
-
+        /*
         var sel = document.getElementById('listBox');
         for (var i = 0; i < this.state.sites.length; i++) {
           var opt = document.createElement('option');
           opt.innerHTML = this.state.sites[i];
           opt.value = this.state.sites[i];
           sel.appendChild(opt);
-        }
+        }*/
     }
 
     uploadGoogle(e) {
@@ -172,7 +176,7 @@ export default class Upload extends Component {
 
     render() {
       return(
-        <div>
+        <div id="uploadpage">
             <Header />
             <h1>Upload file</h1>
             <body>
@@ -200,12 +204,20 @@ export default class Upload extends Component {
                   <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
                 </form>
               </div>
+              <Link to={{
+                pathname: "/results",
+                state: {
+                  facebookData: this.state.facebookData
+                }
+              }} className="link">Create Visuals</Link>
+              {/*
               <button onClick={(e)=>this.exportPDF(e)}>Export to PDF</button>
               <div id="visualcontent">
                 <p>{this.state.num}</p>
                 <select id="listBox" size="5"></select>
               </div>
               <div id="eventH"></div>
+              */}
             </body>
         </div>
       )
