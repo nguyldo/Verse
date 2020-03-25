@@ -24,15 +24,18 @@ def testApi(request):
     return Response(status=status.HTTP_200_OK, data={"data": str})
 
 
+@api_view(["POST"])
 def upload(request):
 
     # WHEN A FILE IS UPLOADED, A POST REQUEST IS MADE AND THIS CODE IS RUN #
     if request.method == "POST":
 
-        try:
-            uploadedFile = request.FILES["document"]
-        except:
-            return render(request, "upload.html")
+        uploadedFile = request.data.get("file")
+        #return Response(status=status.HTTP_200_OK, data={request.data.get("filename")})
+        #try:
+        #    uploadedFile = request.FILES["document"]
+        #except:
+        #    return render(request, "upload.html")
         
         # print(uploadedFile.read())
         # print(uploadedFile.read().decode("utf-8"))  <-- THIS LINE PRINTS OUT THE UPLOADED FILE
@@ -67,6 +70,9 @@ def upload(request):
         counter = counter - 1
         fileName = uploadedFile.name[counter:-4]
 
-        facebookParser.parseFacebookData(fileName)
+        Dict = facebookParser.parseFacebookData(fileName)
 
-    return render(request, "upload.html")
+    num = Dict["Number of Websites"]
+    sites = Dict["List of Websites"]
+    return Response(status=status.HTTP_200_OK, data={"num": num, "sites": sites})
+    # return render(request, "upload.html

@@ -1,38 +1,77 @@
-.App {
+@import url('https://fonts.googleapis.com/css?family=Karla&display=swap');
+
+:root {
+  --main-background-color: #F0F0F0;
+  --primary-color: #29648A;
+  --secondary-color: #2E9CCA;
+
+}
+
+body {
+  background-color: var(--main-background-color);
+  font-family: 'Karla', sans-serif;
+}
+
+#uploadpage, #resultspage, #mainpage {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h1 {
+  color: black;
+}
+
+#uploadslink, #uploadsdlink:visited {
+  background-color: var(--secondary-color);
+  font-size: 20px;
+  text-decoration: none;
+  padding: 12px;
+  color: var(--main-background-color);
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 8px;
+}
+
+#uploadslink:hover {
+  background-color: var(--main-background-color);
+  color: var(--secondary-color);
+}
+
+.uploadoption {
+  background-color: var(--secondary-color);
+  margin: 0px 40px 40px 40px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.uploadoption p {
+  font-size: 30px;
+  width: 100%;
+  padding: 5px 0px 5px 0px;
+  background-color: var(--primary-color);
+  color: var(--main-background-color);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.customupload, button, .link, .link:visited {
+  background-color: white;
+  border-radius: 5px;
+  color: black;
+  padding: 8px;
+  margin: 5px 10px 25px 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: normal;
+  text-decoration: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.customupload:hover, button:hover, .link:hover {
+  cursor: pointer;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  padding: 7px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input[type="file"] {
+  display: none;
 }
