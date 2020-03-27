@@ -10,13 +10,8 @@ from rest_framework.decorators import api_view
 
 import zipfile 
 
-from dataParser import facebookParser
-from dataParser import facebookAnalyzer
-
-#from facebookParser import parseFacebookData
-#from facebookAnalyzer import getDataGroups
-
-# Create your views here.
+from dataParser import facebookParser, facebookAnalyzer
+from dataParser import appleParser, appleAnalyzer
 
 def index(request):
     template = loader.get_template("index.html")
@@ -27,15 +22,33 @@ def testApi(request):
     str = "This request worked :))"
     return Response(status=status.HTTP_200_OK, data={"data": str})
 
+#----- FACEBOOK APIs -----
+
 @api_view(["GET"])
 def facebook_dataGroupAPI(request):
     dg = facebookAnalyzer.getDataGroups()
     return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+#----- GOOGLE APIs -----
     
+#----- APPLE APIs -----
+
 @api_view(["GET"])
-def apple_dataGroupAPI(request):
-    dg = appleAnalyzer.getDataGroups()
+def apple_generalDataGroupAPI(request):
+    dg = appleAnalyzer.getGeneralDataGroups()
     return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+@api_view(["GET"])
+def apple_musicDataGroupAPI(request):
+    dg = appleAnalyzer.getMusicDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+@api_view(["GET"])
+def apple_gamesDataGroupAPI(request):
+    dg = appleAnalyzer.getGameDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+
 
 def upload(request):
 
@@ -84,3 +97,5 @@ def upload(request):
         facebookParser.parseFacebookData(fileName)
 
     return render(request, "upload.html")
+
+    

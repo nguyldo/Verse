@@ -38,6 +38,7 @@ def getDirSizeInGB(rootPathName):
 # Function: extract json data and load into dictionary
 # Return: dictionary with json loaded
 def jsonToDict(filePath):
+
     with open(filePath) as jsonFile:
         data = json.load(jsonFile)
 
@@ -70,10 +71,8 @@ def dictToJsonFile(Dict, filePath):
 def csvToDict(filePath, fieldNames):
     Dict = {}
 
-    df = pd.read_csv(filePath)
+    #get all rows with specified columns
+    df = pd.read_csv(filePath).loc[:, fieldNames].to_dict('records')
 
-    for field in fieldNames:
-        Dict[field] = df[field]
-
-    return Dict
+    return df
     
