@@ -34,18 +34,9 @@ def getDirSizeInGB(rootPathName):
     #print(sizeInGB)
     return sizeInGB
 
-# Function: extract json data and load into dictionary
-# Return: dictionary with json loaded
-def jsonToDict(filePath):
-
-    with open(filePath) as jsonFile:
-        data = json.load(jsonFile)
-
-    return data
-
 # Function: output contents of dictionary into a json file
 # Return: null
-def dictToJsonFile(Dict, filePath):
+def writeToJsonFile(Dict, filePath):
     splitFilePath = filePath.split('/')
     #print(splitFilePath)
 
@@ -64,6 +55,31 @@ def dictToJsonFile(Dict, filePath):
             json.dump(Dict, fp)
     except IOError:
         print("File not found or path incorrect: " + filePath)
+
+# Function: get parsed data from json file for Analyzer
+def getParsedJson(filePath):
+    with open(filePath) as jsonFile:
+        data = json.load(jsonFile)
+
+    return data
+
+# Function: extract json data and load into dictionary
+# Return: dictionary with json loaded
+def jsonToDict(filePath, fieldNames):
+    Dict = {}
+
+    with open(filePath) as jsonFile:
+        data = json.load(jsonFile)
+
+        if filePath == "../media/unzippedFiles/apple/apple-lisa/Game Center/Game Center Data.json":
+            data = data["games_state"]
+        
+    #get all rows with specified columns
+    df = pd.DataFrame.from_dict(data)
+    df = df.fillna('')
+    df = df.loc[:, fieldNames].to_dict('records')
+    
+    return df
 
 # Function extract csv data and load into dictionary
 # Return: dictionary with csv loaded
