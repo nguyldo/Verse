@@ -9,6 +9,7 @@ export default class Results extends Component {
     constructor(props) {
       super(props);
       console.log(props.location.state);
+      this.state = props.location.state;
     }
   
     render() {
@@ -16,6 +17,11 @@ export default class Results extends Component {
         <div id="resultspage">
           <Header />
           <h1>Results</h1>
+          <ul>{
+            Object.entries(this.state.facebookData).map(([key, value]) => {
+              return <li key={key}>{key}:{value}</li>
+            })  
+          }</ul>
         </div>
       )
     }

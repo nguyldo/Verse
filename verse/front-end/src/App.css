@@ -7,6 +7,10 @@
 
 }
 
+li {
+  overflow-wrap: break-word;
+}
+
 body {
   background-color: var(--main-background-color);
   font-family: 'Karla', sans-serif;
