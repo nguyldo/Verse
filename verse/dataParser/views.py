@@ -45,7 +45,7 @@ def apple_musicDataGroupAPI(request):
 
 @api_view(["GET"])
 def apple_appsGamesDataGroupAPI(request):
-    dg = appleAnalyzer.getAppsGameDataGroups()
+    dg = appleAnalyzer.getAppsGamesDataGroups()
     return Response(status=status.HTTP_200_OK, data={"dg": dg})
 
 

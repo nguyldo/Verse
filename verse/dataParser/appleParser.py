@@ -6,8 +6,8 @@ import json
 import zipfile
 
 #TODO: uncomment first if running through django and second if through python
-#from dataParser import genericParser
-import genericParser
+from dataParser import genericParser
+#import genericParser
 
 def parseAppleData(appleDataDumpName):
     # Define dictionary to map json data to
@@ -15,8 +15,8 @@ def parseAppleData(appleDataDumpName):
 
     # Parse through apple media root directory
     #TODO: uncomment first if running through django and second if through python
-    #rootPathName = "./media/unzippedFiles/apple/" + appleDataDumpName
-    rootPathName = "../media/unzippedFiles/apple/" + appleDataDumpName
+    rootPathName = "./media/unzippedFiles/apple/" + appleDataDumpName
+    #rootPathName = "../media/unzippedFiles/apple/" + appleDataDumpName
 
     if os.path.exists(rootPathName):
 
@@ -63,7 +63,7 @@ def parseAppleData(appleDataDumpName):
             print("general dir path not found") 
 
         #write parsed general data dictionary to json file
-        genericParser.dictToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedGeneralAppleData.json')
+        genericParser.writeToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedGeneralAppleData.json')
 
         
         # ---------- Music Data ----------
@@ -131,25 +131,15 @@ def parseAppleData(appleDataDumpName):
             Dict[key_play_activity] = val_play_activity
 
             #-----  -----
-            zipPath = musicDirPath + "/Apple_Media_Services/Apple Music Activity/Apple Music Library Activity.json.zip"
-            with zipfile.ZipFile(zipPath, "r") as zip_ref:
-                zip_ref.extractall(musicDirPath + "/Apple_Media_Services/Apple Music Activity")
-
-            file_library_activity = "Apple_Media_Services/Apple Music Activity/Apple Music Library Activity.json"
-            data_library_activity = genericParser.jsonToDict(musicDirPath + "/" + file_library_activity)
-            
-
-            key_library_activity = "apple_music_library_activity"
-            val_library_activity = data_library_activity
-            Dict[key_library_activity] = val_library_activity
-
-            #-----  -----
             zipPath = musicDirPath + "/Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json.zip"
             with zipfile.ZipFile(zipPath, "r") as zip_ref:
                 zip_ref.extractall(musicDirPath + "/Apple_Media_Services/Apple Music Activity")
 
             file_library_tracks = "Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json"
-            data_library_tracks = genericParser.jsonToDict(musicDirPath + "/" + file_library_tracks)
+            fieldNames = ("Title", "Artist", "Album", "Album Artist", "Genre", "Track Year", 
+                          "Date Added To Library", "Last Played Date", 
+                          "Skip Count", "Date of Last Skip", "Release Date")
+            data_library_tracks = genericParser.jsonToDict(musicDirPath + "/" + file_library_tracks, fieldNames)
 
             key_library_tracks = "apple_music_library_tracks"
             val_library_tracks = data_library_tracks
@@ -159,7 +149,7 @@ def parseAppleData(appleDataDumpName):
             print("music category not found") 
 
         #write parsed music data dictionary to json file
-        genericParser.dictToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedMusicAppleData.json')
+        genericParser.writeToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedMusicAppleData.json')
 
         
         # ---------- Apps/Games Data ----------
@@ -168,7 +158,6 @@ def parseAppleData(appleDataDumpName):
             file_apps = "Update and Redownload History/iTunes and App-Book Re-download and Update History.csv"
             fieldNames = ("Activity Date", "Item Description", "Device IP Address")
             data_apps = genericParser.csvToDict(musicDirPath + "/" + file_apps, fieldNames)
-            
 
             key_apps = "apps"
             val_apps = data_apps
@@ -180,7 +169,8 @@ def parseAppleData(appleDataDumpName):
         if os.path.exists(gameDirPath):
             # -----  -----
             file_game_center = "Game Center Data.json"
-            data_game_center = genericParser.jsonToDict(gameDirPath + "/" + file_game_center)
+            fieldNames = ("game_name", "last_played_utc")
+            data_game_center = genericParser.jsonToDict(gameDirPath + "/" + file_game_center, fieldNames)
 
 
             key_games = "games"
@@ -190,12 +180,12 @@ def parseAppleData(appleDataDumpName):
             print("app category not found") 
 
         #write parsed apps/games data dictionary to json file
-        genericParser.dictToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedAppsGamesAppleData.json')
+        genericParser.writeToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedAppsGamesAppleData.json')
 
     
     else: print("given root path does not exist")
 
-    genericParser.deleteData(rootPathName)
+    #genericParser.deleteData(rootPathName)
 
     return Dict
 
