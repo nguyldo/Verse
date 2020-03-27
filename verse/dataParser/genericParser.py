@@ -72,7 +72,9 @@ def csvToDict(filePath, fieldNames):
     Dict = {}
 
     #get all rows with specified columns
-    df = pd.read_csv(filePath).loc[:, fieldNames].to_dict('records')
-
+    df = pd.read_csv(filePath)
+    df = df.fillna('')
+    df = df.loc[:, fieldNames].to_dict('records')
+    
     return df
     

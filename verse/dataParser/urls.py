@@ -10,7 +10,7 @@ urlpatterns = [
     
     path('appleGeneralDataGroups/', views.apple_generalDataGroupAPI, name='apple_generalDataGroupAPI'),
     path('appleMusicDataGroups/', views.apple_musicDataGroupAPI, name='apple_musicDataGroupAPI'),
-    path('appleGameDataGroups/', views.apple_gamesDataGroupAPI, name='apple_gameDataGroupAPI'),
+    path('appleAppsGamesDataGroups/', views.apple_appsGamesDataGroupAPI, name='apple_gameDataGroupAPI'),
 
     path('testapi/', views.testApi, name='testApi')
 ]
