@@ -10,6 +10,7 @@ from dataParser import appleParser, genericParser
 
 def filterByField(Dict, fieldNames):
     df = pd.DataFrame.from_dict(Dict)
+    df = df.fillna('')
     df = df.loc[:, fieldNames].to_dict('records')
     return df
 
@@ -17,10 +18,18 @@ def countFrequencies(listItems):
     Dict = {}
     uniqueItems = set(listItems)                  
     for item in uniqueItems:
-        Dict[item] = listItems.count(item)
+        if item != "":
+            Dict[item] = listItems.count(item)
 
     return Dict
 
+# https://stackoverflow.com/a/35989770
+def convertMillis(millis):
+    seconds=(millis/1000)%60
+    minutes=(millis/(1000*60))%60
+    hours=(millis/(1000*60*60))%24
+    return hours, minutes, seconds
+    
 def getGeneralDataGroups():
     data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedGeneralAppleData.json")
 
@@ -44,23 +53,36 @@ def getMusicDataGroups():
     #Dict["preferences_pictograph"] = data["apple_music_preferences"]
 
     # -----   -----
-    
-    #Dict["favorite_artists"]
-    #Dict["play_activity_timeline"] = data["apple_music_play_activity"]
+    play_ms = filterByField( data["apple_music_play_activity"], ("Milliseconds Since Play", "Play Duration Milliseconds"))
+    msSincePlay = [s["Milliseconds Since Play"] for s in play_ms]
+    msPlayDuration = [d["Play Duration Milliseconds"] for d in play_ms]
+    for i in range(0, len(msPlayDuration)):
+        if not isinstance(msPlayDuration[i], float):
+            msPlayDuration[i] = 0
 
-    #Dict["library_activity_timeline"] = data["apple_music_library_activity"]
+    totalListenTime = sum(msPlayDuration)
+    totalListenTime = convertMillis(totalListenTime)
+    Dict["total_listen_time"] = { "hours" : totalListenTime[0], "minutes" : totalListenTime[1], "seconds" : totalListenTime[2]}
+    
+
+    # -----   -----
+    artist_song_time = filterByField( data["apple_music_play_activity"], 
+    ("Artist Name", "Content Name", "Play Duration Milliseconds") )
+    #print(artist_song_time)
+    #Dict["play_activity_timeline"] = data["apple_music_play_activity"]
 
     # -----   -----
     genres = filterByField( data["apple_music_play_activity"], ("Genre",) )
     genres = [g["Genre"] for g in genres]       #get values from dict in list of dicts
     dictGenreFreq = countFrequencies(genres)
     
-    Dict["genres_piechart"] = dictGenreFreq
+    #Dict["play_activity_genres_piechart"] = dictGenreFreq
 
     # -----   -----
-
-    #Dict["favorite_artists_list"] = data["apple_music_play_activity"]
-    #TODO: count occurrences
+    artists = filterByField( data["apple_music_play_activity"], ("Artist Name",) )
+    artists = [a["Artist Name"] for a in artists]
+    dictArtistFreq = countFrequencies(artists)
+    #Dict["play_activity_artists_barchart"] = dictArtistFreq
 
     return Dict
 

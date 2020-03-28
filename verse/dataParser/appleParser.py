@@ -84,7 +84,7 @@ def parseAppleData(appleDataDumpName):
                 song = item["Track Description"].split(" - ")[1]
 
                 item.update({"Artist" : artist})
-                item.update({ "Track" : song})
+                item.update({"Track" : song})
                 item.pop("Track Description")
             val_recently_played = data_recent_tracks
             Dict[key_recently_played] = val_recently_played
@@ -122,7 +122,7 @@ def parseAppleData(appleDataDumpName):
             #-----  -----
             file_play_activity = "Apple_Media_Services/Apple Music Activity/Apple Music Play Activity.csv"
             fieldNames = ("Artist Name", "Content Name", "Client IP Address", "End Reason Type", 
-                        "Genre", "Event Received Timestamp", "Event End Timestamp")
+                        "Genre", "Milliseconds Since Play", "Play Duration Milliseconds")
             data_play_activity = genericParser.csvToDict(musicDirPath + "/" + file_play_activity, fieldNames)
 
 
