@@ -10,7 +10,7 @@ from dataParser import facebookParser, genericParser
 
 # Function to get data groups from 
 def getDataGroups():
-    data = facebookParser.parseFacebookData("facebook-lisasilmii")
+    data = genericParser.getParsedJson("./media/processedData/facebook/facebook-lisasilmii/parsedFacebookData.json")
 
     Dict = {}
 

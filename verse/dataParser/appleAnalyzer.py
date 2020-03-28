@@ -10,6 +10,8 @@ from dataParser import appleParser, genericParser
 
 # TODO: how does the data dump page pass the username to the backend
 
+# Function: filters the given Dict by column and handles empty or null values
+# Return: a dictionary containing only the columns specified in fieldNames
 def filterByField(Dict, fieldNames):
     df = pd.DataFrame.from_dict(Dict)
     df = df.replace(r'^\s*$', np.NaN, regex=True)
@@ -17,6 +19,8 @@ def filterByField(Dict, fieldNames):
     df = df.loc[:, fieldNames].to_dict('records')
     return df
 
+# Function: calculates frequency of occurrence of each item in a list
+# Return: a sorted dictionary where the key is the item and the value is the frequency
 def countFrequencies(listItems):
     Dict = {}
     uniqueItems = set(listItems)                  
@@ -34,11 +38,15 @@ def countFrequencies(listItems):
 
     return sortedDict
 
+# Function: calculates top ten entries in a given sorted dictionary
+# Return: a dictionary of the top ten entries
 def countTopTen(Dict):
     topTen = {k: Dict[k] for k in list(Dict)[:10]}
 
     return topTen
 
+# Function: converts milliseconds to hours, mins, seconds
+# Return: a tuple of hours, minutes, seconds
 # https://stackoverflow.com/a/35989770
 def convertMillis(millis):
     seconds=(millis/1000)%60
@@ -46,6 +54,7 @@ def convertMillis(millis):
     hours=(millis/(1000*60*60))%24
     return hours, minutes, seconds
     
+# General API Response
 def getGeneralDataGroups():
     data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedGeneralAppleData.json")
 
@@ -57,8 +66,12 @@ def getGeneralDataGroups():
 
     Dict["devices_list"] = data["devices"]
 
+    #write analyzed data dictionary to json file
+    genericParser.dictToJsonFile(Dict, 'media/processedData/apple/apple-lisa/analyzedGeneralAppleData.json')
+
     return Dict
 
+# Music API Response
 def getMusicDataGroups():
     data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedMusicAppleData.json")
 
@@ -135,8 +148,12 @@ def getMusicDataGroups():
     genre_dates = filterByField( data["apple_music_library_tracks"], ("Genre", "Last Played Date"))
     Dict["genre_timeline"] = genre_dates
 
+    #write analyzed data dictionary to json file
+    genericParser.dictToJsonFile(Dict, 'media/processedData/apple/apple-lisa/analyzedMusicAppleData.json')
+
     return Dict
 
+# Apps/Games API Response
 def getAppsGamesDataGroups():
     data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedAppsGamesAppleData.json")
 
@@ -152,6 +169,9 @@ def getAppsGamesDataGroups():
     # -----   -----
     app_ip = filterByField(data["apps"], ("Device IP Address", "Item Description"))
     Dict["apps_map"] = app_ip
+
+    #write analyzed data dictionary to json file
+    genericParser.dictToJsonFile(Dict, 'media/processedData/apple/apple-lisa/analyzedAppsGamesAppleData.json')
 
     return Dict
 
