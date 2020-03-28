@@ -1,6 +1,7 @@
 import os, stat, shutil
 import csv
 import pandas as pd #parse csv
+import numpy as np
 import json
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
@@ -76,7 +77,8 @@ def jsonToDict(filePath, fieldNames):
         
     #get all rows with specified columns
     df = pd.DataFrame.from_dict(data)
-    df = df.fillna('')
+    df = df.replace(r'^\s*$', np.NaN, regex=True)
+    df = df.dropna(0, subset=fieldNames) 
     df = df.loc[:, fieldNames].to_dict('records')
     
     return df
@@ -88,7 +90,8 @@ def csvToDict(filePath, fieldNames):
 
     #get all rows with specified columns
     df = pd.read_csv(filePath)
-    df = df.fillna('')
+    df = df.replace(r'^\s*$', np.NaN, regex=True)
+    df = df.dropna(0, subset=fieldNames) 
     df = df.loc[:, fieldNames].to_dict('records')
     
     return df
