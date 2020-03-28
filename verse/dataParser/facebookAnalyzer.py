@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-#from facebookParser import parseFacebookData
-from dataParser import facebookParser
+import os
+
+from dataParser import facebookParser, genericParser
 
 # from https://stackoverflow.com/a/30312778
 
@@ -9,7 +10,7 @@ from dataParser import facebookParser
 
 # Function to get data groups from 
 def getDataGroups():
-    data = facebookParser.parseFacebookData("facebook-lisasilmii")
+    data = genericParser.getParsedJson("./media/processedData/facebook/facebook-lisasilmii/parsedFacebookData.json")
 
     Dict = {}
 
@@ -41,6 +42,6 @@ def getDataGroups():
     Dict["master_linegraph"] = [data["friends"], data["num_friends"], data["num_pokes"], data["pokes"], data["profile_update_history"]]
 
     #write analyzed data dictionary to json file
-    genericParser.dictToJson(Dict, 'media/processedData/facebook/facebook-lisasilmii/analyzedFacebookData.json')
+    genericParser.dictToJsonFile(Dict, 'media/processedData/facebook/facebook-lisasilmii/analyzedFacebookData.json')
 
     return Dict

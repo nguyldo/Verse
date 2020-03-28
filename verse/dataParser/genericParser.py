@@ -1,8 +1,8 @@
-import os
+import os, stat, shutil
 import csv
 import pandas as pd #parse csv
+import numpy as np
 import json
-
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
@@ -32,32 +32,84 @@ def getDirSizeInGB(rootPathName):
     
     # round to 2 decimal places
     sizeInGB = round(totalSize/(1024*1024*1024), 2)
-
+    #print(sizeInGB)
     return sizeInGB
 
-# Function: extract json data and load into dictionary
-# Return: dictionary with json loaded
-def jsonToDict(filePath):
+# Function: output contents of dictionary into a json file
+# Return: null
+def writeToJsonFile(Dict, filePath):
+    splitFilePath = filePath.split('/')
+    #print(splitFilePath)
+
+    #create directories if they don't exist
+    for i in range(1, len(splitFilePath)):
+        path = '/'.join(splitFilePath[0:i])
+
+        if not os.path.exists(path):
+            #print("make dir " + path)
+            os.makedirs(path)
+        #else: print(path + " exists")
+
+    #write to file
+    try: 
+        with open(filePath, 'w') as fp:
+            json.dump(Dict, fp)
+    except IOError:
+        print("File not found or path incorrect: " + filePath)
+
+# Function: get parsed data from json file for Analyzer
+def getParsedJson(filePath):
     with open(filePath) as jsonFile:
         data = json.load(jsonFile)
 
     return data
 
-# Function: output contents of dictionary into a json file
-# Return: null
-def dictToJson(Dict, filePath):
-    with open(filePath, 'w') as fp:
-        json.dump(Dict, fp)
+# Function: extract json data and load into dictionary
+# Return: dictionary with json loaded
+def jsonToDict(filePath, fieldNames):
+    Dict = {}
+
+    with open(filePath) as jsonFile:
+        data = json.load(jsonFile)
+
+        if filePath == "../media/unzippedFiles/apple/apple-lisa/Game Center/Game Center Data.json":
+            data = data["games_state"]
+        
+    #get all rows with specified columns
+    df = pd.DataFrame.from_dict(data)
+    df = df.replace(r'^\s*$', np.NaN, regex=True)
+    df = df.dropna(0, subset=fieldNames) 
+    df = df.loc[:, fieldNames].to_dict('records')
+    
+    return df
 
 # Function extract csv data and load into dictionary
 # Return: dictionary with csv loaded
 def csvToDict(filePath, fieldNames):
     Dict = {}
 
-    data = pd.read_csv(filePath)
+    #get all rows with specified columns
+    df = pd.read_csv(filePath)
+    df = df.replace(r'^\s*$', np.NaN, regex=True)
+    df = df.dropna(0, subset=fieldNames) 
+    df = df.loc[:, fieldNames].to_dict('records')
+    
+    return df
 
-    for field in fieldNames:
-        Dict[field] = data.field
+# Function to delete a directory and all of its contents
+def deleteData(rootPath):
+    #for root, dirs, files in os.walk(rootPath, topdown=False):
+    #    for name in files:
+    #        filename = os.path.join(root, name)
+    #        os.chmod(filename, stat.S_IRWXU)
+    #        os.remove(filename)
 
-    return Dict
+    #    for name in dirs:
+    #        os.rmdir(os.path.join(root, name))
+    #os.rmdir(rootPath)      
+
+    shutil.rmtree(rootPath, ignore_errors=True)
+
+    
+
     
