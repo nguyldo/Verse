@@ -147,10 +147,10 @@ def getAppsGamesDataGroups():
 
     # -----   -----
     app_date = filterByField(data["apps"], ("Activity Date", "Item Description"))
-    app_ip = filterByField(data["apps"], ("Device IP Address", "Item Description"))
-
     Dict["apps_timeline"] = app_date
 
+    # -----   -----
+    app_ip = filterByField(data["apps"], ("Device IP Address", "Item Description"))
     Dict["apps_map"] = app_ip
 
     return Dict
