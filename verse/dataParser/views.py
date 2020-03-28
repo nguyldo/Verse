@@ -1,18 +1,17 @@
+#!/usr/bin/env python3
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context, loader
 from django.core.files.storage import FileSystemStorage, default_storage
-from dataParser import facebookParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
+import zipfile 
 
-# from django.contrib messages
-import zipfile # this module allows us to easily unzip items
-#from pprint import pprint
-
-# Create your views here.
+from dataParser import facebookParser, facebookAnalyzer
+from dataParser import appleParser, appleAnalyzer
 
 def index(request):
     template = loader.get_template("index.html")
@@ -22,6 +21,33 @@ def index(request):
 def testApi(request):
     str = "This request worked :))"
     return Response(status=status.HTTP_200_OK, data={"data": str})
+
+#----- FACEBOOK APIs -----
+
+@api_view(["GET"])
+def facebook_dataGroupAPI(request):
+    dg = facebookAnalyzer.getDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+#----- GOOGLE APIs -----
+    
+#----- APPLE APIs -----
+
+@api_view(["GET"])
+def apple_generalDataGroupAPI(request, fileName):
+    dg = appleAnalyzer.getGeneralDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+@api_view(["GET"])
+def apple_musicDataGroupAPI(request):
+    dg = appleAnalyzer.getMusicDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
+@api_view(["GET"])
+def apple_appsGamesDataGroupAPI(request):
+    dg = appleAnalyzer.getAppsGamesDataGroups()
+    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+
 
 
 @api_view(["POST"])
@@ -69,10 +95,7 @@ def upload(request):
             
         counter = counter - 1
         fileName = uploadedFile.name[counter:-4]
+        print(fileName)
 
-        Dict = facebookParser.parseFacebookData(fileName)
-
-    num = Dict["Number of Websites"]
-    sites = Dict["List of Websites"]
-    return Response(status=status.HTTP_200_OK, data={"num": num, "sites": sites})
-    # return render(request, "upload.html
+        return Response(status=status.HTTP_200_OK, data={"fileName" : fileName})
+        # return render(request, "upload.html
