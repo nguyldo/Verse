@@ -34,7 +34,7 @@ def facebook_dataGroupAPI(request):
 #----- APPLE APIs -----
 
 @api_view(["GET"])
-def apple_generalDataGroupAPI(request):
+def apple_generalDataGroupAPI(request, fileName):
     dg = appleAnalyzer.getGeneralDataGroups()
     return Response(status=status.HTTP_200_OK, data={"dg": dg})
 
@@ -50,15 +50,18 @@ def apple_appsGamesDataGroupAPI(request):
 
 
 
+@api_view(["POST"])
 def upload(request):
 
     # WHEN A FILE IS UPLOADED, A POST REQUEST IS MADE AND THIS CODE IS RUN #
     if request.method == "POST":
 
-        try:
-            uploadedFile = request.FILES["document"]
-        except:
-            return render(request, "upload.html")
+        uploadedFile = request.data.get("file")
+        #return Response(status=status.HTTP_200_OK, data={request.data.get("filename")})
+        #try:
+        #    uploadedFile = request.FILES["document"]
+        #except:
+        #    return render(request, "upload.html")
         
         # print(uploadedFile.read())
         # print(uploadedFile.read().decode("utf-8"))  <-- THIS LINE PRINTS OUT THE UPLOADED FILE
@@ -92,10 +95,7 @@ def upload(request):
             
         counter = counter - 1
         fileName = uploadedFile.name[counter:-4]
+        print(fileName)
 
-        #facebookParser.parseFacebookData(fileName)
-        facebookParser.parseFacebookData(fileName)
-
-    return render(request, "upload.html")
-
-    
+        return Response(status=status.HTTP_200_OK, data={"fileName" : fileName})
+        # return render(request, "upload.html

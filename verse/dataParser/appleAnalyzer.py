@@ -175,9 +175,9 @@ def getAppsGamesDataGroups():
 
     return Dict
 
-def main():
-    getAppsGamesDataGroups()
+#def main():
+#    getAppsGamesDataGroups()
 
-if __name__ == "__main__":
-    main() 
+#if __name__ == "__main__":
+#    main() 
 

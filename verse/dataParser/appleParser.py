@@ -189,9 +189,9 @@ def parseAppleData(appleDataDumpName):
 
     return Dict
 
-def main():
-    root = "apple-lisa"
-    parseAppleData(root)
+#def main():
+#    root = "apple-lisa"
+#    parseAppleData(root)
 
-if __name__ == "__main__":
-    main() 
+#if __name__ == "__main__":
+#    main() 

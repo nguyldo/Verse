@@ -5,27 +5,10 @@ import string
 import sqlite3 as lite 
 from sqlite3 import Error
 from random import randint
-from dataParser import genericParser
+from dataParser import genericParser  
 
-# Function to grab the websites from the off-facebook activity file.
-# returns a list of sites
-def getWebsites(fileName):
-    jsonStr = open(fileName).read()
-    data = json.loads(jsonStr)
-    
-    sites = []
-    for app in data["off_facebook_activity"]:
-        for key in app:
-            if key == "name":
-                site = app[key]
-                for i in site:
-                    if i == '.':
-                        sites.append(site)
-                        break
-    return sites       
-
-# Function to extract json data from the root directory of facebook data 
-# and input into a dictionary
+# Function: extracts json data from the root directory of facebook data 
+# Return: a dictionary with parsed data
 def parseFacebookData(facebookDataDumpName): 
     # Define dictionary to map json data to
     Dict = {}
