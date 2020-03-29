@@ -11,10 +11,10 @@ export default class Upload extends Component {
     this.state = {
 
       // facebook state
-      facebookFile: null,
+      facebookFiles: null,
       facebookRequest: "",
 
-      googleFile: null,
+      googleFiles: null,
       googleRequest: "",
 
       appleFiles: null,
@@ -58,21 +58,33 @@ export default class Upload extends Component {
 
   handleFile(e) {
 
-    //console.log(e.target.id);
+    console.log(e.target.files);
     const specifiedCompany = e.target.id;
     if (specifiedCompany == "facebookupload") {
-      this.setState({ facebookFile: e.target.files[0] });
-      this.setState({ facebookButton: e.target.files[0].name });
+      this.setState({ facebookFile: e.target.files });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ facebookButton: label });
+      } else {
+        this.setState({ facebookButton: e.target.files[0].name });
+      }
     } else if (specifiedCompany == "googleupload") {
-      this.setState({ googleFile: e.target.files[0] });
-      this.setState({ googleButton: e.target.files[0].name });
+      this.setState({ googleFile: e.target.files });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ googleButton: label });
+      } else {
+        this.setState({ googleButton: e.target.files[0].name });
+      }
     } else if (specifiedCompany == "appleupload") {
-      this.setState({ appleFile: e.target.files[0] });
-      this.setState({ appleButton: e.target.files[0].name });
+      this.setState({ appleFile: e.target.files });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ appleButton: label });
+      } else {
+        this.setState({ appleButton: e.target.files[0].name });
+      }
     }
-    // this.setState({ file: e.target.files[0] })
-
-    // this.setState({ facebookButton: e.target.files[0].name });
 
   }
 
@@ -137,6 +149,7 @@ export default class Upload extends Component {
 
   }
 
+  /*
   async uploadFacebook(e) {
     let file = this.state.file
 
@@ -191,7 +204,7 @@ export default class Upload extends Component {
       opt.innerHTML = this.state.sites[i];
       opt.value = this.state.sites[i];
       sel.appendChild(opt);
-    }*/
+    }
   }
 
   uploadGoogle(e) {
@@ -248,6 +261,7 @@ export default class Upload extends Component {
       console.log("Test: " + vals);
     }
   }
+  */
 
   render() {
     return (
@@ -259,7 +273,7 @@ export default class Upload extends Component {
             <p>{this.state.facebookTitle}</p>
             <form id="facebookoption">
               <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
-              <input id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
               <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
@@ -267,7 +281,7 @@ export default class Upload extends Component {
             <p>Google</p>
             <form>
               <label for="googleupload" class="customupload">{this.state.googleButton}</label>
-              <input id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
               <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
@@ -275,7 +289,7 @@ export default class Upload extends Component {
             <p>Apple</p>
             <form>
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
-              <input id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
               <button type="button" id="appleuploadconfirm" onClick={(e) => this.uploadApple(e)}>Upload</button>
             </form>
           </div>
