@@ -12,7 +12,7 @@ import os
 import zipfile 
 
 from dataParser import visualizationData
-from dataParser import facebookParser, appleParser
+from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -83,6 +83,7 @@ def upload(request):
         if serviceName == "facebook":
             fileName = uploadedFiles.name[:-4]
             facebookParser.parseFacebookData(fileName)
+            facebookAnalyzer.analyzeFacebookData(fileName)
 
         elif serviceName == "apple":
             # take all the uploaded files and put it in another directory
@@ -97,6 +98,7 @@ def upload(request):
             #fileName = newDirName
             fileName = uploadedFiles.name[:-4]
             appleParser.parseAppleData(fileName)
+            appleAnalyzer.analyzeAppleData(fileName)
 
         #elif serviceName == "google":
         
