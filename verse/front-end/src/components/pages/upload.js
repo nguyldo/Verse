@@ -61,7 +61,19 @@ export default class Upload extends Component {
     console.log(e.target.files);
     const specifiedCompany = e.target.id;
     if (specifiedCompany == "facebookupload") {
-      this.setState({ facebookFile: e.target.files });
+
+      this.setState({ facebookFile: e.target.files[0] });
+      /*
+      let filesList = [];
+      for (let i = 0; i < e.target.files.length; i++) {
+        filesList.push(e.target.files[i]);
+      }
+
+      console.log("Debug");
+      console.log(filesList);
+
+      this.setState({ facebookFile: filesList });*/
+
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
         this.setState({ facebookButton: label });
@@ -69,7 +81,7 @@ export default class Upload extends Component {
         this.setState({ facebookButton: e.target.files[0].name });
       }
     } else if (specifiedCompany == "googleupload") {
-      this.setState({ googleFile: e.target.files });
+      this.setState({ googleFile: e.target.files[0] });
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
         this.setState({ googleButton: label });
@@ -77,7 +89,7 @@ export default class Upload extends Component {
         this.setState({ googleButton: e.target.files[0].name });
       }
     } else if (specifiedCompany == "appleupload") {
-      this.setState({ appleFile: e.target.files });
+      this.setState({ appleFile: e.target.files[0] });
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
         this.setState({ appleButton: label });
@@ -112,9 +124,13 @@ export default class Upload extends Component {
     }
 
     let formData = new FormData();
-    formData.append("file", file);
+    formData.append("files", file);
     formData.append("filename", file.name);
     formData.append("company", company);
+
+    console.log("Ultimate debug");
+    console.log(file);
+    console.log(company);
 
     const promise = await axios({
       url: "http://localhost:8000/upload/",
@@ -278,7 +294,7 @@ export default class Upload extends Component {
           </div>
           <div class="uploadoption">
             <p>Google</p>
-            <form>
+            <form id="googleoption">
               <label for="googleupload" class="customupload">{this.state.googleButton}</label>
               <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
               <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
@@ -286,16 +302,18 @@ export default class Upload extends Component {
           </div>
           <div class="uploadoption">
             <p>Apple</p>
-            <form>
+            <form id="appleoption">
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
               <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="appleuploadconfirm" onClick={(e) => this.uploadApple(e)}>Upload</button>
+              <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <Link to={{
             pathname: "/results",
             state: {
-              facebookData: this.state.facebookData
+              facebookRequest: this.state.facebookRequest,
+              googleRequest: this.state.googleRequest,
+              appleRequest: this.state.appleRequest
             }
           }} className="link">Create Visuals</Link>
         </body>
