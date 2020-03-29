@@ -144,7 +144,6 @@ export default class Upload extends Component {
       
     } else {
       console.log("Upload failed");
-      this.setState({ facebookTitle: "Facebook: Upload Failed..." });
     }
 
   }
