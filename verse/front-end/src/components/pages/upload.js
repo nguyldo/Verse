@@ -11,13 +11,24 @@ export default class Upload extends Component {
     this.state = {
 
       // facebook state
-      file: null,
-      num: "",
-      sites: [],
+      facebookFile: null,
+      facebookRequest: "",
+
+      googleFile: null,
+      googleRequest: "",
+
+      appleFiles: null,
+      appleRequest: "",
 
       facebookData: {},
       facebookButton: "Choose a file...",
       facebookTitle: "Facebook",
+
+      googleButton: "Choose a file...",
+      googleTitle: "Google",
+
+      appleButton: "Choose a file...",
+      appleTitle: "Apple",
 
       // google state
 
@@ -47,9 +58,82 @@ export default class Upload extends Component {
 
   handleFile(e) {
 
-    this.setState({ file: e.target.files[0] })
+    //console.log(e.target.id);
+    const specifiedCompany = e.target.id;
+    if (specifiedCompany == "facebookupload") {
+      this.setState({ facebookFile: e.target.files[0] });
+      this.setState({ facebookButton: e.target.files[0].name });
+    } else if (specifiedCompany == "googleupload") {
+      this.setState({ googleFile: e.target.files[0] });
+      this.setState({ googleButton: e.target.files[0].name });
+    } else if (specifiedCompany == "appleupload") {
+      this.setState({ appleFile: e.target.files[0] });
+      this.setState({ appleButton: e.target.files[0].name });
+    }
+    // this.setState({ file: e.target.files[0] })
 
-    this.setState({ facebookButton: e.target.files[0].name });
+    // this.setState({ facebookButton: e.target.files[0].name });
+
+  }
+
+  async globalUpload(e) {
+
+    const specifiedId = e.target.id;
+    let company = null;
+    let file = null;
+    if (specifiedId == "facebookuploadconfirm") {
+      file = this.state.facebookFile;
+      company = "facebook";
+    } else if (specifiedId == "googleuploadconfirm") {
+      file = this.state.googleFile;
+      company = "google";
+    } else if (specifiedId == "appleuploadconfirm") {
+      file = this.state.appleFile;
+      company = "apple";
+    } else {
+      console.log("Error in confirming upload");
+    }
+
+    if (file == null) {
+      alert("Nothing was uploaded, please try again.");
+      return;
+    }
+
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("filename", file.name);
+    formData.append("company", company);
+
+    const promise = await axios({
+      url: "http://localhost:8000/upload/",
+      method: "POST",
+      data: formData
+    });
+
+    const status = promise.status;
+    if (status === 200) {
+
+      if (company == "facebook") {
+        this.setState({ facebookRequest: promise.data.fileName });
+        document.getElementById("facebookoption").style.display = "none";
+        this.setState({ facebookTitle: "Facebook: Upload Success!" });
+      } else if (company == "google") {
+        this.setState({ googleRequest: promise.data.fileName });
+        document.getElementById("googleoption").style.display = "none";
+        this.setState({ facebookTitle: "Google: Upload Success!" });
+      } else if (company == "apple") {
+        this.setState({ appleRequest: promise.data.fileName });
+        document.getElementById("appleoption").style.display = "none";
+        this.setState({ facebookTitle: "Apple: Upload Success!" });
+      } else {
+        console.log("internal error");
+      }
+
+      
+    } else {
+      console.log("Upload failed");
+      this.setState({ facebookTitle: "Facebook: Upload Failed..." });
+    }
 
   }
 
@@ -88,6 +172,9 @@ export default class Upload extends Component {
 
       document.getElementById("facebookoption").style.display = "none";
       this.setState({ facebookTitle: "Facebook: Upload Success!" });
+    } else {
+      console.log("Upload failed");
+      this.setState({ facebookTitle: "Facebook: Upload Failed..." });
     }
 
 
@@ -162,34 +249,6 @@ export default class Upload extends Component {
     }
   }
 
-  exportPDF(e) {
-    /*
-    let pdf = new jsPDF();
-    let htmlDiv = $("#visualcontent").html();
-    let specialEventHandlers = {
-        "#elementH": function(element, handler) {
-            return true;
-        }
-    }
-    pdf.fromHTML(htmlDiv, 15, 15, {
-        "width": 170,
-        "elementHandlers": specialEventHandlers
-    })
-    pdf.save("visuals.pdf");
-    */
-    html2canvas(document.getElementById("visualcontent"), { scale: 1 }).then(canvas => {
-      //document.body.appendChild(canvas);
-      //let image = canvas.toDataURL("visuals/jpg");
-      let dwnld = document.createElement("a");
-      dwnld.download = "visuals";
-      dwnld.href = canvas.toDataURL();
-      dwnld.click();
-      //window.location.href = image;
-
-    });
-
-  }
-
   render() {
     return (
       <div id="uploadpage">
@@ -201,23 +260,23 @@ export default class Upload extends Component {
             <form id="facebookoption">
               <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
               <input id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" onClick={(e) => this.uploadFacebook(e)}>Upload</button>
+              <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <div class="uploadoption">
             <p>Google</p>
             <form>
-              <label for="googleupload" class="customupload">Choose a file</label>
+              <label for="googleupload" class="customupload">{this.state.googleButton}</label>
               <input id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" onClick={(e) => this.uploadGoogle(e)}>Upload</button>
+              <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <div class="uploadoption">
             <p>Apple</p>
             <form>
-              <label for="appleupload" class="customupload">Choose a file</label>
+              <label for="appleupload" class="customupload">{this.state.appleButton}</label>
               <input id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" onClick={(e) => this.uploadApple(e)}>Upload</button>
+              <button type="button" id="appleuploadconfirm" onClick={(e) => this.uploadApple(e)}>Upload</button>
             </form>
           </div>
           <Link to={{
@@ -226,14 +285,6 @@ export default class Upload extends Component {
               facebookData: this.state.facebookData
             }
           }} className="link">Create Visuals</Link>
-          {/*
-              <button onClick={(e)=>this.exportPDF(e)}>Export to PDF</button>
-              <div id="visualcontent">
-                <p>{this.state.num}</p>
-                <select id="listBox" size="5"></select>
-              </div>
-              <div id="eventH"></div>
-              */}
         </body>
       </div>
     )

@@ -19,6 +19,7 @@ export default class Main extends Component {
             <br></br>
 
             <Link to="/upload" id="uploadslink">Analyze my data!</Link>
+            <Link to="/about" id="uploadslink">About!</Link>
         </div>
       )
     }
