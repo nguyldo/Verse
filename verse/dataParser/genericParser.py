@@ -115,7 +115,3 @@ def deleteData(rootPath):
     #os.rmdir(rootPath)      
 
     shutil.rmtree(rootPath, ignore_errors=True)
-
-    
-
-    
