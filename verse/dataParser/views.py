@@ -57,14 +57,6 @@ def upload(request):
     if request.method == "POST":
 
         uploadedFile = request.data.get("file")
-        #return Response(status=status.HTTP_200_OK, data={request.data.get("filename")})
-        #try:
-        #    uploadedFile = request.FILES["document"]
-        #except:
-        #    return render(request, "upload.html")
-        
-        # print(uploadedFile.read())
-        # print(uploadedFile.read().decode("utf-8"))  <-- THIS LINE PRINTS OUT THE UPLOADED FILE
 
         # FileSystemStorage modules from Django #
         # Documentation can be found here: https://docs.djangoproject.com/en/3.0/ref/files/storage/ #
@@ -75,9 +67,10 @@ def upload(request):
         #TODO: implement progress bar on frontend
 
         # find name of company
-        nameOfCompany = ""
-        if uploadedFile.name.find("facebook") >= 0:
-            nameOfCompany = "facebook"
+        nameOfCompany = request.data.get("company")
+        
+        #if uploadedFile.name.find("facebook") >= 0:
+        #    nameOfCompany = "facebook"
         # as more parsers are added, more companies will be accounted for here
 
 

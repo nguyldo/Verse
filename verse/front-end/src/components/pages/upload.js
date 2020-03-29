@@ -1,351 +1,306 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-import {Link} from "react-router-dom";
-import $ from "jquery";
-import jsPDF from "jspdf";
+import { Link } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
 
 export default class Upload extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        file: null,
-        num: "",
-        sites: [],
-        facebookData: {},
-        facebookButton: "Choose a file..."
-      };
+  constructor(props) {
+    super(props);
+    this.state = {
+
+      // facebook state
+      facebookFiles: null,
+      facebookRequest: "",
+
+      googleFiles: null,
+      googleRequest: "",
+
+      appleFiles: null,
+      appleRequest: "",
+
+      facebookData: {},
+      facebookButton: "Choose a file...",
+      facebookTitle: "Facebook",
+
+      googleButton: "Choose a file...",
+      googleTitle: "Google",
+
+      appleButton: "Choose a file...",
+      appleTitle: "Apple",
+
+      // google state
+
+
+      // apple state
+
+    };
+  }
+
+  // shuffles and array, taken from 
+  // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+  shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    while (0 !== currentIndex) {
+
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
     }
 
-    // shuffles and array, taken from 
-    // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-    shuffle(array) {
-      var currentIndex = array.length, temporaryValue, randomIndex;
-    
-      while (0 !== currentIndex) {
-    
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-    
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
+    return array;
+  }
+
+  handleFile(e) {
+
+    console.log(e.target.files);
+    const specifiedCompany = e.target.id;
+    if (specifiedCompany == "facebookupload") {
+      this.setState({ facebookFile: e.target.files });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ facebookButton: label });
+      } else {
+        this.setState({ facebookButton: e.target.files[0].name });
       }
-    
-      return array;
-    }
-
-    handleFile(e) {
-
-        console.log(e.target.files, "12345");
-        console.log(e.target.files[0], "12345");
-
-        this.setState({file: e.target.files[0]})
-
-        this.setState({facebookButton: e.target.files[0].name});
-
-    }
-    
-    async uploadFacebook(e) {
-        let file = this.state.file
-
-        let formData = new FormData();
-        formData.append("file", file);
-        if (file == null) {
-          alert("nothing uploaded")
-          return
-        } else if (!file.name.includes("facebook")) {
-          alert("no facebook data entered")
-          return
-        }
-        formData.append("filename", file.name)
-
-        
-        const promise = await axios({
-            url: "http://localhost:8000/upload/",
-            method: "POST",
-            data: formData
-        })
-
-        const status = promise.status;
-        if (status===200) {
-          const data = promise.data.num;
-          const websites = promise.data.sites;
-          this.setState({num:data, sites:websites});
-          this.setState({facebookData: promise.data});
-        }
-
-
-        console.log(file);
-        for (let vals of formData.values()) {
-            console.log("Test: " + vals);
-        }
-
-        this.shuffle(this.state.sites);
-        /*
-        var sel = document.getElementById('listBox');
-        for (var i = 0; i < this.state.sites.length; i++) {
-          var opt = document.createElement('option');
-          opt.innerHTML = this.state.sites[i];
-          opt.value = this.state.sites[i];
-          sel.appendChild(opt);
-        }*/
-    }
-
-    uploadGoogle(e) {
-      let file = this.state.file
-
-      let formData = new FormData();
-      formData.append("file", file);
-      if (file == null) {
-        alert("nothing uploaded")
-        return
-      } else if (!file.name.includes("takeout")) {
-        alert("no google data entered")
-        return
+    } else if (specifiedCompany == "googleupload") {
+      this.setState({ googleFile: e.target.files });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ googleButton: label });
+      } else {
+        this.setState({ googleButton: e.target.files[0].name });
       }
-      alert(file.name)
-      formData.append("filename", file.name)
+    } else if (specifiedCompany == "appleupload") {
+      this.setState({ appleFile: e.target.files });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ appleButton: label });
+      } else {
+        this.setState({ appleButton: e.target.files[0].name });
+      }
+    }
+
+  }
+
+  async globalUpload(e) {
+
+    const specifiedId = e.target.id;
+    let company = null;
+    let file = null;
+    if (specifiedId == "facebookuploadconfirm") {
+      file = this.state.facebookFile;
+      company = "facebook";
+    } else if (specifiedId == "googleuploadconfirm") {
+      file = this.state.googleFile;
+      company = "google";
+    } else if (specifiedId == "appleuploadconfirm") {
+      file = this.state.appleFile;
+      company = "apple";
+    } else {
+      console.log("Error in confirming upload");
+    }
+
+    if (file == null) {
+      alert("Nothing was uploaded, please try again.");
+      return;
+    }
+
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("filename", file.name);
+    formData.append("company", company);
+
+    const promise = await axios({
+      url: "http://localhost:8000/upload/",
+      method: "POST",
+      data: formData
+    });
+
+    const status = promise.status;
+    if (status === 200) {
+
+      if (company == "facebook") {
+        this.setState({ facebookRequest: promise.data.fileName });
+        document.getElementById("facebookoption").style.display = "none";
+        this.setState({ facebookTitle: "Facebook: Upload Success!" });
+      } else if (company == "google") {
+        this.setState({ googleRequest: promise.data.fileName });
+        document.getElementById("googleoption").style.display = "none";
+        this.setState({ facebookTitle: "Google: Upload Success!" });
+      } else if (company == "apple") {
+        this.setState({ appleRequest: promise.data.fileName });
+        document.getElementById("appleoption").style.display = "none";
+        this.setState({ facebookTitle: "Apple: Upload Success!" });
+      } else {
+        console.log("internal error");
+      }
 
       
-      axios({
-          url: "http://localhost:8000/upload/",
-          method: "POST",
-          data: formData
-      })
-
-      console.log(file);
-      for (let vals of formData.values()) {
-          console.log("Test: " + vals);
-      }
+    } else {
+      console.log("Upload failed");
     }
 
-    uploadApple(e) {
-      let file = this.state.file
+  }
 
-      let formData = new FormData();
-      formData.append("file", file);
-      if (file == null) {
-        alert("nothing uploaded")
-        return
-      } else if (!file.name.includes("takeout")) {
-        alert("no apple data entered")
-        return
-      }
-      formData.append("filename", file.name)
+  /*
+  async uploadFacebook(e) {
+    let file = this.state.file
 
-    
-      axios({
-        url: "http://localhost:8000/upload/",
-        method: "POST",
-        data: formData
-      })
+    let formData = new FormData();
+    formData.append("file", file);
+    if (file == null) {
+      alert("nothing uploaded")
+      return
+    } else if (!file.name.includes("facebook")) {
+      alert("no facebook data entered")
+      return
+    }
+    formData.append("filename", file.name)
 
-      console.log(file);
-      for (let vals of formData.values()) {
-        console.log("Test: " + vals);
-      }
+
+    const promise = await axios({
+      url: "http://localhost:8000/upload/",
+      method: "POST",
+      data: formData
+    })
+
+    const status = promise.status;
+    if (status === 200) {
+      const data = promise.data.num;
+      const websites = promise.data.sites;
+      this.setState({ num: data, sites: websites });
+
+      // add facebook json to state
+      this.setState({ facebookData: promise.data });
+
+      // update ui based on uploads
+      this.setState({ facebookButton: "Uploaded successfully!" });
+
+      document.getElementById("facebookoption").style.display = "none";
+      this.setState({ facebookTitle: "Facebook: Upload Success!" });
+    } else {
+      console.log("Upload failed");
+      this.setState({ facebookTitle: "Facebook: Upload Failed..." });
     }
 
-    exportPDF(e) {
-        /*
-        let pdf = new jsPDF();
-        let htmlDiv = $("#visualcontent").html();
-        let specialEventHandlers = {
-            "#elementH": function(element, handler) {
-                return true;
-            }
-        }
-        pdf.fromHTML(htmlDiv, 15, 15, {
-            "width": 170,
-            "elementHandlers": specialEventHandlers
-        })
-        pdf.save("visuals.pdf");
-        */
-       html2canvas(document.getElementById("visualcontent"), {scale: 1}).then(canvas => {
-         //document.body.appendChild(canvas);
-         //let image = canvas.toDataURL("visuals/jpg");
-         let dwnld = document.createElement("a");
-         dwnld.download = "visuals";
-         dwnld.href = canvas.toDataURL();
-         dwnld.click();
-         //window.location.href = image;
 
-       });
-       
+    console.log(file);
+    for (let vals of formData.values()) {
+      console.log("Test: " + vals);
     }
 
-    render() {
-      return(
-        <div id="uploadpage">
-            <Header />
-            <h1>Upload file</h1>
-            <body>
-              <div class="uploadoption">
-                <p>Facebook</p>
-                <form>
-                  <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
-                  <input id="facebookupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                  <button type="button" onClick={(e)=>this.uploadFacebook(e)}>Upload</button>
-                </form>
-              </div>
-              <div class="uploadoption">
-                <p>Google</p>
-                <form>
-                  <label for="googleupload" class="customupload">Choose a file</label>
-                  <input id="googleupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                  <button type="button" onClick={(e)=>this.uploadGoogle(e)}>Upload</button>
-                </form>
-              </div>
-              <div class="uploadoption">
-                <p>Apple</p>
-                <form>
-                  <label for="appleupload" class="customupload">Choose a file</label>
-                  <input id="appleupload" type="file" name="file" onChange={(e)=>this.handleFile(e)} />
-                  <button type="button" onClick={(e)=>this.uploadApple(e)}>Upload</button>
-                </form>
-              </div>
-              <Link to={{
-                pathname: "/results",
-                state: {
-                  facebookData: this.state.facebookData
-                }
-              }} className="link">Create Visuals</Link>
-              {/*
-              <button onClick={(e)=>this.exportPDF(e)}>Export to PDF</button>
-              <div id="visualcontent">
-                <p>{this.state.num}</p>
-                <select id="listBox" size="5"></select>
-              </div>
-              <div id="eventH"></div>
-              */}
-            </body>
-        </div>
-      )
+    this.shuffle(this.state.sites);
+    /*
+    var sel = document.getElementById('listBox');
+    for (var i = 0; i < this.state.sites.length; i++) {
+      var opt = document.createElement('option');
+      opt.innerHTML = this.state.sites[i];
+      opt.value = this.state.sites[i];
+      sel.appendChild(opt);
     }
   }
 
-/*
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="document" id="document" multiple>
-        <button type="submit" onclick="checkType()">Upload</button>
-        <button type="button" onclick="clearUpload()">Delete Upload</button>
-    </form>
-*/
+  uploadGoogle(e) {
+    let file = this.state.file
 
-/*
-<!-- 
-    UPLOAD PORTAL PAGE (this is temporary, we can use React later on)
-    Learned from this tutorial: https://www.youtube.com/watch?v=Zx09vcYq1oc
-    $('#document').replaceWith($('#document').val('').clone(true))
- -->
-
- 
- <!DOCTYPE html>
- <html>
-    <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <!-- Show message on page load -->
-        <script>
-            $(document).ready(function(){
-                $("#exampleModal").modal('show');
-            });
-        </script>
-    </head>
-    <body>
-
-        <!-- Button triggers modal (below) -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-            Button
-        </button>
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <!-- Message Title -->
-                <h5 class="modal-title" id="exampleModalLabel">Data Title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <!-- Body message -->
-                <div class="modal-body">
-                description...
-                </div>
-
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">I have read and understand that my files will not be shared</button>
-                <!--<button type="button" class="btn btn-primary">Save changes</button> -->
-                </div>
-            </div>
-            </div>
-        </div>
-
-        <!-- End of Modal -->
+    let formData = new FormData();
+    formData.append("file", file);
+    if (file == null) {
+      alert("nothing uploaded")
+      return
+    } else if (!file.name.includes("takeout")) {
+      alert("no google data entered")
+      return
+    }
+    alert(file.name)
+    formData.append("filename", file.name)
 
 
+    axios({
+      url: "http://localhost:8000/upload/",
+      method: "POST",
+      data: formData
+    })
+
+    console.log(file);
+    for (let vals of formData.values()) {
+      console.log("Test: " + vals);
+    }
+  }
+
+  uploadApple(e) {
+    let file = this.state.file
+
+    let formData = new FormData();
+    formData.append("file", file);
+    if (file == null) {
+      alert("nothing uploaded")
+      return
+    } else if (!file.name.includes("takeout")) {
+      alert("no apple data entered")
+      return
+    }
+    formData.append("filename", file.name)
 
 
-        <h1>Upload Page</h1>
-        <label for="data-type">Choose a data type:</label>
-        <select type="menu" name="data-type" id="data-type">
-            <option value="facebook">FaceBook</option>
-            <option value="google">Google</option>
-            <option value="apple">Apple</option>
-        </select>
-        <p>
-            
-        </p>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="document" id="document" multiple>
-            <button type="submit" onclick="checkType()">Upload</button>
-            <button type="button" onclick="clearUpload()">Delete Upload</button>
-        </form>
-        {% load static %}
-        <a href="{% static 'facebook_tutorial.pdf' %}">Link to facebook tutorial</a>
-        <!--
-        <a href="https://drive.google.com/file/d/1fQPsknv3G_hxiGKkyOeUYXfTrBU3qYbL/view?usp=sharing">Tutorial to download your Facebook data</a>
-        -->
-    </body>
+    axios({
+      url: "http://localhost:8000/upload/",
+      method: "POST",
+      data: formData
+    })
 
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script language="javascript" type="text/javascript">
-        
-        // Tutorial here: https://css-tricks.com/snippets/jquery/clear-a-file-input/
-        function clearUpload() {
-            var input = $("#document");
-            input.replaceWith(input.val('').clone(true));
-        }
-        function checkType() {
-            var filename = document.getElementById("document").value;
-            var data = document.getElementById("data-type").value;
-            if (data.includes("facebook")) {
-                if (!filename.includes("facebook")) {
-                    alert("You are not uploading facebook data!");
-                    clearUpload();
-                }
+    console.log(file);
+    for (let vals of formData.values()) {
+      console.log("Test: " + vals);
+    }
+  }
+  */
+
+  render() {
+    return (
+      <div id="uploadpage">
+        <Header />
+        <h1>Upload file</h1>
+        <body>
+          <div class="uploadoption">
+            <p>{this.state.facebookTitle}</p>
+            <form id="facebookoption">
+              <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
+              <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+            </form>
+          </div>
+          <div class="uploadoption">
+            <p>Google</p>
+            <form>
+              <label for="googleupload" class="customupload">{this.state.googleButton}</label>
+              <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+            </form>
+          </div>
+          <div class="uploadoption">
+            <p>Apple</p>
+            <form>
+              <label for="appleupload" class="customupload">{this.state.appleButton}</label>
+              <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <button type="button" id="appleuploadconfirm" onClick={(e) => this.uploadApple(e)}>Upload</button>
+            </form>
+          </div>
+          <Link to={{
+            pathname: "/results",
+            state: {
+              facebookData: this.state.facebookData
             }
-            else if (data.includes("google")) {
-                if (!filename.includes("takeout")) {
-                    alert("You are not uploading google data!");
-                    clearUpload();
-                }
-            }
-            else {
-                if (!filename.includes("apple")) {
-                    alert("You are not uploading apple data!");
-                    clearUpload();
-                }
-            }
-        }
-    </script>
-    
-</html>
-*/
+          }} className="link">Create Visuals</Link>
+        </body>
+      </div>
+    )
+  }
+}
+
