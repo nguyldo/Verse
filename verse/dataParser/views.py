@@ -58,6 +58,7 @@ def upload(request):
     # WHEN A FILE IS UPLOADED, A POST REQUEST IS MADE AND THIS CODE IS RUN #
     if request.method == "POST":
 
+        dev-connectAPIs
         serviceName = request.data.get("company")
         uploadedFiles = request.data.get("files")
         userId = request.session.session_key
@@ -68,8 +69,9 @@ def upload(request):
         for uploadedFile in uploadedFiles:
             fss.save(uploadedFile.name, uploadedFile)
 
+        dev-connectAPIs
             zipPath = fss.location + "/" + uploadedFile.name
-            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFile.name[:-4]
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFile.name[:-4]        
 
             # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
             with zipfile.ZipFile(zipPath, "r") as zip_ref:
