@@ -2,15 +2,15 @@
 
 import os
 
-from dataParser import facebookParser, genericParser
+from dataParser import genericParser
+#import genericParser
 
 # from https://stackoverflow.com/a/30312778
 
-# TODO: how does the data dump page pass the username to the backend
-
-# Function to get data groups from 
-def getDataGroups():
-    data = genericParser.getParsedJson("./media/processedData/facebook/facebook-lisasilmii/parsedFacebookData.json")
+# Function: get data from parsed file and group it according to visualization methods
+def analyzeFacebookData(facebookUserFileName):
+    data = genericParser.getParsedJson("media/processedData/facebook/" + facebookUserFileName + "/parsedFacebookData.json")
+    #data = genericParser.getParsedJson("../media/processedData/facebook/" + facebookUserFileName + "/parsedFacebookData.json")
 
     Dict = {}
 
@@ -42,6 +42,14 @@ def getDataGroups():
     Dict["master_linegraph"] = [data["friends"], data["num_friends"], data["num_pokes"], data["pokes"], data["profile_update_history"]]
 
     #write analyzed data dictionary to json file
-    genericParser.dictToJsonFile(Dict, 'media/processedData/facebook/facebook-lisasilmii/analyzedFacebookData.json')
+    genericParser.writeToJsonFile(Dict, "media/processedData/facebook/" + facebookUserFileName + "/analyzedFacebookData.json")
+    #genericParser.writeToJsonFile(Dict, "../media/processedData/facebook/" + facebookUserFileName + "/analyzedFacebookData.json")
 
-    return Dict
+"""
+def main():
+    root = "facebook-lisasilmii"
+    analyzeFacebookData(root)
+
+if __name__ == "__main__":
+    main() 
+"""

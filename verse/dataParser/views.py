@@ -7,88 +7,102 @@ from django.core.files.storage import FileSystemStorage, default_storage
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+import os
 
 import zipfile 
 
-from dataParser import facebookParser, facebookAnalyzer
-from dataParser import appleParser, appleAnalyzer
+from dataParser import visualizationData
+from dataParser import facebookParser, appleParser
 
 def index(request):
+    if request.session.test_cookie_worked():
+        print("The test cookie worked!!!")
+        request.session.delete_test_cookie()
+
     template = loader.get_template("index.html")
     return HttpResponse(template.render())
-
-@api_view(["GET"])
-def testApi(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
 
 #----- FACEBOOK APIs -----
 
 @api_view(["GET"])
-def facebook_dataGroupAPI(request):
-    dg = facebookAnalyzer.getDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
-
-#----- GOOGLE APIs -----
+def facebookDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedFacebookData(userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
     
 #----- APPLE APIs -----
 
 @api_view(["GET"])
-def apple_generalDataGroupAPI(request, fileName):
-    dg = appleAnalyzer.getGeneralDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+def appleGeneralDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedAppleData(userFileName, "general")
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 @api_view(["GET"])
-def apple_musicDataGroupAPI(request):
-    dg = appleAnalyzer.getMusicDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+def appleMusicDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedAppleData(userFileName, "music")
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 @api_view(["GET"])
-def apple_appsGamesDataGroupAPI(request):
-    dg = appleAnalyzer.getAppsGamesDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+def appleAppsGamesDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedAppleData(userFileName, "appsGames")
+    return Response(status=status.HTTP_200_OK, data={"data": data})
+
+#----- GOOGLE APIs -----
 
 
+#----- UPLOAD API -----
 
 @api_view(["POST"])
 def upload(request):
+    request.session.set_test_cookie()
 
     # WHEN A FILE IS UPLOADED, A POST REQUEST IS MADE AND THIS CODE IS RUN #
     if request.method == "POST":
 
-        uploadedFile = request.data.get("file")
+        dev-connectAPIs
+        serviceName = request.data.get("company")
+        uploadedFiles = request.data.get("files")
+        userId = request.session.session_key
 
-        # FileSystemStorage modules from Django #
-        # Documentation can be found here: https://docs.djangoproject.com/en/3.0/ref/files/storage/ #
+        # save and unzip files
         fss = FileSystemStorage()
-        fss.save(uploadedFile.name, uploadedFile)
-        zipfileLocation = fss.location + "/" + uploadedFile.name
+
+        for uploadedFile in uploadedFiles:
+            fss.save(uploadedFile.name, uploadedFile)
+
+        dev-connectAPIs
+            zipPath = fss.location + "/" + uploadedFile.name
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFile.name[:-4]        
+
+            # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
+            with zipfile.ZipFile(zipPath, "r") as zip_ref:
+                zip_ref.extractall(mediaDirPath)        
+
+        # call the parser corresponding to the service
+        fileName = ""
+        if serviceName == "facebook":
+            fileName = uploadedFile.name[:4]
+            facebookParser.parseFacebookData(fileName)
+
+        elif serviceName == "apple":
+            # take all the uploaded files and put it in another directory
+            newDirName = "apple-" + userId
+            os.makedirs(newDirName)
+            
+            for uploadedFile in uploadedFiles:
+                currPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFile.name[:-4]
+                newPath = fss.location + "/unzippedFiles/" + serviceName + "/" + newDirName + "/" + uploadedFile.name[:-4]
+                os.rename(currPath, newPath)
+
+            fileName = newDirName
+            appleParser.parseAppleData(newDirName)
+
+        #elif serviceName == "google":
+        
+        else: print("service name not recognized")
+
 
         #TODO: implement progress bar on frontend
 
-        # find name of company
-        nameOfCompany = request.data.get("company")
-        
-        #if uploadedFile.name.find("facebook") >= 0:
-        #    nameOfCompany = "facebook"
-        # as more parsers are added, more companies will be accounted for here
-
-
-        # IMPLEMENTATION FOUND HERE: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
-        with zipfile.ZipFile(zipfileLocation, "r") as zip_ref:
-            zip_ref.extractall(fss.location + "/" +  "/unzippedFiles/" + nameOfCompany + "/" + uploadedFile.name[:-4])
-
-        default_storage.delete(uploadedFile.name)
-
-        counter = 0
-        for i in uploadedFile.name:
-            counter = counter + 1
-            if i == 'f' :
-                break
-            
-        counter = counter - 1
-        fileName = uploadedFile.name[counter:-4]
-        print(fileName)
+        #default_storage.delete(uploadedFile.name)
 
         return Response(status=status.HTTP_200_OK, data={"fileName" : fileName})
-        # return render(request, "upload.html

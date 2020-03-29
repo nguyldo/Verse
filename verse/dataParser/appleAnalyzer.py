@@ -5,8 +5,9 @@ import pandas as pd
 import numpy as np
 import operator
 
-from dataParser import appleParser, genericParser
-#import genericParser, appleParser
+#TODO: uncomment first if running through django and second if through python
+from dataParser import genericParser
+#import genericParser
 
 # TODO: how does the data dump page pass the username to the backend
 
@@ -54,9 +55,11 @@ def convertMillis(millis):
     hours=(millis/(1000*60*60))%24
     return hours, minutes, seconds
     
-# General API Response
-def getGeneralDataGroups():
-    data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedGeneralAppleData.json")
+# Function: get data from parsed file and group it according to visualization methods
+def analyzeGeneralAppleData(appleUserFileName):
+    #TODO: uncomment first if running through django and second if through python
+    data = genericParser.getParsedJson("./media/processedData/apple/" + appleUserFileName + "/parsedGeneralAppleData.json")
+    #data = genericParser.getParsedJson("../media/processedData/apple/" + appleUserFileName + "/parsedGeneralAppleData.json")
 
     Dict = {}
 
@@ -67,13 +70,13 @@ def getGeneralDataGroups():
     Dict["devices_list"] = data["devices"]
 
     #write analyzed data dictionary to json file
-    genericParser.dictToJsonFile(Dict, 'media/processedData/apple/apple-lisa/analyzedGeneralAppleData.json')
+    #TODO: uncomment first if running through django and second if through python
+    genericParser.writeToJsonFile(Dict, "media/processedData/apple/" + appleUserFileName + "/analyzedGeneralAppleData.json")
+    #genericParser.writeToJsonFile(Dict, "../media/processedData/apple/" + appleUserFileName + "/analyzedGeneralAppleData.json")
 
-    return Dict
-
-# Music API Response
-def getMusicDataGroups():
-    data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedMusicAppleData.json")
+def analyzeMusicAppleData(appleUserFileName):
+    data = genericParser.getParsedJson("./media/processedData/apple/" + appleUserFileName + "/parsedMusicAppleData.json")
+    #data = genericParser.getParsedJson("../media/processedData/apple/" + appleUserFileName + "/parsedMusicAppleData.json")
 
     Dict = {}
 
@@ -149,13 +152,12 @@ def getMusicDataGroups():
     Dict["genre_timeline"] = genre_dates
 
     #write analyzed data dictionary to json file
-    genericParser.dictToJsonFile(Dict, 'media/processedData/apple/apple-lisa/analyzedMusicAppleData.json')
+    genericParser.writeToJsonFile(Dict, "media/processedData/apple/" + appleUserFileName + "/analyzedMusicAppleData.json")
+    #genericParser.writeToJsonFile(Dict, "../media/processedData/apple/" + appleUserFileName + "/analyzedMusicAppleData.json")
 
-    return Dict
-
-# Apps/Games API Response
-def getAppsGamesDataGroups():
-    data = genericParser.getParsedJson("./media/processedData/apple/apple-lisa/parsedAppsGamesAppleData.json")
+def analyzeAppsGamesAppleData(appleUserFileName):
+    data = genericParser.getParsedJson("./media/processedData/apple/" + appleUserFileName + "/parsedAppsGamesAppleData.json")
+    #data = genericParser.getParsedJson("../media/processedData/apple/" + appleUserFileName + "/parsedAppsGamesAppleData.json")
 
     Dict = {}
 
@@ -171,13 +173,16 @@ def getAppsGamesDataGroups():
     Dict["apps_map"] = app_ip
 
     #write analyzed data dictionary to json file
-    genericParser.dictToJsonFile(Dict, 'media/processedData/apple/apple-lisa/analyzedAppsGamesAppleData.json')
+    genericParser.writeToJsonFile(Dict, "media/processedData/apple/" + appleUserFileName + "/analyzedAppsGamesAppleData.json")
+    #genericParser.writeToJsonFile(Dict, "../media/processedData/apple/" + appleUserFileName + "/analyzedAppsGamesAppleData.json")
 
-    return Dict
+"""
+def main():
+    root = "apple-lisa"
+    analyzeGeneralAppleData(root)
+    analyzeMusicAppleData(root)
+    analyzeAppsGamesAppleData(root)
 
-#def main():
-#    getAppsGamesDataGroups()
-
-#if __name__ == "__main__":
-#    main() 
-
+if __name__ == "__main__":
+    main() 
+"""
