@@ -14,10 +14,10 @@ export default class Header extends Component {
       return(
         <div>
             <Link to="/" id="link"><h1 id="header">VERSE</h1></Link>
-            <nav>
-              <NavLink to="/upload" activeStyle={{background:'white', color:'blue'}}>Upload</NavLink>
-              <NavLink to="/help" activeStyle={{background:'white', color:'blue'}}>Help</NavLink>
-              <NavLink to="/about" activeStyle={{background:'white', color:'blue'}}>About Us</NavLink>
+            <nav id="Nav">
+              <NavLink to="/upload" id="NavLink" activeStyle={{background:'white', color:'blue'}}>Upload</NavLink>
+              <NavLink to="/help" id="NavLink" activeStyle={{background:'white', color:'blue'}}>Help</NavLink>
+              <NavLink to="/about" id="NavLink" activeStyle={{background:'white', color:'blue'}}>About Verse</NavLink>
             </nav>
         </div>
       )
