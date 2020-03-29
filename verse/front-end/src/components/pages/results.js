@@ -11,6 +11,18 @@ export default class Results extends Component {
     super(props);
     console.log(props.location.state);
     this.state = props.location.state;
+    this.getFacebookData();
+  }
+
+  async getFacebookData() {
+    axios.get("http://localhost:8000/facebookData/", {
+      params: {
+        userFileName: this.state.facebookRequest
+      }
+    }).then(function(response) {
+      console.log(response);
+      console.log("Success");
+    })
   }
 
   exportToImage(e) {
