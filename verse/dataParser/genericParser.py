@@ -46,14 +46,14 @@ def writeToJsonFile(Dict, filePath):
         path = '/'.join(splitFilePath[0:i])
 
         if not os.path.exists(path):
-            #print("make dir " + path)
+            print("make dir " + path)
             os.makedirs(path)
-        #else: print(path + " exists")
+        else: print(path + " exists")
 
     #write to file
     try: 
         with open(filePath, 'w') as fp:
-            json.dump(Dict, fp)
+            json.dump(Dict, fp, ensure_ascii=False)
     except IOError:
         print("File not found or path incorrect: " + filePath)
 
@@ -72,16 +72,22 @@ def jsonToDict(filePath, fieldNames):
     with open(filePath) as jsonFile:
         data = json.load(jsonFile)
 
-        if filePath == "../media/unzippedFiles/apple/apple-lisa/Game Center/Game Center Data.json":
-            data = data["games_state"]
-        
-    #get all rows with specified columns
-    df = pd.DataFrame.from_dict(data)
-    df = df.replace(r'^\s*$', np.NaN, regex=True)
-    df = df.dropna(0, subset=fieldNames) 
-    df = df.loc[:, fieldNames].to_dict('records')
-    
-    return df
+    if filePath == "../media/unzippedFiles/apple/apple-lisa/Game Center/Game Center Data.json":
+        data = data["games_state"]
+
+    #check fieldNames not empty
+    if fieldNames:
+        #get all rows with specified columns
+        df = pd.DataFrame.from_dict(data)
+        df = df.replace(r'^\s*$', np.NaN, regex=True)
+        df = df.dropna(0, subset=fieldNames) 
+        df = df.loc[:, fieldNames].to_dict('records')
+
+        return df
+
+    #fieldNames empty means that it's facebookParser calling this
+    else:
+        return data
 
 # Function extract csv data and load into dictionary
 # Return: dictionary with csv loaded

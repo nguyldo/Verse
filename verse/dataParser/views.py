@@ -10,45 +10,40 @@ from rest_framework.decorators import api_view
 
 import zipfile 
 
-from dataParser import facebookParser, facebookAnalyzer
-from dataParser import appleParser, appleAnalyzer
+from dataParser import visualizationData
 
 def index(request):
     template = loader.get_template("index.html")
     return HttpResponse(template.render())
 
-@api_view(["GET"])
-def testApi(request):
-    str = "This request worked :))"
-    return Response(status=status.HTTP_200_OK, data={"data": str})
-
 #----- FACEBOOK APIs -----
 
 @api_view(["GET"])
-def facebook_dataGroupAPI(request):
-    dg = facebookAnalyzer.getDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
-
-#----- GOOGLE APIs -----
+def facebookDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedFacebookData(userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
     
 #----- APPLE APIs -----
 
 @api_view(["GET"])
-def apple_generalDataGroupAPI(request, fileName):
-    dg = appleAnalyzer.getGeneralDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+def appleGeneralDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedAppleData(userFileName, "general")
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 @api_view(["GET"])
-def apple_musicDataGroupAPI(request):
-    dg = appleAnalyzer.getMusicDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+def appleMusicDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedAppleData(userFileName, "music")
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 @api_view(["GET"])
-def apple_appsGamesDataGroupAPI(request):
-    dg = appleAnalyzer.getAppsGamesDataGroups()
-    return Response(status=status.HTTP_200_OK, data={"dg": dg})
+def appleAppsGamesDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedAppleData(userFileName, "appsGames")
+    return Response(status=status.HTTP_200_OK, data={"data": data})
+
+#----- GOOGLE APIs -----
 
 
+#----- UPLOAD API -----
 
 @api_view(["POST"])
 def upload(request):
