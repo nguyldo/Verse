@@ -86,15 +86,19 @@ def upload(request):
 
         elif serviceName == "apple":
             # take all the uploaded files and put it in another directory
-            #newDirName = "apple-" + userId
-            #os.makedirs(newDirName)
+            # TODO: multi file support for sprint 3
+            """
+            newDirName = "apple-" + userId
+            os.makedirs(newDirName)
             
-            #for uploadedFile in uploadedFiles:
-                #currPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]
-                #newPath = fss.location + "/unzippedFiles/" + serviceName + "/" + newDirName + "/" + uploadedFiles.name[:-4]
-                #os.rename(currPath, newPath)
+            for uploadedFile in uploadedFiles:
+                currPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]
+                newPath = fss.location + "/unzippedFiles/" + serviceName + "/" + newDirName + "/" + uploadedFiles.name[:-4]
+                os.rename(currPath, newPath)
 
-            #fileName = newDirName
+            fileName = newDirName
+            """
+
             fileName = uploadedFiles.name[:-4]
             appleParser.parseAppleData(fileName)
 
