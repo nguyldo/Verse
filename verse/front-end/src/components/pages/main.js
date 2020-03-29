@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import Header from "./../sections/header.js";
 
 export default class Main extends Component {
@@ -17,7 +17,7 @@ export default class Main extends Component {
             <h1>Welcome to Verse!</h1>
             <h3>Verse slogan here...</h3>
             <br></br>
-
+            
             <Link to="/upload" id="uploadslink">Analyze my data!</Link>
             <Link to="/about" id="uploadslink">About!</Link>
         </div>

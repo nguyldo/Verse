@@ -303,3 +303,4 @@ export default class Upload extends Component {
     )
   }
 }
+

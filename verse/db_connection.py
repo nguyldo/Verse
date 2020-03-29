@@ -36,6 +36,12 @@ def main():
  
     sql_create_facebook_table = """ CREATE TABLE IF NOT EXISTS facebook (
                                         id integer PRIMARY KEY,
+                                        peer_group text,
+                                        apps_and_websites text,
+                                        friends text,
+                                        posts_and_comments text,
+                                        pokes text,
+                                        security text,
                                         posts text,
                                         other_posts text,
                                         profile_info text,
