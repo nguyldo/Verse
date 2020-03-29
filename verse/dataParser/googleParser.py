@@ -92,11 +92,10 @@ def parseGoogleData(googleMediaRoot):
                     message = mailbox.mbox(fileOfInterest)
                     content = ''.join(part.get_payload(decode=True) for part in message.get_payload())
 
-                    Dict[key1] = content
+                    Dict["mail"] = content
                     mail = content
 
                 elif rootDir == "My Activity":
-                    ignorethis = ""
                     # My Activity has a lot of folders listing activities done in all available apps including
                     # Android, Assistant, Gmail, Maps, Search, Sound Search, and Voice and Audio
 
@@ -110,13 +109,22 @@ def parseGoogleData(googleMediaRoot):
                     # TODO: Parse these folders and the files inside them
 
                     if os.path.exists(rootMyActivityAndroid):
-                        dothing = 0
+                        # address = 'file.html' #this html file is stored on the same folder of the code file
+                        fileAddress = rootMyActivityAndroid + "/MyActivity.html"
+                        html_file = open(fileAddress, 'r')
+                        source_code = html_file.read()
+
+
                              
                     if os.path.exists(rootMyActivityMaps):
-                        dothing = 0
+                        fileAddress = rootMyActivityMaps + "/MyActivity.html"
+                        html_file = open(fileAddress, 'r')
+                        source_code = html_file.read()
 
                     if os.path.exists(rootMyActivitySearch):
-                        dothing = 0
+                        fileAddress = rootMyActivitySearch + "/MyActivity.html"
+                        html_file = open(fileAddress, 'r')
+                        source_code = html_file.read()
 
                     if os.path.exists(rootMyActivityVoiceAudio):
                         voiceAudio = len([name for name in os.listdir('.') if os.path.isfile(rootMyActivityVoiceAudio)])
@@ -125,12 +133,11 @@ def parseGoogleData(googleMediaRoot):
 
                 elif rootDir == "Profile":
                     fileOfInterest1 = "Profile"
-                    key1, value1 = jsonFileToString(pathName, rootDir, fileOfInterest1)
-                    Dict[key1] = value1
+                    value1 = jsonFileToString(pathName, rootDir, fileOfInterest1)
+                    Dict["profile"] = value1
                     profile = value1 
 
                 elif rootDir == "YouTube":
-                    ignorethis = ""
                     # YouTube has folders containing the different information for each field including
                     # history, my-comments, playlists, and subscriptions
 
@@ -142,23 +149,50 @@ def parseGoogleData(googleMediaRoot):
                     # TODO: Parse these folders and the files inside them
 
                     if os.path.exists(rootYoutubeHistory):
-                        dothing = 0
+                        fileAddress = rootYoutubeHistory + "/watch-history.html"
+                        html_file = open(fileAddress, 'r')
+                        source_code = html_file.read()
+
+                        youtubeHistory = source_code
                     
                     if os.path.exists(rootYoutubeComments):
-                        dothing = 0
+                        fileAddress = rootYoutubeComments + "/my-comments.html"
+                        html_file = open(fileAddress, 'r')
+                        source_code = html_file.read()
+
+                        youtubeComments = source_code
                     
                     if os.path.exists(rootYoutubePlaylists):
                         youtubePlaylists = len([name for name in os.listdir('.') if os.path.isfile(rootYoutubePlaylists)])
                     
                     if os.path.exists(rootYoutubeSubscriptions):
-                        dothing = 0
+                        fileAddress = rootYoutubeSubscriptions + "/subscriptions.html"
+                        html_file = open(fileAddress, 'r')
+                        source_code = html_file.read()
+
+                        youtubeSubscriptions = source_code
                     
 
 
         if conn is not None:
-            # TODO: finish the parameters/arguments
-            sql_insert = """INSERT INTO google ( id, total_size) 
-                            VALUES ( ?, ?, ?, ?, ?, ?, ?);"""
+            sql_insert = """INSERT INTO google ( 
+                                            id, 
+                                            total_size, 
+                                            browserhistory, 
+                                            drive, 
+                                            mail, 
+                                            android, 
+                                            maps, 
+                                            search, 
+                                            voiceAudio, 
+                                            profile, 
+                                            youtubeHistory, 
+                                            youtubeComments, 
+                                            youtubePlaylists, 
+                                            youtubeSubscriptions
+                                        )
+                                        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+                        """
 
             try:
                 c = conn.cursor()
