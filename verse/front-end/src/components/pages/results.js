@@ -5,6 +5,11 @@ import { Link } from "react-router-dom";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
+import GenresPieChart from "../visuals/GenresPieChart"
+import ArtistsBarChart from "../visuals/ArtistsBarChart"
+import TracksBarChart from "../visuals/TracksBarChart"
+
+
 export default class Results extends Component {
 
   constructor(props) {
@@ -33,10 +38,8 @@ export default class Results extends Component {
     
     axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
     ).then((response) => {
-      console.log(response);
       this.state.facebookData = response.data.data;
       console.log("Facebook analyze return success");
-      console.log(this.state.facebookData);
     });
     /*
     const promise = await axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest);
@@ -50,12 +53,22 @@ export default class Results extends Component {
   }
 
   async getAppleData() {
-    axios.get("http://localhost:8000/appleData/" + this.state.appleRequest
+    axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest
     ).then((response) => {
-      console.log(response);
-      this.state.appleData = response.data.data;
-      console.log("Apple analyze return success");
-      console.log(this.state.appleData);
+      this.state.appleGeneralData = response.data.data;
+      console.log("Apple general return success");
+    });
+
+    axios.get("http://localhost:8000/appleMusicData/" + this.state.appleRequest
+    ).then((response) => {
+      this.state.appleMusicData = response.data.data;
+      console.log("Apple music return success");
+    });
+
+    axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest
+    ).then((response) => {
+      this.state.appleAppsGamesData = response.data.data;
+      console.log("Apple apps games return success");
     });
   }
 
@@ -121,9 +134,9 @@ export default class Results extends Component {
               <p>sample google</p>
             </div>
             <div class="visualssection" id="applevisuals">
-              <p>sample apple</p>
-              <p>sample apple</p>
-              <p>sample apple</p>
+              <GenresPieChart/>
+              <ArtistsBarChart/>
+              <TracksBarChart/>
               <p>sample apple</p>
               <p>sample apple</p>
               <p>sample apple</p>

@@ -148,11 +148,11 @@ export default class Upload extends Component {
       } else if (company == "google") {
         this.setState({ googleRequest: promise.data.fileName });
         document.getElementById("googleoption").style.display = "none";
-        this.setState({ facebookTitle: "Google: Upload Success!" });
+        this.setState({ googleTitle: "Google: Upload Success!" });
       } else if (company == "apple") {
         this.setState({ appleRequest: promise.data.fileName });
         document.getElementById("appleoption").style.display = "none";
-        this.setState({ facebookTitle: "Apple: Upload Success!" });
+        this.setState({ appleTitle: "Apple: Upload Success!" });
       } else {
         console.log("internal error");
       }
