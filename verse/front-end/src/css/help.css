@@ -1,0 +1,26 @@
+#p {
+    font-size: 15px;
+    text-align: left;
+    padding-left: 70px;
+}
+
+#list {
+    font-size: 15px;
+    text-align: left;
+    padding-left: 80px;
+}
+
+#hdr {
+    font-size: 45px;
+}
+
+#hdr-companies {
+    font-size: 30px;
+}
+
+#pic {
+    margin-left: 100px;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
