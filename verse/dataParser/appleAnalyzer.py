@@ -89,7 +89,7 @@ def analyzeGeneralAppleData(appleUserFileName):
 
     #write analyzed data dictionary to json file
     #TODO: uncomment first if running through django and second if through python
-    genericParser.writeToJsonFile(Dict, "media/processedData/apple/" + appleUserFileName + "/analyzedGeneralAppleData.json")
+    genericParser.writeToJsonFile(Dict, "./media/processedData/apple/" + appleUserFileName + "/analyzedGeneralAppleData.json")
     #genericParser.writeToJsonFile(Dict, "../media/processedData/apple/" + appleUserFileName + "/analyzedGeneralAppleData.json")
 
 def analyzeMusicAppleData(appleUserFileName):
@@ -182,7 +182,7 @@ def analyzeMusicAppleData(appleUserFileName):
     Dict["genre_timeline"] = genre_dates
 
     #write analyzed data dictionary to json file
-    genericParser.writeToJsonFile(Dict, "media/processedData/apple/" + appleUserFileName + "/analyzedMusicAppleData.json")
+    genericParser.writeToJsonFile(Dict, "./media/processedData/apple/" + appleUserFileName + "/analyzedMusicAppleData.json")
     #genericParser.writeToJsonFile(Dict, "../media/processedData/apple/" + appleUserFileName + "/analyzedMusicAppleData.json")
 
 def analyzeAppsGamesAppleData(appleUserFileName):
@@ -203,7 +203,7 @@ def analyzeAppsGamesAppleData(appleUserFileName):
     Dict["apps_map"] = app_ip
 
     #write analyzed data dictionary to json file
-    genericParser.writeToJsonFile(Dict, "media/processedData/apple/" + appleUserFileName + "/analyzedAppsGamesAppleData.json")
+    genericParser.writeToJsonFile(Dict, "./media/processedData/apple/" + appleUserFileName + "/analyzedAppsGamesAppleData.json")
     #genericParser.writeToJsonFile(Dict, "../media/processedData/apple/" + appleUserFileName + "/analyzedAppsGamesAppleData.json")
 
 """

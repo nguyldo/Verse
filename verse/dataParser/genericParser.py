@@ -72,22 +72,23 @@ def jsonToDict(filePath, fieldNames):
     with open(filePath) as jsonFile:
         data = json.load(jsonFile)
 
-    if filePath == "../media/unzippedFiles/apple/apple-lisa/Game Center/Game Center Data.json":
-        data = data["games_state"]
+        fileName = filePath.rsplit('/', 1)[-1]
+        if fileName == "Game Center Data.json":
+            data = data["games_state"]
 
-    #check fieldNames not empty
-    if fieldNames:
-        #get all rows with specified columns
-        df = pd.DataFrame.from_dict(data)
-        df = df.replace(r'^\s*$', np.NaN, regex=True)
-        df = df.dropna(0, subset=fieldNames) 
-        df = df.loc[:, fieldNames].to_dict('records')
+        #check fieldNames not empty
+        if fieldNames:
+            #get all rows with specified columns
+            df = pd.DataFrame.from_dict(data)
+            df = df.replace(r'^\s*$', np.NaN, regex=True)
+            df = df.dropna(0, subset=fieldNames) 
+            df = df.loc[:, fieldNames].to_dict('records')
 
-        return df
+            return df
 
-    #fieldNames empty means that it's facebookParser calling this
-    else:
-        return data
+        #fieldNames empty means that it's facebookParser calling this
+        else:
+            return data
 
 # Function extract csv data and load into dictionary
 # Return: dictionary with csv loaded

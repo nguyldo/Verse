@@ -102,7 +102,9 @@ def upload(request):
 
             fileName = uploadedFiles.name[:-4]
             appleParser.parseAppleData(fileName)
-            appleAnalyzer.analyzeAppleData(fileName)
+            appleAnalyzer.analyzeGeneralAppleData(fileName)
+            appleAnalyzer.analyzeMusicAppleData(fileName)
+            appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
         #elif serviceName == "google":
         
