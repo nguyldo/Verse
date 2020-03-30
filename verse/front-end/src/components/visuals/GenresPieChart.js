@@ -47,7 +47,9 @@ const styles = theme => ({
 class GenresPieChart extends React.Component {
 
     render() {
+        
         const { classes } = this.props;
+
         return (
             <React.Fragment>
                 <Card className={classes.card} elevation={0}>
