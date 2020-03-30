@@ -11,6 +11,52 @@ export default class Results extends Component {
     super(props);
     console.log(props.location.state);
     this.state = props.location.state;
+    this.setState = ({
+      facebookData: {},
+      googleData: {},
+      appleData: {}
+    });
+    this.getFacebookData = this.getFacebookData.bind(this);
+    this.getAppleData = this.getAppleData.bind(this);
+  }
+
+  componentWillMount() {
+    if (this.state.facebookRequest != "") {
+      this.getFacebookData();
+    }
+    if (this.state.appleRequest != "") {
+      this.getAppleData();
+    }
+  }
+
+  async getFacebookData() {
+    
+    axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
+    ).then((response) => {
+      console.log(response);
+      this.state.facebookData = response.data.data;
+      console.log("Facebook analyze return success");
+      console.log(this.state.facebookData);
+    });
+    /*
+    const promise = await axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest);
+    const status = promise.status;
+    if (status == 200) {
+      const data = promise.data.data;
+      console.log(this);
+      this.state.facebookData = data;
+      console.log(this.state.facebookData);
+    }*/
+  }
+
+  async getAppleData() {
+    axios.get("http://localhost:8000/appleData/" + this.state.appleRequest
+    ).then((response) => {
+      console.log(response);
+      this.state.appleData = response.data.data;
+      console.log("Apple analyze return success");
+      console.log(this.state.appleData);
+    });
   }
 
   exportToImage(e) {
