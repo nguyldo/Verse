@@ -20,6 +20,7 @@
     padding: 30px;
     letter-spacing: 2px;
     text-decoration: none;
+    
 }
 
 #Nav {
@@ -27,4 +28,5 @@
     padding-top: 20px;
     padding-bottom: 20px;
     background-color: rgb(165, 164, 164);
+    box-shadow: 1px 5px 5px rgb(54, 54, 54);
 }
