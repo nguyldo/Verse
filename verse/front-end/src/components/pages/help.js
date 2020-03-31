@@ -98,7 +98,17 @@ export default class Help extends Component {
                 {/* Apple */}
 
                 <h2 id="hdr-companies"><a id="apple"><b>Downloading Your Personal Apple Data Dump</b></a></h2>
-                
+                <p id="p"><b>1.</b> Go to privacy.apple.com, and click on "Request a copy of your data."</p>
+                <img id="pic" src="https://i.ibb.co/Y7vxrSd/Screen-Shot-2020-03-31-at-10-00-22-AM.png" alt="Apple-Download0" border="0"/>
+
+                <p id="p"><b>2.</b> On the right hand side, click "select all." Confirm the upload at the bottom of the page</p>
+                <img id="pic" src="https://i.ibb.co/KhdVcdW/Screen-Shot-2020-03-31-at-10-00-35-AM.png" alt="Apple-Download1" border="0"/>
+
+                <p id="p"><b>3.</b> Comfirm the upload with a 1GB size.</p>
+                <img id="pic" src="https://i.ibb.co/xXgDscw/Screen-Shot-2020-03-31-at-10-00-56-AM.png" alt="Apple-Download1" border="0"/>
+
+                <p id="p"><b>4.</b> You will be emailed your data dump once it's ready.</p>
+
             </div>
         )
     }
