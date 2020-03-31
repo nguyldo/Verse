@@ -132,35 +132,45 @@ export default class Upload extends Component {
     console.log(file);
     console.log(company);
 
-    const promise = await axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
-    });
-
-    const status = promise.status;
-    if (status === 200) {
-
+    try {
+      const promise = await axios({
+        url: "http://localhost:8000/upload/",
+        method: "POST",
+        data: formData
+      });
+  
+      const status = promise.status;
+      if (status === 200) {
+  
+        if (company == "facebook") {
+          this.setState({ facebookRequest: promise.data.fileName });
+          document.getElementById("facebookoption").style.display = "none";
+          this.setState({ facebookTitle: "Facebook: Upload Success!" });
+        } else if (company == "google") {
+          this.setState({ googleRequest: promise.data.fileName });
+          document.getElementById("googleoption").style.display = "none";
+          this.setState({ googleTitle: "Google: Upload Success!" });
+        } else if (company == "apple") {
+          this.setState({ appleRequest: promise.data.fileName });
+          document.getElementById("appleoption").style.display = "none";
+          this.setState({ appleTitle: "Apple: Upload Success!" });
+        } else {
+          console.log("internal error");
+        }
+      }
+    } catch {
+      console.log(company)
       if (company == "facebook") {
-        this.setState({ facebookRequest: promise.data.fileName });
-        document.getElementById("facebookoption").style.display = "none";
-        this.setState({ facebookTitle: "Facebook: Upload Success!" });
+        this.setState({ facebookTitle: "Facebook: Upload Failed..." });
       } else if (company == "google") {
-        this.setState({ googleRequest: promise.data.fileName });
-        document.getElementById("googleoption").style.display = "none";
-        this.setState({ facebookTitle: "Google: Upload Success!" });
+        this.setState({ googleTitle: "Google: Upload Failed..." });
       } else if (company == "apple") {
-        this.setState({ appleRequest: promise.data.fileName });
-        document.getElementById("appleoption").style.display = "none";
-        this.setState({ facebookTitle: "Apple: Upload Success!" });
+        this.setState({ appleTitle: "Apple: Upload Failed..." });
       } else {
         console.log("internal error");
       }
-
-      
-    } else {
-      console.log("Upload failed");
     }
+    
 
   }
 
@@ -293,7 +303,7 @@ export default class Upload extends Component {
             </form>
           </div>
           <div class="uploadoption">
-            <p>Google</p>
+            <p>{this.state.googleTitle}</p>
             <form id="googleoption">
               <label for="googleupload" class="customupload">{this.state.googleButton}</label>
               <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
@@ -301,7 +311,7 @@ export default class Upload extends Component {
             </form>
           </div>
           <div class="uploadoption">
-            <p>Apple</p>
+            <p>{this.state.appleTitle}</p>
             <form id="appleoption">
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
               <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
