@@ -36,12 +36,21 @@ export default class Results extends Component {
     this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.facebookRequest != "") {
       this.getFacebookData();
+    } else {
+      document.getElementById("facebookvisuals").style.display = "none";
+    }
+    if (this.state.googleRequest != "") {
+      // get google data
+    } else {
+      document.getElementById("googlevisuals").style.display = "none";
     }
     if (this.state.appleRequest != "") {
       this.getAppleData();
+    } else {
+      document.getElementById("applevisuals").style.display = "none";
     }
   }
 

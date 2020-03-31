@@ -6,7 +6,7 @@
   --secondary-color: #2E9CCA;
   --facebook-color: #29648A;
   --google-color: #F4B400;
-  --apple-color: #888888;
+  --apple-color: #F0A3A3;
 }
 
 li {
@@ -102,7 +102,7 @@ input[type="file"] {
 }
 
 .visualssection {
-  background-color: #D3D3D3;
+  background-color: #FFFFFF;
   border-style: solid;
   border-radius: 8px;
   padding: 10px;
