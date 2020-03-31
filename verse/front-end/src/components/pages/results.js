@@ -4,6 +4,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
+import IPAdressChart from "./IPAddressChart";
+import ReactionBarChart from "./ReactionBarChart";
+import PostPieChart from "./PostPieChart.js";
 
 export default class Results extends Component {
 
@@ -12,6 +15,7 @@ export default class Results extends Component {
     console.log(props.location.state);
     this.state = props.location.state;
     this.setState = ({
+      //vals: "hi",
       name: "",
       category: "",
       full_locations: [],
@@ -20,6 +24,7 @@ export default class Results extends Component {
       other_posts: [],
       comments: [],
       companies: [],
+      companies_num: 0,
       off_num: 0,
       sites: [],
       sites_num: 0,
@@ -58,7 +63,9 @@ export default class Results extends Component {
       this.state.sites = this.state.facebookData["websites_list"];
       this.state.sites_num = this.state.facebookData["websites_count"];
       this.state.companies = this.state.facebookData["advertisers_list"];
+      this.state.companies_num = this.state.companies.length;
       this.state.off_num = this.state.facebookData["off-facebook_activity_count"];
+      //this.state.vals = "hi"
       this.forceUpdate();
       this.populateSelect();
       this.populateLocationDict();
@@ -77,9 +84,9 @@ export default class Results extends Component {
     }
 
     var select = document.getElementById("select_comp");
-    var options = this.state.sites;
-    for (var i = 0; i < this.state.sites_num; i ++) {
-      var opt = options[i].name;
+    var options = this.state.companies;
+    for (var i = 0; i < this.state.companies.length; i ++) {
+      var opt = options[i];
       var el = document.createElement("option");
       el.textContent = opt;
       el.value = opt;
@@ -164,14 +171,22 @@ export default class Results extends Component {
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
               <p>IP Adresses You Have Used to Sign Into Facebook</p>
-              <p>Your Posts vs. Your Friend's Posts</p>
-              <p>How Frequently You Use Each Reaction</p>
+              <div class="chart">
+                <IPAdressChart/>
+              </div>
+              <div class="chart">
+                <PostPieChart/>
+              </div>
+              <div class="chart">
+                <ReactionBarChart/>
+              </div>
               <p>List of Websites You Have Logged Into Using Facebook:</p>
               <select id="select_sites" size="5"></select>
               <p>Total Number: {this.state.sites_num}</p>
               <p>Companies Who Have Directed Ads Towards You On Facebook:</p>
-              <p>Number of Off-Facebook Websites and Apps that Facebook Tracks: {this.state.off_num}</p>
               <select id="select_comp" size="5"></select>
+              <p>Total Number: {this.state.companies_num}</p>
+              <p>Number of Off-Facebook Websites and Apps that Facebook Tracks: {this.state.off_num}</p>
             </div>
             <div class="visualssection" id="googlevisuals">
               <p>sample google</p>
