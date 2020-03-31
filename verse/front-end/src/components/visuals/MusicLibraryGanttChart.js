@@ -4,7 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from '@material-ui/core';
 
-import GanttChart from "./GanttChart"
+import GanttChart from "./atomicGraphs/GanttChart"
 import musicLibraryData from "./data/musicLibraryData"
 
 const styles = theme => ({
@@ -14,10 +14,6 @@ const styles = theme => ({
         maxHeight: 1024,
         margin: "24px auto",
         overflow: 'auto',
-    },
-    container: {
-        margin: "0 auto",
-        height: 240
     },
     title: {
         color: "#232427",
@@ -33,15 +29,6 @@ const styles = theme => ({
         fontSize: 14,
         fontWeight: 500,
         textAlign: "left"
-    },
-    info: {
-        margin: "24 24"
-    },
-    text: {
-        color: "#383a40",
-        fontFamily: "'Nunito', sans-serif",
-        fontSize: 14,
-        fontWeight: 400
     },
 });
 

@@ -1,25 +1,19 @@
 import React from "react";
-// import moment from "moment";
-
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import PieChart from "./PieChart";
+import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
+
+//var data = [];
+import data from "./data/IPdata"
 
 const styles = theme => ({
   card: {
     border: "1px solid #e9ecee",
     maxWidth: 748,
     margin: "24px auto"
-  },
-  container: {
-    margin: "0 auto",
-    height: 240
-  },
-  menuIcon: {
-    color: "#C8D1DA"
   },
   title: {
     color: "#232427",
@@ -36,18 +30,9 @@ const styles = theme => ({
     fontWeight: 500,
     textAlign: "left"
   },
-  info: {
-    margin: "24 24"
-  },
-  text: {
-    color: "#383a40",
-    fontFamily: "'Nunito', sans-serif",
-    fontSize: 14,
-    fontWeight: 400
-  }
 });
 
-class PostPieChart extends React.Component {
+class IPAddressChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -59,12 +44,12 @@ class PostPieChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-
-            title="Posts on Your Timeline: You vs. Your Friends"
+            title="IP Addresses You Have Used to Sign In To Facebook"
+            subheader="Number of times you've used each address."
           />
           <CardContent>
             <div style={{height: 200}}>
-              <PieChart />
+              <ScrollableBarChart data={data}/>
             </div>
           </CardContent>
         </Card>
@@ -73,4 +58,4 @@ class PostPieChart extends React.Component {
   }
 }
 
-export default withStyles(styles)(PostPieChart);
+export default withStyles(styles)(IPAddressChart);

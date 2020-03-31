@@ -1,8 +1,6 @@
 import React from "react";
 import Chart from "react-google-charts";
 
-
-
 class GanttChart extends React.Component {
 
     mapData(musicData) {
@@ -44,8 +42,6 @@ class GanttChart extends React.Component {
 
         const data = dataLabels.concat(this.mapData(musicData))
         
-        console.log(data)
-
         return (
             <div>
                 <Chart 
@@ -55,7 +51,7 @@ class GanttChart extends React.Component {
                     loader={<div>Loading Chart</div>}
                     data={ data }
                     options={{
-                        height: 2100,
+                        height: 2000,
                         gantt: {
                             trackHeight: 30,
                         },

@@ -1,12 +1,11 @@
 import React from "react";
 import { ResponsivePie } from '@nivo/pie'
 
-import data from "./postData"; // import data
+import data from "../visuals/data/postData"; // import data
 
 class PieChart extends React.Component {
 
   render() {
-    console.log(data);
 
     return (
       <ResponsivePie

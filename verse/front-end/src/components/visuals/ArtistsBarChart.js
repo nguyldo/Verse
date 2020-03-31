@@ -1,11 +1,10 @@
 import React from "react";
-
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import ScrollBarChart from "./ScrollBarChart"
+import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
 import artistsData from "./data/artistsData"
 
 const styles = theme => ({
@@ -13,10 +12,6 @@ const styles = theme => ({
         border: "1px solid #e9ecee",
         maxWidth: 748,
         margin: "24px auto"
-    },
-    container: {
-        margin: "0 auto",
-        height: 240
     },
     title: {
         color: "#232427",
@@ -33,15 +28,6 @@ const styles = theme => ({
         fontWeight: 500,
         textAlign: "left"
     },
-    info: {
-        margin: "24 24"
-    },
-    text: {
-        color: "#383a40",
-        fontFamily: "'Nunito', sans-serif",
-        fontSize: 14,
-        fontWeight: 400
-    }
 });
 
 class ArtistsBarChart extends React.Component {
@@ -61,7 +47,7 @@ class ArtistsBarChart extends React.Component {
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>
-                            <ScrollBarChart data={artistsData} />
+                            <ScrollableBarChart data={artistsData} />
                         </div>
                     </CardContent>
                 </Card>

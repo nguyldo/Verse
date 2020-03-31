@@ -2,6 +2,7 @@ import React from "react";
 import { ResponsivePie } from '@nivo/pie'
 
 class PieChart extends React.Component {
+    
     render() {
         const { data } = this.props;
 

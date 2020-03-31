@@ -1,32 +1,16 @@
 import React from "react";
-// import moment from "moment";
-
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import MoreVert from "@material-ui/icons/MoreVert";
 import { withStyles } from "@material-ui/core/styles";
 
-import ScrollableBarChart from "./ScrollableBarChart"
-
-//var data = [];
-import data from "./ReactionData"
+import PieChart from "../pages/PieChart";
 
 const styles = theme => ({
   card: {
     border: "1px solid #e9ecee",
     maxWidth: 748,
     margin: "24px auto"
-  },
-  container: {
-    margin: "0 auto",
-    height: 240
-  },
-  menuIcon: {
-    color: "#C8D1DA"
   },
   title: {
     color: "#232427",
@@ -43,18 +27,9 @@ const styles = theme => ({
     fontWeight: 500,
     textAlign: "left"
   },
-  info: {
-    margin: "24 24"
-  },
-  text: {
-    color: "#383a40",
-    fontFamily: "'Nunito', sans-serif",
-    fontSize: 14,
-    fontWeight: 400
-  }
 });
 
-class ReactionBarChart extends React.Component {
+class PostPieChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -66,16 +41,12 @@ class ReactionBarChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-            action={
-              <IconButton disabled={true}>
-                <MoreVert className={classes.menuIcon} />
-              </IconButton>
-            }
-            title="How Frequently You Use Each Reaction"
+            title="Posts on Your Timeline"
+            subheader="Number of times you've posted vs. your friends."
           />
           <CardContent>
             <div style={{height: 200}}>
-              <ScrollableBarChart data={data}/>
+              <PieChart />
             </div>
           </CardContent>
         </Card>
@@ -84,4 +55,4 @@ class ReactionBarChart extends React.Component {
   }
 }
 
-export default withStyles(styles)(ReactionBarChart);
+export default withStyles(styles)(PostPieChart);

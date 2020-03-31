@@ -2,25 +2,16 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import { withStyles } from "@material-ui/core/styles";
+
+import listenTime from "./data/totalListenTimeData"
 
 const styles = theme => ({
-    list: {
-        width: '100%',
-        maxWidth: 540,
-        backgroundColor: theme.palette.background.paper,
-        position: 'relative',
-        overflow: 'auto',
-        maxHeight: 320,
-    },
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 540,
-        maxHeight: 540,
+        maxWidth: 300,
+        maxHeight: 300,
         margin: "24px auto"
-    },
-    container: {
-        margin: "0 auto",
-        height: 240
     },
     title: {
         color: "#232427",
@@ -37,15 +28,6 @@ const styles = theme => ({
         fontWeight: 500,
         textAlign: "left"
     },
-    info: {
-        margin: "24 24"
-    },
-    text: {
-        color: "#383a40",
-        fontFamily: "'Nunito', sans-serif",
-        fontSize: 14,
-        fontWeight: 400
-    },
 });
 
 class ListenTimeBigNum extends React.Component {
@@ -53,21 +35,33 @@ class ListenTimeBigNum extends React.Component {
 
         const { classes } = this.props;
 
-        <React.Fragment>
-            <Card className={classes.card} elevation={0}>
-                <CardHeader
-                    classes={{
-                        title: classes.title,
-                        subheader: classes.subheader
-                    }}
-                    title="Total Listen Time"
-                    subheader="Since..."
-                />
-                <CardContent>
-                    <h1></h1>
-                </CardContent>
-            </Card>
-        </React.Fragment>
+        let h = listenTime[0].hours.toFixed(0);
+        let m = listenTime[0].minutes.toFixed(0);
+        let s = listenTime[0].seconds.toFixed(0);
+        let y = listenTime[0].year;
 
+        let sh = "Since ".concat(y.toString());
+
+        return (
+            <React.Fragment>
+                <Card className={classes.card} elevation={0}>
+                    <CardHeader
+                        classes={{
+                            title: classes.title,
+                            subheader: classes.subheader
+                        }}
+                        title="Total Listen Time"
+                        subheader={sh}
+                    />
+                    <CardContent>
+                    <h1>{h} hours, </h1>
+                    <h1>{m} minutes, </h1>
+                    <h1>{s} seconds</h1> 
+                    </CardContent>
+                </Card>
+            </React.Fragment>
+        )
     }
 }
+
+export default withStyles(styles)(ListenTimeBigNum);

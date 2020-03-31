@@ -25,10 +25,6 @@ const styles = theme => ({
         maxHeight: 540,
         margin: "24px auto"
     },
-    container: {
-        margin: "0 auto",
-        height: 240
-    },
     title: {
         color: "#232427",
         fontSize: 15,
@@ -43,15 +39,6 @@ const styles = theme => ({
         fontSize: 14,
         fontWeight: 500,
         textAlign: "left"
-    },
-    info: {
-        margin: "24 24"
-    },
-    text: {
-        color: "#383a40",
-        fontFamily: "'Nunito', sans-serif",
-        fontSize: 14,
-        fontWeight: 400
     },
 });
 
@@ -75,7 +62,7 @@ class TopTenArtistsList extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Your Top Ten Artists"
-                        subheader="from <year> - <year>"
+                        subheader="from 2015 - 2020"
                     />
                     <CardContent>
                         <Divider />

@@ -3,19 +3,24 @@ import React, { Component } from "react";
 import axios from "axios";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
-import IPAdressChart from "./IPAddressChart";
-import ReactionBarChart from "./ReactionBarChart";
-import PostPieChart from "./PostPieChart.js";
 
 import Grid from '@material-ui/core/Grid';
 
-import TopTenGenresList from "../visuals/TopTenGenresList"
-import GenresPieChart from "../visuals/GenresPieChart"
-import TopTenArtistsList from "../visuals/TopTenArtistsList"
-import ArtistsBarChart from "../visuals/ArtistsBarChart"
-import TopTenTracksList from "../visuals/TopTenTracksList"
-import TracksBarChart from "../visuals/TracksBarChart"
-import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart"
+//Facebook Visuals
+import IPAdressChart from "../visuals/IPAddressChart";
+import ReactionBarChart from "../visuals/ReactionBarChart";
+import PostPieChart from "../visuals/PostPieChart.js";
+
+//Apple Visuals
+import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
+import ListenTimeBigNum from "../visuals/ListenTimeBigNum";
+import TopTenGenresList from "../visuals/TopTenGenresList";
+import GenresPieChart from "../visuals/GenresPieChart";
+import TopTenArtistsList from "../visuals/TopTenArtistsList";
+import ArtistsBarChart from "../visuals/ArtistsBarChart";
+import TopTenTracksList from "../visuals/TopTenTracksList";
+import TracksBarChart from "../visuals/TracksBarChart";
+import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart";
 
 
 export default class Results extends Component {
@@ -48,28 +53,25 @@ export default class Results extends Component {
       appleMusicData: {},
       appleAppsGamesData: {},
 
-      //appleGeneralData: {
-        total_size_bignum: 0,
-        personal_info_header: "",
-        devices_list:  "",
-      //},
-      //appleMusicData: {
-        total_listen_time_bignum: 0,
-        preferences_pictograph: [],
-        play_activity_genres_piechart: [],
-        top_ten_genres_list: [],
-        play_activity_artists_barchart: [],
-        top_ten_artists_list: [],
-        play_activity_track_barchart: [],
-        top_ten_tracks_list: [],
-        play_activity_map: [],
-        library_song_timeline: [],
-        genre_timeline: [],
-      //},
-      //appleAppsGamesData: {
-        apps_timeline: [],
-        games_timeline: []
-      //}
+      total_size_bignum: 0,
+      personal_info_header: "",
+      devices_list:  "",
+ 
+      total_listen_time_bignum: 0,
+      preferences_pictograph: [],
+      play_activity_genres_piechart: [],
+      top_ten_genres_list: [],
+      play_activity_artists_barchart: [],
+      top_ten_artists_list: [],
+      play_activity_track_barchart: [],
+      top_ten_tracks_list: [],
+      play_activity_map: [],
+      library_song_timeline: [],
+      genre_timeline: [],
+
+      apps_timeline: [],
+      games_timeline: []
+
     });
     this.getFacebookData = this.getFacebookData.bind(this);
     this.getAppleData = this.getAppleData.bind(this);
@@ -164,10 +166,11 @@ export default class Results extends Component {
     ).then((response) => {
       this.state.appleGeneralData = response.data.data;
 
-      this.state.appleGeneralData.total_size_bignum = this.state.appleGeneralData["total_size_bignum"];
-      this.state.appleGeneralData.personal_info_header = this.state.appleGeneralData["personal_info_header"];
-      this.state.appleGeneralData.devices_list = this.state.appleGeneralData["devices_list"];
+      this.state.total_size_bignum = this.state.appleGeneralData["total_size_bignum"];
+      this.state.personal_info_header = this.state.appleGeneralData["personal_info_header"];
+      this.state.devices_list = this.state.appleGeneralData["devices_list"];
 
+      this.forceUpdate();
       console.log("Apple general return success");
     });
 
@@ -197,9 +200,10 @@ export default class Results extends Component {
     ).then((response) => {
       this.state.appleAppsGamesData = response.data.data;
 
-      this.state.appleAppsGamesData.apps_timeline = this.state.appleAppsGamesData["apps_timeline"];
-      this.state.appleAppsGamesData.games_timeline = this.state.appleAppsGamesData["games_timeline"];
+      this.state.apps_timeline = this.state.appleAppsGamesData["apps_timeline"];
+      this.state.games_timeline = this.state.appleAppsGamesData["games_timeline"];
 
+      this.forceUpdate();
       console.log("Apple apps games return success");
     });
   }
@@ -247,7 +251,7 @@ export default class Results extends Component {
         width: 100,
       },
       control: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(5),
       },
     })
 
@@ -268,7 +272,6 @@ export default class Results extends Component {
             <div class="visualssection" id="facebookvisuals">
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
-              <p>IP Adresses You Have Used to Sign Into Facebook</p>
               <div class="chart">
                 <IPAdressChart/>
               </div>
@@ -295,47 +298,29 @@ export default class Results extends Component {
               <p>sample google</p>
             </div>
             <div class="visualssection" id="applevisuals">
-              <Grid container spacing={3}>
+              <Grid container spacing={5}>
+
+                <Grid item xs={12}>
+                  <Grid container justify="center" spacing={3}>
+                    <Grid key={0}>
+                      <TotalSizeBigNum />
+                    </Grid>
+                    <Grid key={1}>
+                      <ListenTimeBigNum />
+                    </Grid>
+                  </Grid>
+                </Grid>
+
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={5}>
-                    <Grid >
-                      <TopTenGenresList />
+                    <Grid spacing={3}>
+                      <TopTenGenresList key={3}/>
                     </Grid>
                     <Grid >
-                      <TopTenArtistsList />
+                      <TopTenArtistsList key={4}/>
                     </Grid>
                     <Grid >
-                      <TopTenTracksList />
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Grid container justify="center">
-
-                      <Grid >
-
-                      </Grid>
-
-                      <Grid >
-
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Grid container justify="center">
-                      
-                      <Grid >
-                        
-                      </Grid>
-
-                      <Grid >
-                        
-                      </Grid>
-
-                      <Grid >
-                        
-                      </Grid>
+                      <TopTenTracksList key={5}/>
                     </Grid>
                   </Grid>
                 </Grid>

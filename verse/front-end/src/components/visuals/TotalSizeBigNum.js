@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import PieChart from "./atomicGraphs/PieChart";
-import genresData from "./data/genresData"
+import totalSize from "./data/totalSizeData"
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 748,
+        maxWidth: 300,
+        maxHeight: 300,
         margin: "24px auto"
     },
     title: {
@@ -30,10 +30,9 @@ const styles = theme => ({
     },
 });
 
-class GenresPieChart extends React.Component {
-
+class TotalSizeBigNum extends React.Component {
     render() {
-        
+
         const { classes } = this.props;
 
         return (
@@ -44,18 +43,17 @@ class GenresPieChart extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Play Activity - Genres"
-                        subheader="Number of times you've listened to songs in each genre."
+                        title="Total Size"
+                        subheader="Amount of data in your Apple data dump."
                     />
                     <CardContent>
-                        <div style={{ height: 200 }}>
-                            <PieChart data={genresData}/>
-                        </div>
+                        <h1>{totalSize} GB </h1>
+
                     </CardContent>
                 </Card>
             </React.Fragment>
-        );
+        )
     }
 }
 
-export default withStyles(styles)(GenresPieChart);
+export default withStyles(styles)(TotalSizeBigNum);
