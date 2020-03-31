@@ -22,6 +22,11 @@
     text-decoration: none;
 }
 
+#NavLink:hover {
+    color: #29648A;
+
+}
+
 #Nav {
     text-align: right;
     padding-top: 20px;
