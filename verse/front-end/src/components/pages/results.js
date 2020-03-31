@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-import { Link } from "react-router-dom";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
@@ -226,10 +225,6 @@ export default class Results extends Component {
 
                   <Grid item xs={12}>
                     <Grid container justify="center">
-
-                      <Grid >
-
-                      </Grid>
 
                       <Grid >
 

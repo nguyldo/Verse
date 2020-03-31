@@ -74,7 +74,8 @@ class TopTenArtistsList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Play Activity - Top Ten Artists"
+                        title="Your Top Ten Artists"
+                        subheader="from <year> - <year>"
                     />
                     <CardContent>
                         <Divider />

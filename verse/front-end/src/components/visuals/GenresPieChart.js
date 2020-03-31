@@ -58,6 +58,7 @@ class GenresPieChart extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Apple Music Play Activity - Genres"
+                        subheader="Number of times you've listened to songs in each genre."
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>

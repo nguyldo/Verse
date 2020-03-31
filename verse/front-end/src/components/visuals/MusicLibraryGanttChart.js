@@ -59,7 +59,8 @@ class MusicLibraryGanttChart extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Library"
+                        title="Apple Music Library Song Activity"
+                        subheader="Length of time between when you added a song to your library and when you last played it."
                     />
                     <CardContent>
                         <div>

@@ -57,6 +57,7 @@ class TracksBarChart extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Apple Music Play Activity - Tracks"
+                        subheader="Number of times you've listened to each track."
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>

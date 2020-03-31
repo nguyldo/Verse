@@ -74,7 +74,8 @@ class TopTenGenresList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Play Activity - Top Ten Genres"
+                        title="Your Top Ten Genres"
+                        subheader="from <year> - <year>"
                     />
                     <CardContent>
                         <Divider />
