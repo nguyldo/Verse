@@ -4,7 +4,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import PieChart from "../pages/PieChart";
+import PieChart from "./atomicGraphs/PieChart";
+import data from "./data/postData"; 
 
 const styles = theme => ({
   card: {
@@ -46,7 +47,7 @@ class PostPieChart extends React.Component {
           />
           <CardContent>
             <div style={{height: 200}}>
-              <PieChart />
+              <PieChart data={data}/>
             </div>
           </CardContent>
         </Card>
