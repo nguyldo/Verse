@@ -6,7 +6,6 @@ import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 
 import TopTenGenresList from "../visuals/TopTenGenresList"
 import GenresPieChart from "../visuals/GenresPieChart"
@@ -14,6 +13,7 @@ import TopTenArtistsList from "../visuals/TopTenArtistsList"
 import ArtistsBarChart from "../visuals/ArtistsBarChart"
 import TopTenTracksList from "../visuals/TopTenTracksList"
 import TracksBarChart from "../visuals/TracksBarChart"
+import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart"
 
 
 export default class Results extends Component {
@@ -263,6 +263,7 @@ export default class Results extends Component {
               <GenresPieChart />
               <ArtistsBarChart />
               <TracksBarChart />
+              <MusicLibraryGanttChart />
             </div>
           </div>
         </div>

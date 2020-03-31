@@ -1,17 +1,19 @@
-import React from "react";
+import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core';
 
-import PieChart from "./PieChart";
-import genresData from "./data/genresData"
+import GanttChart from "./GanttChart"
+import musicLibraryData from "./data/musicLibraryData"
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 748,
-        margin: "24px auto"
+        maxWidth: 1024,
+        maxHeight: 1024,
+        margin: "24px auto",
+        overflow: 'auto',
     },
     container: {
         margin: "0 auto",
@@ -40,13 +42,13 @@ const styles = theme => ({
         fontFamily: "'Nunito', sans-serif",
         fontSize: 14,
         fontWeight: 400
-    }
+    },
 });
 
-class GenresPieChart extends React.Component {
+class MusicLibraryGanttChart extends React.Component {
 
     render() {
-        
+
         const { classes } = this.props;
 
         return (
@@ -57,11 +59,11 @@ class GenresPieChart extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Play Activity - Genres"
+                        title="Apple Music Library"
                     />
                     <CardContent>
-                        <div style={{ height: 200 }}>
-                            <PieChart data={genresData}/>
+                        <div>
+                            <GanttChart musicData={musicLibraryData} />
                         </div>
                     </CardContent>
                 </Card>
@@ -70,4 +72,4 @@ class GenresPieChart extends React.Component {
     }
 }
 
-export default withStyles(styles)(GenresPieChart);
+export default withStyles(styles)(MusicLibraryGanttChart);
