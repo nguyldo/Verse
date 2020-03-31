@@ -123,6 +123,19 @@ export default class Upload extends Component {
       return;
     }
 
+    if (company == "facebook") {
+      document.getElementById("facebookoption").style.display = "none";
+      this.setState({ facebookTitle: "Facebook: Loading..." });
+    } else if (company == "google") {
+      document.getElementById("googleoption").style.display = "none";
+      this.setState({ googleTitle: "Google: Loading..." });
+    } else if (company == "apple") {
+      document.getElementById("appleoption").style.display = "none";
+      this.setState({ appleTitle: "Apple: Loading..." });
+    } else {
+      console.log("internal error");
+    }
+
     let formData = new FormData();
     formData.append("files", file);
     formData.append("filename", file.name);
@@ -161,10 +174,13 @@ export default class Upload extends Component {
     } catch {
       console.log(company)
       if (company == "facebook") {
+        document.getElementById("appleoption").style.display = "block";
         this.setState({ facebookTitle: "Facebook: Upload Failed..." });
       } else if (company == "google") {
+        document.getElementById("appleoption").style.display = "block";
         this.setState({ googleTitle: "Google: Upload Failed..." });
       } else if (company == "apple") {
+        document.getElementById("appleoption").style.display = "block";
         this.setState({ appleTitle: "Apple: Upload Failed..." });
       } else {
         console.log("internal error");
