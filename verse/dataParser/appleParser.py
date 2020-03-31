@@ -63,7 +63,7 @@ def parseAppleData(appleDataDumpName):
             print("general dir path not found") 
 
         #write parsed general data dictionary to json file
-        genericParser.writeToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedGeneralAppleData.json')
+        genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedGeneralAppleData.json')
 
         
         # ---------- Music Data ----------
@@ -149,7 +149,7 @@ def parseAppleData(appleDataDumpName):
             print("music category not found") 
 
         #write parsed music data dictionary to json file
-        genericParser.writeToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedMusicAppleData.json')
+        genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedMusicAppleData.json')
 
         
         # ---------- Apps/Games Data ----------
@@ -180,7 +180,7 @@ def parseAppleData(appleDataDumpName):
             print("app category not found") 
 
         #write parsed apps/games data dictionary to json file
-        genericParser.writeToJsonFile(Dict, '../media/processedData/apple/' + appleDataDumpName + '/parsedAppsGamesAppleData.json')
+        genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedAppsGamesAppleData.json')
 
     
     else: print("given root path does not exist")

@@ -64,6 +64,45 @@ def formatDictionary(Dict, key):
 
     return listDicts
 
+# Function: extract year, month, day from an iso date string
+# Return: a tuple with year, month, day
+def getYearMonthDay(date):
+    year = date.split("-")[0]
+    month = date.split("-")[1]
+    day = date.split("-")[2]
+    day = day.split("T")[0]
+
+    return year, month, day
+
+# Function: take a dict and format for a google charts gantt chart
+# Return: list of list
+def formatGanttData(Dict):
+    List = []
+    ct = 1
+    for d in Dict:
+        innerList = []
+        innerList.append(str(ct))
+        ct = ct + 1
+        innerList.append(d["Title"] + " - " + d["Artist"])
+        innerList.append(d["Genre"])
+
+        #TODO: maybe calculate the difference between 
+        #last played date and release date as percentage??
+        #year, month, day = getYearMonthDay(d["Release Date"])
+        #innerList.append("new Date(" + year + ", " + month + ", " + day + ")")
+
+        year, month, day = getYearMonthDay(d["Date Added To Library"])
+        innerList.append([int(year), int(month), int(day)])
+        year, month, day = getYearMonthDay(d["Last Played Date"])
+        innerList.append([int(year), int(month), int(day)])
+        innerList.append("null")    #duration
+        innerList.append(0)         #percent complete
+        innerList.append("null")    #dependencies
+
+        List.append(innerList)
+
+    return List
+
 # Function: converts milliseconds to hours, mins, seconds
 # Return: a tuple of hours, minutes, seconds
 # https://stackoverflow.com/a/35989770
@@ -165,17 +204,18 @@ def analyzeMusicAppleData(appleUserFileName):
     Dict["top_ten_tracks_list"] = dictTopTracks
 
     # -----   -----
-    track_ip = filterByField( data["apple_music_play_activity"], ("Content Name", "Artist Name", "Client IP Address"))
-    Dict["play_activity_map"] = track_ip
+    trackIP = filterByField( data["apple_music_play_activity"], ("Content Name", "Artist Name", "Client IP Address"))
+    Dict["play_activity_map"] = trackIP
 
     # -----   -----
     totalNumTracks = len(data["apple_music_library_tracks"])
     Dict["total_tracks_bignum"] = totalNumTracks
 
     # -----   -----
-    title_artist_dates = filterByField( data["apple_music_library_tracks"], ("Title", "Artist", 
+    titleArtistDates = filterByField( data["apple_music_library_tracks"], ("Title", "Artist", "Genre",
     "Date Added To Library", "Last Played Date", "Release Date"))
-    Dict["library_song_timeline"] = title_artist_dates
+    titleArtistDatesList = formatGanttData(titleArtistDates)
+    Dict["library_song_ganttchart"] = titleArtistDatesList
 
     # -----   -----
     genre_dates = filterByField( data["apple_music_library_tracks"], ("Genre", "Last Played Date"))
