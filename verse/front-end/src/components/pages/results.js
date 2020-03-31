@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import axios from "axios";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
+import IPAdressChart from "./IPAddressChart";
+import ReactionBarChart from "./ReactionBarChart";
+import PostPieChart from "./PostPieChart.js";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -22,6 +25,19 @@ export default class Results extends Component {
     console.log(props.location.state);
     this.state = props.location.state;
     this.setState = ({
+      //vals: "hi",
+      name: "",
+      category: "",
+      full_locations: [],
+      locations: {},
+      your_posts: [],
+      other_posts: [],
+      comments: [],
+      companies: [],
+      companies_num: 0,
+      off_num: 0,
+      sites: [],
+      sites_num: 0,
       facebookData: {},
 
       googleData: {},
@@ -59,12 +75,21 @@ export default class Results extends Component {
     this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.facebookRequest != "") {
       this.getFacebookData();
+    } else {
+      document.getElementById("facebookvisuals").style.display = "none";
+    }
+    if (this.state.googleRequest != "") {
+      // get google data
+    } else {
+      document.getElementById("googlevisuals").style.display = "none";
     }
     if (this.state.appleRequest != "") {
       this.getAppleData();
+    } else {
+      document.getElementById("applevisuals").style.display = "none";
     }
   }
 
@@ -74,16 +99,64 @@ export default class Results extends Component {
     ).then((response) => {
       this.state.facebookData = response.data.data;
       console.log("Facebook analyze return success");
-    });
-    /*
-    const promise = await axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest);
-    const status = promise.status;
-    if (status == 200) {
-      const data = promise.data.data;
-      console.log(this);
-      this.state.facebookData = data;
       console.log(this.state.facebookData);
-    }*/
+      this.state.name = this.state.facebookData["name_category_header"]["0"];
+      this.state.category = this.state.facebookData["name_category_header"]["1"];
+      this.state.full_locations = this.state.facebookData["locations_piechart"];
+      this.state.your_posts = this.state.facebookData["posts_linegraph"]["0"];
+      this.state.other_posts = this.state.facebookData["posts_linegraph"]["1"];
+      this.state.comments = this.state.facebookData["posts_linegraph"];
+      this.state.reactions = this.state.facebookData["reactions_pictograph"];
+      this.state.sites = this.state.facebookData["websites_list"];
+      this.state.sites_num = this.state.facebookData["websites_count"];
+      this.state.companies = this.state.facebookData["advertisers_list"];
+      this.state.companies_num = this.state.companies.length;
+      this.state.off_num = this.state.facebookData["off-facebook_activity_count"];
+      //this.state.vals = "hi"
+      this.forceUpdate();
+      this.populateSelect();
+      this.populateLocationDict();
+    });
+  }
+
+  populateSelect() {
+    var select = document.getElementById("select_sites");
+    var options = this.state.sites;
+    for (var i = 0; i < this.state.sites_num; i ++) {
+      var opt = options[i].name;
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+
+    var select = document.getElementById("select_comp");
+    var options = this.state.companies;
+    for (var i = 0; i < this.state.companies.length; i ++) {
+      var opt = options[i];
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+  }
+
+  populateLocationDict() {
+    var dict = {};
+
+    var list = this.state.full_locations;
+
+    for (var i = 0; i < list.length; i ++) {
+      dict[list[i]["ip_address"]] = "0";
+    }
+
+    for (var i = 0; i < list.length; i ++) {
+      var num = Number(dict[list[i]["ip_address"]]);
+      num = num + 1;
+      dict[list[i]["ip_address"]] = num.toString(10);
+    }
+    this.locations = dict;
+    console.log(this.locations);
   }
 
   async getAppleData() {
@@ -193,12 +266,25 @@ export default class Results extends Component {
           </div>
           <div id="mainvisuals">
             <div class="visualssection" id="facebookvisuals">
-              <p>sample facebook</p>
-              <p>sample facebook</p>
-              <p>sample facebook</p>
-              <p>sample facebook</p>
-              <p>sample facebook</p>
-              <p>sample facebook</p>
+              <h1>Name: {this.state.name}</h1>
+              <h2>Category: {this.state.category}</h2>
+              <p>IP Adresses You Have Used to Sign Into Facebook</p>
+              <div class="chart">
+                <IPAdressChart/>
+              </div>
+              <div class="chart">
+                <PostPieChart/>
+              </div>
+              <div class="chart">
+                <ReactionBarChart/>
+              </div>
+              <p>List of Websites You Have Logged Into Using Facebook:</p>
+              <select id="select_sites" size="5"></select>
+              <p>Total Number: {this.state.sites_num}</p>
+              <p>Companies Who Have Directed Ads Towards You On Facebook:</p>
+              <select id="select_comp" size="5"></select>
+              <p>Total Number: {this.state.companies_num}</p>
+              <p>Number of Off-Facebook Websites and Apps that Facebook Tracks: {this.state.off_num}</p>
             </div>
             <div class="visualssection" id="googlevisuals">
               <p>sample google</p>
