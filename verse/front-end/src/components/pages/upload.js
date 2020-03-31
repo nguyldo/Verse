@@ -1,14 +1,18 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
+import "./styles.css";
 
-export default class Upload extends Component {
+export default class Upload extends React.Component {
   constructor(props) {
+    console.log("Props - ", props);
     super(props);
     this.state = {
+      modalVisible: false,
 
       // facebook state
       facebookFiles: null,
@@ -36,6 +40,15 @@ export default class Upload extends Component {
       // apple state
 
     };
+    this.openModal = this.openModal.bind(this);
+  }
+
+  openModal() {
+    console.log("Open modal called ", this.state.modalVisible);
+    const modalVisible = !this.state.modalVisible;
+    this.setState({
+      modalVisible
+    });
   }
 
   // shuffles and array, taken from 
@@ -279,46 +292,137 @@ export default class Upload extends Component {
   */
 
   render() {
+    let styles = this.state.modalVisible
+      ? { display: "block" }
+      : { display: "none" };
     return (
-      <div id="uploadpage">
-        <Header />
-        <h1>Upload file</h1>
-        <body>
-          <div class="uploadoption">
-            <p>{this.state.facebookTitle}</p>
-            <form id="facebookoption">
-              <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
-              <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
-            </form>
+      <div className="Upload">
+        <h1>Hello CodeSandbox</h1>
+        <h2>Start editing to see some magic happen!</h2>
+        <button
+          type="button"
+          onClick={this.openModal}
+          className="btn btn-info btn-lg"
+        >
+          Open Modal
+        </button>
+        <div
+          id="myModal"
+          className="modal fade in"
+          role="dialog"
+          style={styles}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button
+                  type="button"
+                  onClick={this.openModal}
+                  className="close"
+                >
+                  &times;
+                </button>
+                <h4 className="modal-title">Modal Header</h4>
+              </div>
+              <div className="modal-body">
+                <p>Some text in the modal.</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  onClick={this.openModal}
+                  type="button"
+                  className="btn btn-default"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="uploadoption">
-            <p>Google</p>
-            <form id="googleoption">
-              <label for="googleupload" class="customupload">{this.state.googleButton}</label>
-              <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
-            </form>
-          </div>
-          <div class="uploadoption">
-            <p>Apple</p>
-            <form id="appleoption">
-              <label for="appleupload" class="customupload">{this.state.appleButton}</label>
-              <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
-            </form>
-          </div>
-          <Link to={{
-            pathname: "/results",
-            state: {
-              facebookRequest: this.state.facebookRequest,
-              googleRequest: this.state.googleRequest,
-              appleRequest: this.state.appleRequest
-            }
-          }} className="link">Create Visuals</Link>
-        </body>
+        </div>
       </div>
-    )
+      <div id="uploadpage">
+      <Header />
+      <h1>Upload file</h1>
+      <body>
+        <div class="uploadoption">
+          <p>{this.state.facebookTitle}</p>
+          <form id="facebookoption">
+            <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
+            <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+            <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+          </form>
+        </div>
+        <div class="uploadoption">
+          <p>Google</p>
+          <form id="googleoption">
+            <label for="googleupload" class="customupload">{this.state.googleButton}</label>
+            <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+            <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+          </form>
+        </div>
+        <div class="uploadoption">
+          <p>Apple</p>
+          <form id="appleoption">
+            <label for="appleupload" class="customupload">{this.state.appleButton}</label>
+            <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+            <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+          </form>
+        </div>
+        <Link to={{
+          pathname: "/results",
+          state: {
+            facebookRequest: this.state.facebookRequest,
+            googleRequest: this.state.googleRequest,
+            appleRequest: this.state.appleRequest
+          }
+        }} className="link">Create Visuals</Link>
+      </body>
+      </div>
+    );
   }
 }
+//     return (
+//       <div id="uploadpage">
+//         <Header />
+//         <h1>Upload file</h1>
+//         <body>
+//           <div class="uploadoption">
+//             <p>{this.state.facebookTitle}</p>
+//             <form id="facebookoption">
+//               <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
+//               <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+//               <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+//             </form>
+//           </div>
+//           <div class="uploadoption">
+//             <p>Google</p>
+//             <form id="googleoption">
+//               <label for="googleupload" class="customupload">{this.state.googleButton}</label>
+//               <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+//               <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+//             </form>
+//           </div>
+//           <div class="uploadoption">
+//             <p>Apple</p>
+//             <form id="appleoption">
+//               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
+//               <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+//               <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+//             </form>
+//           </div>
+//           <Link to={{
+//             pathname: "/results",
+//             state: {
+//               facebookRequest: this.state.facebookRequest,
+//               googleRequest: this.state.googleRequest,
+//               appleRequest: this.state.appleRequest
+//             }
+//           }} className="link">Create Visuals</Link>
+//         </body>
+//       </div>
+//     )
+//   }
+// }
 
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
