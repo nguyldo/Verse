@@ -29,6 +29,9 @@ export default class Results extends Component {
     super(props);
     console.log(props.location.state);
     this.state = props.location.state;
+
+    // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
+
     this.setState = ({
       //vals: "hi",
       name: "",
@@ -73,11 +76,11 @@ export default class Results extends Component {
       games_timeline: []
 
     });
-    this.getFacebookData = this.getFacebookData.bind(this);
-    this.getAppleData = this.getAppleData.bind(this);
+    // this.getFacebookData = this.getFacebookData.bind(this);
+    // this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentWillMount() {
+  componentMount() {
     
     /*
     if (this.state.facebookRequest != "") {
@@ -101,10 +104,34 @@ export default class Results extends Component {
   componentDidMount() {
     console.log("Did mount");
     console.log(this.state);
+
+    // decides whether or not to show the visuals for each section
+    if ("facebook" in this.state.compiledRequest) {
+      console.log("facebook data was loaded");
+    } else {
+      console.log("facebook data was NOT loaded");
+      document.getElementById("facebookvisuals").style.display = "none";
+    }
+
+    if ("applegeneral" in this.state.compiledRequest) {
+      console.log("apple data was loaded");
+    } else {
+      console.log("apple data was NOT loaded");
+      document.getElementById("applevisuals").style.display = "none";
+    }
+
+    if ("google" in this.state.compiledRequest) {
+      console.log("google data was loaded");
+    } else {
+      console.log("google data was NOT loaded");
+      document.getElementById("googlevisuals").style.display = "none";
+    }
+
   }
 
   async getFacebookData() {
     
+    /*
     axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
     ).then((response) => {
       this.state.facebookData = response.data.data;
@@ -127,6 +154,7 @@ export default class Results extends Component {
       this.populateSelect();
       this.populateLocationDict();
     });
+    */
   }
 
   populateSelect() {
@@ -170,6 +198,7 @@ export default class Results extends Component {
   }
 
   async getAppleData() {
+    /*
     axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest
     ).then((response) => {
       this.state.appleGeneralData = response.data.data;
@@ -214,6 +243,7 @@ export default class Results extends Component {
       this.forceUpdate();
       console.log("Apple apps games return success");
     });
+    */
   }
 
   exportToImage(e) {

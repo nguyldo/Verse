@@ -32,30 +32,7 @@ export default class Upload extends Component {
       appleButton: "Choose a file...",
       appleTitle: "Apple",
 
-      // google state
-
-
-      // apple state
-
     };
-  }
-
-  // shuffles and array, taken from 
-  // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-  shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (0 !== currentIndex) {
-
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-
-    return array;
   }
 
   handleFile(e) {
@@ -65,16 +42,6 @@ export default class Upload extends Component {
     if (specifiedCompany == "facebookupload") {
 
       this.setState({ facebookFile: e.target.files[0] });
-      /*
-      let filesList = [];
-      for (let i = 0; i < e.target.files.length; i++) {
-        filesList.push(e.target.files[i]);
-      }
-
-      console.log("Debug");
-      console.log(filesList);
-
-      this.setState({ facebookFile: filesList });*/
 
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
@@ -188,123 +155,8 @@ export default class Upload extends Component {
         console.log("internal error");
       }
     }
-    
 
   }
-
-  /*
-  async uploadFacebook(e) {
-    let file = this.state.file
-
-    let formData = new FormData();
-    formData.append("file", file);
-    if (file == null) {
-      alert("nothing uploaded")
-      return
-    } else if (!file.name.includes("facebook")) {
-      alert("no facebook data entered")
-      return
-    }
-    formData.append("filename", file.name)
-
-
-    const promise = await axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
-    })
-
-    const status = promise.status;
-    if (status === 200) {
-      const data = promise.data.num;
-      const websites = promise.data.sites;
-      this.setState({ num: data, sites: websites });
-
-      // add facebook json to state
-      this.setState({ facebookData: promise.data });
-
-      // update ui based on uploads
-      this.setState({ facebookButton: "Uploaded successfully!" });
-
-      document.getElementById("facebookoption").style.display = "none";
-      this.setState({ facebookTitle: "Facebook: Upload Success!" });
-    } else {
-      console.log("Upload failed");
-      this.setState({ facebookTitle: "Facebook: Upload Failed..." });
-    }
-
-
-    console.log(file);
-    for (let vals of formData.values()) {
-      console.log("Test: " + vals);
-    }
-
-    this.shuffle(this.state.sites);
-    /*
-    var sel = document.getElementById('listBox');
-    for (var i = 0; i < this.state.sites.length; i++) {
-      var opt = document.createElement('option');
-      opt.innerHTML = this.state.sites[i];
-      opt.value = this.state.sites[i];
-      sel.appendChild(opt);
-    }
-  }
-
-  uploadGoogle(e) {
-    let file = this.state.file
-
-    let formData = new FormData();
-    formData.append("file", file);
-    if (file == null) {
-      alert("nothing uploaded")
-      return
-    } else if (!file.name.includes("takeout")) {
-      alert("no google data entered")
-      return
-    }
-    alert(file.name)
-    formData.append("filename", file.name)
-
-
-    axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
-    })
-
-    console.log(file);
-    for (let vals of formData.values()) {
-      console.log("Test: " + vals);
-    }
-  }
-
-  uploadApple(e) {
-    let file = this.state.file
-
-    let formData = new FormData();
-    formData.append("file", file);
-    if (file == null) {
-      alert("nothing uploaded")
-      return
-    } else if (!file.name.includes("takeout")) {
-      alert("no apple data entered")
-      return
-    }
-    formData.append("filename", file.name)
-
-
-    axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
-    })
-
-    console.log(file);
-    for (let vals of formData.values()) {
-      console.log("Test: " + vals);
-    }
-  }
-  */
 
   prepareData(e) {
     let requests = [];
@@ -335,23 +187,18 @@ export default class Upload extends Component {
       let retrievedData = {}
       if (this.state.facebookRequest != "") {
         retrievedData["facebook"] = responses[count].data.data;
-        //retrievedData.push({"facebook": responses[count].data.data});
         count++;
       }
       if (this.state.googleRequest != "") {
         retrievedData["google"] = responses[count].data.data;
-        //retrievedData.push({"google": responses[count].data.data});
         count++;
       }
       if (this.state.appleRequest != "") {
         retrievedData["applegeneral"] = responses[count].data.data;
-        //retrievedData.push({"applegeneral": responses[count].data.data})
         count++;
         retrievedData["applemusic"] = responses[count].data.data;
-        //retrievedData.push({"applemusic": responses[count].data.data})
         count++;
         retrievedData["applegames"] = responses[count].data.data;
-        //retrievedData.push({"applegames": responses[count].data.data})
         count++;
       }
 
@@ -360,9 +207,7 @@ export default class Upload extends Component {
 
       this.setState({redirect: retrievedData});
       
-      // use/access the results 
     })).catch(errors => {
-      // react on errors.
       console.log("error...")
     })
   }
@@ -372,9 +217,6 @@ export default class Upload extends Component {
       return <Redirect to={{
         pathname: "/results",
         state: {
-          facebookRequest: this.state.facebookRequest,
-          googleRequest: this.state.googleRequest,
-          appleRequest: this.state.appleRequest,
           compiledRequest: this.state.redirect
         }
        }} />
@@ -408,15 +250,7 @@ export default class Upload extends Component {
               <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
-          <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create actual visuals</button>
-          <Link to={{
-            pathname: "/loading",
-            state: {
-              facebookRequest: this.state.facebookRequest,
-              googleRequest: this.state.googleRequest,
-              appleRequest: this.state.appleRequest
-            }
-          }} className="link">Create Visuals</Link>
+          <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create Visuals</button>
         </body>
       </div>
     )

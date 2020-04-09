@@ -15,9 +15,9 @@ export default class Header extends Component {
         <div>
             <Link to="/" id="link"><h1 id="header">VERSE</h1></Link>
             <nav id="Nav">
-              <NavLink to="/upload" id="NavLink" activeStyle={{background:'white', color:'blue'}}>Upload</NavLink>
-              <NavLink to="/help" id="NavLink" activeStyle={{background:'white', color:'blue'}}>Help</NavLink>
-              <NavLink to="/about" id="NavLink" activeStyle={{background:'white', color:'blue'}}>About Verse</NavLink>
+              <NavLink to="/upload" id="NavLink" activeStyle={{background:'#CCCCCC', color:'#29648A'}}>Upload</NavLink>
+              <NavLink to="/help" id="NavLink" activeStyle={{background:'#CCCCCC', color:'#29648A'}}>Help</NavLink>
+              <NavLink to="/about" id="NavLink" activeStyle={{background:'#CCCCCC', color:'#29648A'}}>About Verse</NavLink>
             </nav>
         </div>
       )
