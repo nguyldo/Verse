@@ -305,7 +305,7 @@ def parseFacebookData(facebookDataDumpName):
     genericParser.writeToJsonFile(Dict, 'media/processedData/facebook/' + facebookDataDumpName + '/parsedFacebookData.json')
     #genericParser.writeToJsonFile(Dict, '../media/processedData/facebook/' + facebookDataDumpName + '/parsedFacebookData.json')
 
-    #genericParser.deleteData(rootPathName)
+    genericParser.deleteData(rootPathName)
 
 """
 def main():

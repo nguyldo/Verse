@@ -77,7 +77,8 @@ export default class Results extends Component {
     this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    
     if (this.state.facebookRequest != "") {
       this.getFacebookData();
     } else {
@@ -93,6 +94,11 @@ export default class Results extends Component {
     } else {
       document.getElementById("applevisuals").style.display = "none";
     }
+  }
+
+  componentDidMount() {
+    console.log("Did mount");
+    console.log(this.state);
   }
 
   async getFacebookData() {

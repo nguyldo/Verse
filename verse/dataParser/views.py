@@ -11,7 +11,7 @@ import os
 
 import zipfile 
 
-from dataParser import visualizationData
+from dataParser import visualizationData, genericParser
 from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer
 
 def index(request):
@@ -27,6 +27,8 @@ def index(request):
 @api_view(["GET"])
 def facebookDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedFacebookData(userFileName)
+    rootPathName = "./media/processedData/facebook/" + userFileName
+    genericParser.deleteData(rootPathName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
     
 #----- APPLE APIs -----
@@ -59,7 +61,7 @@ def upload(request):
     if request.method == "POST":
 
         serviceName = request.data.get("company")
-        uploadedFiles = request.data.get("files")
+        uploadedFile = request.data.get("files")
         userId = request.session.session_key
 
         # save and unzip files
@@ -68,11 +70,11 @@ def upload(request):
         #print("Debug: " + uploadedFiles)
         #for uploadedFile in uploadedFiles:
         #    fss.save(uploadedFile.name, uploadedFile)
-        fss.save(uploadedFiles.name, uploadedFiles)
+        fss.save(uploadedFile.name, uploadedFile)
 
         #dev-connectAPIs
-        zipPath = fss.location + "/" + uploadedFiles.name
-        mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
+        zipPath = fss.location + "/" + uploadedFile.name
+        mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFile.name[:-4]        
 
             # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
         with zipfile.ZipFile(zipPath, "r") as zip_ref:
@@ -81,7 +83,7 @@ def upload(request):
         # call the parser corresponding to the service
         fileName = ""
         if serviceName == "facebook":
-            fileName = uploadedFiles.name[:-4]
+            fileName = uploadedFile.name[:-4]
             facebookParser.parseFacebookData(fileName)
             facebookAnalyzer.analyzeFacebookData(fileName)
 
@@ -100,7 +102,7 @@ def upload(request):
             fileName = newDirName
             """
 
-            fileName = uploadedFiles.name[:-4]
+            fileName = uploadedFile.name[:-4]
             appleParser.parseAppleData(fileName)
             appleAnalyzer.analyzeGeneralAppleData(fileName)
             appleAnalyzer.analyzeMusicAppleData(fileName)
@@ -110,6 +112,7 @@ def upload(request):
         
         else: print("service name not recognized")
 
+        fss.delete(uploadedFile.name)
 
         #TODO: implement progress bar on frontend
 

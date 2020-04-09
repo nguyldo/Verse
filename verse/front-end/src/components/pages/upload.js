@@ -304,6 +304,64 @@ export default class Upload extends Component {
   }
   */
 
+  prepareData(e) {
+    let requests = [];
+    if (this.state.facebookRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest)
+      );
+    }
+    if (this.state.googleRequest != "") {
+      
+    }
+    if (this.state.appleRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest)
+      );
+      requests.push(
+        axios.get("http://localhost:8000/appleMusicData/" + this.state.appleRequest)
+      );
+      requests.push(
+        axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest)
+      );
+    }
+    axios.all(requests).then(axios.spread((...responses) => {
+      console.log("Requests successful!")
+      console.log(responses)
+      
+      let count = 0;
+      let retrievedData = {}
+      console.log("hit0")
+      if (this.state.facebookRequest != "") {
+        console.log("hit1")
+        retrievedData["facebook"] = responses[count].data.data;
+        //retrievedData.push({"facebook": responses[count].data.data});
+        count++;
+        console.log("hit2")
+      }
+      if (this.state.googleRequest != "") {
+        retrievedData.push({"google": responses[count].data.data});
+        count++;
+      }
+      if (this.state.appleRequest != "") {
+        retrievedData.push({"applegeneral": responses[count].data.data})
+        count++;
+        retrievedData.push({"applemusic": responses[count].data.data})
+        count++;
+        retrievedData.push({"applegames": responses[count].data.data})
+        count++;
+      }
+
+      console.log("retrieved data")
+      console.log(retrievedData)
+      
+      // use/access the results 
+    })).catch(errors => {
+      // react on errors.
+      console.log("error...")
+    })
+  }
+
   render() {
     return (
       <div id="uploadpage">
@@ -334,8 +392,9 @@ export default class Upload extends Component {
               <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
+          <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create actual visuals</button>
           <Link to={{
-            pathname: "/results",
+            pathname: "/loading",
             state: {
               facebookRequest: this.state.facebookRequest,
               googleRequest: this.state.googleRequest,
