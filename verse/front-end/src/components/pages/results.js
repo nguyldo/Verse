@@ -79,6 +79,7 @@ export default class Results extends Component {
 
   componentWillMount() {
     
+    /*
     if (this.state.facebookRequest != "") {
       this.getFacebookData();
     } else {
@@ -94,6 +95,7 @@ export default class Results extends Component {
     } else {
       document.getElementById("applevisuals").style.display = "none";
     }
+    */
   }
 
   componentDidMount() {

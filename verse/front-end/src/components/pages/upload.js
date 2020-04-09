@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
 
@@ -9,6 +9,8 @@ export default class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
+      redirect: null,
 
       // facebook state
       facebookFiles: null,
@@ -331,29 +333,32 @@ export default class Upload extends Component {
       
       let count = 0;
       let retrievedData = {}
-      console.log("hit0")
       if (this.state.facebookRequest != "") {
-        console.log("hit1")
         retrievedData["facebook"] = responses[count].data.data;
         //retrievedData.push({"facebook": responses[count].data.data});
         count++;
-        console.log("hit2")
       }
       if (this.state.googleRequest != "") {
-        retrievedData.push({"google": responses[count].data.data});
+        retrievedData["google"] = responses[count].data.data;
+        //retrievedData.push({"google": responses[count].data.data});
         count++;
       }
       if (this.state.appleRequest != "") {
-        retrievedData.push({"applegeneral": responses[count].data.data})
+        retrievedData["applegeneral"] = responses[count].data.data;
+        //retrievedData.push({"applegeneral": responses[count].data.data})
         count++;
-        retrievedData.push({"applemusic": responses[count].data.data})
+        retrievedData["applemusic"] = responses[count].data.data;
+        //retrievedData.push({"applemusic": responses[count].data.data})
         count++;
-        retrievedData.push({"applegames": responses[count].data.data})
+        retrievedData["applegames"] = responses[count].data.data;
+        //retrievedData.push({"applegames": responses[count].data.data})
         count++;
       }
 
-      console.log("retrieved data")
-      console.log(retrievedData)
+      console.log("retrieved data");
+      console.log(retrievedData);
+
+      this.setState({redirect: retrievedData});
       
       // use/access the results 
     })).catch(errors => {
@@ -363,6 +368,17 @@ export default class Upload extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={{
+        pathname: "/results",
+        state: {
+          facebookRequest: this.state.facebookRequest,
+          googleRequest: this.state.googleRequest,
+          appleRequest: this.state.appleRequest,
+          compiledRequest: this.state.redirect
+        }
+       }} />
+    }
     return (
       <div id="uploadpage">
         <Header />
