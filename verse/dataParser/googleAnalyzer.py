@@ -6,8 +6,8 @@ import numpy as np
 import operator
 
 #TODO: uncomment first if running through django and second if through python
-#from dataParser import genericParser
-import genericParser
+from dataParser import genericParser
+#import genericParser
 
 def analyzeGoogleData(googleUserFileName):
     #TODO: uncomment first if running through django and second if through python
