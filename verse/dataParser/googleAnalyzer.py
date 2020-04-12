@@ -11,8 +11,8 @@ import genericParser
 
 def analyzeGoogleData(googleUserFileName):
     #TODO: uncomment first if running through django and second if through python
-    #data = genericParser.getParsedJson("./media/processedData/google/" + googleUserFileName + "/parsedGoogleData.json")
-    data = genericParser.getParsedJson("../media/processedData/google/" + googleUserFileName + "/parsedGoogleData.json")
+    data = genericParser.getParsedJson("./media/processedData/google/" + googleUserFileName + "/parsedGoogleData.json")
+    #data = genericParser.getParsedJson("../media/processedData/google/" + googleUserFileName + "/parsedGoogleData.json")
 
     Dict = {}
 
@@ -29,13 +29,14 @@ def analyzeGoogleData(googleUserFileName):
     Dict["youtube_timeline"] = data["youtube_activity"]
 
     #write analyzed data dictionary to json file
-    #genericParser.writeToJsonFile(Dict, "./media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
-    genericParser.writeToJsonFile(Dict, "../media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
+    genericParser.writeToJsonFile(Dict, "./media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
+    #genericParser.writeToJsonFile(Dict, "../media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
 
-
+"""
 def main():
     root = "google-lisa"
     analyzeGoogleData(root)
 
 if __name__ == "__main__":
     main() 
+"""

@@ -9,8 +9,8 @@ import pandas as pd
 from bs4 import BeautifulSoup
 
 #TODO: uncomment first if running through django and second if through python
-#from dataParser import genericParser  
-import genericParser
+from dataParser import genericParser  
+#import genericParser
 
 # Function: extracts json data from the root directory of facebook data 
 # Return: a dictionary with parsed data
@@ -24,8 +24,8 @@ def parseGoogleData(googleDataDumpName):
 
     # Parse through apple media root directory
     #TODO: uncomment first if running through django and second if through python
-    #rootPathName = "./media/unzippedFiles/google/" + googleDataDumpName
-    rootPathName = "../media/unzippedFiles/google/" + googleDataDumpName
+    rootPathName = "./media/unzippedFiles/google/" + googleDataDumpName
+    #rootPathName = "../media/unzippedFiles/google/" + googleDataDumpName
     
     if os.path.exists(rootPathName):
         # Get total size
@@ -330,11 +330,14 @@ def parseGoogleData(googleDataDumpName):
     else: print("path does not exist")
 
     #write parsed data dictionary to json file
-    genericParser.writeToJsonFile(Dict, '../media/processedData/google/' + googleDataDumpName + '/parsedGoogleData.json')
+    genericParser.writeToJsonFile(Dict, './media/processedData/google/' + googleDataDumpName + '/parsedGoogleData.json')
+    #genericParser.writeToJsonFile(Dict, '../media/processedData/google/' + googleDataDumpName + '/parsedGoogleData.json')
 
+"""
 def main():
     root = "google-lisa"
     parseGoogleData(root)
 
 if __name__ == "__main__":
     main() 
+"""
