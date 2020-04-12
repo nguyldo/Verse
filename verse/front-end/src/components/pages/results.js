@@ -10,6 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import IPAdressChart from "../visuals/IPAddressChart";
 import ReactionBarChart from "../visuals/ReactionBarChart";
 import PostPieChart from "../visuals/PostPieChart.js";
+import LocationPieChart from "../visuals/LocationPieChart.js";
+import DrivePieChart from "../visuals/DrivePieChart.js";
+import ChannelPieChart from "../visuals/ChannelPieChart.js";
 
 //Apple Visuals
 import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
@@ -31,7 +34,7 @@ export default class Results extends Component {
     this.state = props.location.state;
     this.setState = ({
       //vals: "hi",
-      name: "",
+      fb_name: "",
       category: "",
       full_locations: [],
       locations: {},
@@ -45,6 +48,16 @@ export default class Results extends Component {
       sites_num: 0,
       facebookData: {},
 
+      google_name: "",
+      email: "",
+      assistant_num: 0,
+      google_sites_num: 0,
+      subscriptions: 0,
+      prof_pic_num: 0,
+      playlists: 0,
+      contacts: "",
+      google_ad: "",
+      google_sites: "",
       googleData: {},
 
       vals: "testing",
@@ -102,7 +115,7 @@ export default class Results extends Component {
       this.state.facebookData = response.data.data;
       console.log("Facebook analyze return success");
       console.log(this.state.facebookData);
-      this.state.name = this.state.facebookData["name_category_header"]["0"];
+      this.state.fb_name = this.state.facebookData["name_category_header"]["0"];
       this.state.category = this.state.facebookData["name_category_header"]["1"];
       this.state.full_locations = this.state.facebookData["locations_piechart"];
       this.state.your_posts = this.state.facebookData["posts_linegraph"]["0"];
@@ -270,7 +283,7 @@ export default class Results extends Component {
           </div>
           <div id="mainvisuals">
             <div class="visualssection" id="facebookvisuals">
-              <h1>Name: {this.state.name}</h1>
+              <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.category}</h2>
               <div class="chart">
                 <IPAdressChart/>
@@ -290,12 +303,28 @@ export default class Results extends Component {
               <p>Number of Off-Facebook Websites and Apps that Facebook Tracks: {this.state.off_num}</p>
             </div>
             <div class="visualssection" id="googlevisuals">
-              <p>sample google</p>
-              <p>sample google</p>
-              <p>sample google</p>
-              <p>sample google</p>
-              <p>sample google</p>
-              <p>sample google</p>
+              <h1>Name: {this.state.google_name}</h1>
+              <h2>Gmail: {this.state.email}</h2>
+              <div class="chart">
+                <LocationPieChart/>
+              </div>
+              <div class="chart">
+                <DrivePieChart/>
+              </div>
+              <div class="chart">
+                <ChannelPieChart/>
+              </div>
+              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
+              <p>List of Websites You Have Logged Into Using Google:</p>
+              <select id="select_google_sites" size="5"></select>
+              <p>Total Number: {this.state.google_sites_num}</p>
+              <p>List of Websites that have advertised to you through Google:</p>
+              <select id="select_google_comp" size="5"></select>
+              <p>Your Google contacts:</p>
+              <select id="select_google_contacts" size="5"></select>
+              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
+              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
+              <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
             <div class="visualssection" id="applevisuals">
               <Grid container spacing={5}>
