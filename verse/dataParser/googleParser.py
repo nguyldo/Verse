@@ -60,7 +60,7 @@ def parseGoogleData(googleDataDumpName):
             data_saved_places = genericParser.jsonToDict(file_saved_places, ())
             data_saved_places = data_saved_places["features"]
 
-            key_saved_places = "Saved Places"
+            key_saved_places = "saved_places"
 
             val_saved_places = []
             for data_pt in data_saved_places:
