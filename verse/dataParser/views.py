@@ -12,7 +12,7 @@ import os
 import zipfile 
 
 from dataParser import visualizationData
-from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -48,6 +48,10 @@ def appleAppsGamesDataAPI(request, userFileName):
 
 #----- GOOGLE APIs -----
 
+@api_view(["GET"])
+def googleDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedGoogleData(userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- UPLOAD API -----
 
@@ -65,12 +69,8 @@ def upload(request):
         # save and unzip files
         fss = FileSystemStorage()
 
-        #print("Debug: " + uploadedFiles)
-        #for uploadedFile in uploadedFiles:
-        #    fss.save(uploadedFile.name, uploadedFile)
         fss.save(uploadedFiles.name, uploadedFiles)
 
-        #dev-connectAPIs
         zipPath = fss.location + "/" + uploadedFiles.name
         mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
 
@@ -106,14 +106,15 @@ def upload(request):
             appleAnalyzer.analyzeMusicAppleData(fileName)
             appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
-        #elif serviceName == "google":
-        
+        elif serviceName == "google":
+            fileName = uploadedFiles.name[:-4]
+            googleParser.parseGoogleData(fileName)
+            googleAnalyzer.analyzeGoogleData(fileName)
+            
         else: print("service name not recognized")
 
 
         #TODO: implement progress bar on frontend
-
-        #default_storage.delete(uploadedFile.name)
 
         print(fileName)
         return Response(status=status.HTTP_200_OK, data={"fileName" : fileName})

@@ -37,7 +37,7 @@ def parseGoogleData(googleDataDumpName):
         mapsDirPath = rootPathName + "/Maps (your places)"
         activityDirPath = rootPathName + "/My Activity"
         profileDirPath = rootPathName + "/Profile"
-        """
+        
         # ---------- Bookmarks Data ---------- 
         if os.path.exists(bookmarksDirPath):
             # -----  -----
@@ -88,7 +88,6 @@ def parseGoogleData(googleDataDumpName):
 
         else: print("maps dir path not found")
 
-        
         # ---------- Activity Data ----------
         if os.path.exists(activityDirPath):
             
@@ -199,7 +198,6 @@ def parseGoogleData(googleDataDumpName):
 
             Dict[key_maps] = val_maps
 
-            
             # -----  -----
             file_search = activityDirPath + "/Search/MyActivity.html"
 
@@ -311,7 +309,7 @@ def parseGoogleData(googleDataDumpName):
             Dict[key_youtube] = val_youtube
 
         else: print("activity dir path not found")
-        """
+        
         # ---------- Profile Data ----------
         if os.path.exists(profileDirPath):
 
@@ -326,11 +324,13 @@ def parseGoogleData(googleDataDumpName):
             val_profile["orgs"] = data_profile["organizations"]
 
             Dict[key_profile] = val_profile
-            print(Dict)
 
         else: print("profile dir path not found")
 
     else: print("path does not exist")
+
+    #write parsed data dictionary to json file
+    genericParser.writeToJsonFile(Dict, '../media/processedData/google/' + googleDataDumpName + '/parsedGoogleData.json')
 
 def main():
     root = "google-lisa"
