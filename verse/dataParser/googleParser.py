@@ -32,207 +32,303 @@ def parseGoogleData(googleDataDumpName):
         Dict["totalSizeInGB"] = genericParser.getDirSizeInGB(rootPathName)
         #TODO: double check, this number doesn't make sense
 
-        for root, dirs, files in genericParser.walklevel(rootPathName, level=1):
-            categoryDirName = root.rsplit('/', 1)[-1]
+        #Extract data
+        bookmarksDirPath = rootPathName + "/Bookmarks"
+        mapsDirPath = rootPathName + "/Maps (your places)"
+        activityDirPath = rootPathName + "/My Activity"
+        profileDirPath = rootPathName + "/Profile"
+        """
+        # ---------- Bookmarks Data ---------- 
+        if os.path.exists(bookmarksDirPath):
+            # -----  -----
+            file_bookmarks = bookmarksDirPath + "/Bookmarks.html"
 
-            # if category is valid,
-            # add data of interest to dictionary
-            dirPath = rootPathName + "/" + categoryDirName
+            key_bookmarks = "bookmarks"
+            val_bookmarks = []
 
-            if any(categoryDirName in category for category in rootCategoriesOfInterest) and os.path.exists(dirPath):
+            bookmarks = genericParser.htmlToSoup(file_bookmarks, "dl", "")
+            val_bookmarks = list(filter(None, bookmarks[0].text.split("\n")))
+
+            Dict[key_bookmarks] = val_bookmarks
+
+        else: print("bookmarks dir path not found")
+
+        # ---------- Maps Data ----------
+        if os.path.exists(mapsDirPath):
+            # -----  -----
+            file_saved_places = mapsDirPath + "/Saved Places.json"
+            data_saved_places = genericParser.jsonToDict(file_saved_places, ())
+            data_saved_places = data_saved_places["features"]
+
+            key_saved_places = "Saved Places"
+
+            val_saved_places = []
+            for data_pt in data_saved_places:
+                place = []
+
+                name = data_pt["properties"]["Title"]
+                place.append(name)
+
+                locations = data_pt["properties"]["Location"]
+            
+                if "Geo Coordinates" in locations.keys() and "Address" in locations.keys():
+                    address = locations["Address"]
+                    coords = locations["Geo Coordinates"]
+
+                    place.append(address)
+                    place.append(coords)
+
+                else: 
+                    coords = locations
+                    place.append(coords)
+
+                val_saved_places.append(place)
+
+            Dict[key_saved_places] = val_saved_places
+
+        else: print("maps dir path not found")
+
+        
+        # ---------- Activity Data ----------
+        if os.path.exists(activityDirPath):
+            
+            # -----  -----
+            file_ads = activityDirPath + "/Ads/MyActivity.html"
+
+            # list of (link, date) tuples
+            key_ads = "ads_activity"
+            val_ads = []
+
+            ads = genericParser.htmlToSoup(file_ads, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
                 
-                if categoryDirName == "Bookmarks":
-                    # -----  -----
-                    file_bookmarks = dirPath + "/Bookmarks.html"
+            for ad in ads:
+                if len(ad.contents) == 4:
+                    link = ad.contents[1]['href']
+                    date = ad.contents[3]
 
-                    with open(file_bookmarks, "rb") as infile:
-                        soup = BeautifulSoup(infile,'lxml')
+                    val_ads.append((link, date))
 
-                        key_bookmarks = soup.title.text
+            Dict[key_ads] = val_ads
 
-                        places = soup.find_all("dl")[0].get_text()
-                        places = places.split("\n")
-                        places = list(filter(None, places))
+            # -----  -----
+            file_maps = activityDirPath + "/Maps/MyActivity.html"
+
+            # dict of lists of (link, date) tuples
+            key_maps = "maps_activity"
+            val_maps = {}
+
+            usages = []     #list of timestamps maps was used
+            links = []      
+            views = []      
+            searches = []   
+            calls = []      
+            directions = []
+            others = []
+
+            maps = genericParser.htmlToSoup(file_maps, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
+
+            for item in maps:
+
+                if len(item.contents) == 3:
+                    if "Used" in str(item.contents[0]):
+                        date = item.contents[2]
+
+                        usages.append(date)
+
+                    elif "Viewed" in str(item.contents[0]):
+                        try:
+                            link = item.contents[0]['href']
+                        except: link = ""
+                        date = item.contents[2]
+
+                        views.append((link, date))
+
+                    else:
+                        try:
+                            link = item.contents[0]['href']
+                        except: link = ""
+                        date = item.contents[2]
+
+                        links.append((link, date))
+
+                elif len(item.contents) == 4:
+                    if "Viewed" in str(item.contents[0]):
+                        try:
+                            link = item.contents[1]['href']
+                        except: link = ""
+                        date = item.contents[3]
+
+                        views.append((link, date))
+
+                    elif "Searched" in str(item.contents[0]):
+                        try:
+                            link = item.contents[1]['href']
+                        except: link = ""
+                        date = item.contents[3]
+
+                        searches.append((link, date))
+
+                    elif "Called" in str(item.contents[0]):
+                        try:
+                            link = item.contents[1]['href']
+                        except: link = ""
+                        date = item.contents[3]
+
+                        calls.append((link, date))
+
+                elif len(item.contents) == 8:
+                    try:
+                        link = item.contents[1]['href']
+                    except: link = ""
+                    origin = item.contents[3]
+                    dest = item.contents[5]
+                    date = item.contents[7]
+
+                    directions.append((link, origin, dest, date))
+
+                else: 
+                    others.append(item.contents)
+
+            val_maps["usages"] = usages
+            val_maps["links"] = links
+            val_maps["views"] = views
+            val_maps["searches"] = searches
+            val_maps["calls"] = calls
+            val_maps["directions"] = directions 
+            #val_maps["others"] = others   
+
+            Dict[key_maps] = val_maps
+
+            
+            # -----  -----
+            file_search = activityDirPath + "/Search/MyActivity.html"
+
+            # dict of lists of (link, date) tuples
+            key_searches = "search_activity"
+            val_searches = {}
+
+            views = []
+            visits = []
+            searches = []
+
+            engineSearches = genericParser.htmlToSoup(file_search, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
+
+            for item in engineSearches:
+
+                if len(item.contents) == 4:
+
+                    if "Viewed" in str(item.contents[0]):
+                        view = item.contents[1].string
+                        link = item.contents[1]['href']
+                        date = item.contents[3]
+
+                        caption = item.next_sibling.next_sibling.contents
+                        if len(caption) > 4 and "Locations" in str(caption[4]):
+                            coordLink = caption[7]['href']
+
+                            if "center" in str(coordLink):
+                                coords = coordLink.split("center")[1][1:21]
+                            else:
+                                coords = coordLink.split("=")[2][1:21]
+
+                            views.append((view, link, date, coords))
                         
-                        val_bookmarks = places
+                        else: views.append((view, link, date))
 
-                        Dict[key_bookmarks] = val_bookmarks
+                    elif "Visited" in str(item.contents[0]):
+                        visit = item.contents[1].string
+                        link = item.contents[1]['href']
+                        date = item.contents[3]
 
-                elif categoryDirName == "Maps (your places)":
-                    # -----  -----
-                    file_saved_places = "Saved Places.json"
-                    data_saved_places = genericParser.jsonToDict(dirPath + "/" + file_saved_places, ())
-                    data_saved_places = data_saved_places["features"]
+                        caption = item.next_sibling.next_sibling.contents
+                        if len(caption) > 4 and "Locations" in str(caption[4]):
+                            coordLink = caption[7]['href']
 
-                    key_saved_places = "Saved Places"
+                            if "center" in str(coordLink):
+                                coords = coordLink.split("center")[1][1:21]
+                            else:
+                                coords = coordLink.split("=")[2][1:21]
 
-                    val_saved_places = []
-                    for data_pt in data_saved_places:
-                        place = []
-
-                        name = data_pt["properties"]["Title"]
-                        place.append(name)
-
-                        locations = data_pt["properties"]["Location"]
-                    
-                        if "Geo Coordinates" in locations.keys() and "Address" in locations.keys():
-                            address = locations["Address"]
-                            coords = locations["Geo Coordinates"]
-
-                            place.append(address)
-                            place.append(coords)
-
-                        else: 
-                            coords = locations
-                            place.append(coords)
-
-                        val_saved_places.append(place)
-
-                    Dict[key_saved_places] = val_saved_places
-
-                elif categoryDirName == "My Activity":
-                    # -----  -----
-                    file_ads = dirPath + "/Ads/MyActivity.html"
-
-                    key_ads = "ads_activity"
-                    val_ads = []
-
-                    with open(file_ads, "rb") as infile:
-                        soup = BeautifulSoup(infile,'lxml')
-                        ads = soup.find_all("div", {"class": "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1"})
+                            visits.append((visit, link, date, coords))
                         
-                        for item in ads:
+                        else: visits.append((visit, link, date))
 
-                            if len(item.contents) >= 4:
-                                link = item.contents[1]['href']
-                                date = item.contents[3]
+                    elif "Searched" in str(item.contents[0]):
+                        search = item.contents[1].string
+                        link = item.contents[1]['href']
+                        date = item.contents[3]
 
-                                val_ads.append((link, date))
+                        caption = item.next_sibling.next_sibling.contents
+                        if len(caption) > 4 and "Locations" in str(caption[4]):
+                            coordLink = caption[7]['href']
 
-                    Dict[key_ads] = val_ads
+                            if "center" in str(coordLink):
+                                coords = coordLink.split("center")[1][1:21]
+                            else:
+                                coords = coordLink.split("=")[2][1:21]
 
-                    # -----  -----
-                    file_maps = dirPath + "/Maps/MyActivity.html"
+                            searches.append((search, link, date, coords))
+                        
+                        else: searches.append((search, link, date))
 
-                    key_maps = "maps_activity"
-                    val_maps = {}
+            val_searches["views"] = views
+            val_searches["visits"] = visits
+            val_searches["searches"] = searches
+                
+            Dict[key_searches] = val_searches
+            
+            # -----  -----
+            file_youtube = activityDirPath + "/YouTube/MyActivity.html"
+            
+            key_youtube = "youtube_activity"
+            val_youtube = {}
 
-                    usages = []     #list of timestamps maps was used
-                    links = []      #list of links and timestamps
-                    views = []      #list of links and timestamps
-                    searches = []   #list of links and timestamps
-                    calls = []      #list of links and timestamps
-                    directions = []
-                    others = []
+            watches = []
+            searches = []
 
-                    with open(file_maps, "rb") as infile:
-                        soup = BeautifulSoup(infile,'lxml')
-                        entries = soup.find_all("div", {"class": "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1"})
+            youtubeActions = genericParser.htmlToSoup(file_youtube, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
 
-                        for item in entries:
+            for item in youtubeActions:
+                
+                if len(item.contents) == 6 and "Watched" in str(item.contents[0]):
+                    video = item.contents[1].string
+                    link = item.contents[1]['href']
+                    uploader = item.contents[3].string
+                    date = item.contents[5]
 
-                            if len(item.contents) == 3:
-                                if "Used" in str(item.contents[0]):
-                                    date = item.contents[2]
-                                    usages.append(date)
+                    watches.append((video, link, uploader, date))
 
-                                else:
-                                    try:
-                                        link = item.contents[0]['href']
-                                    except:
-                                        link = ""
+                elif len(item.contents) == 4 and "Searched" in str(item.contents[0]):
+                    query = item.contents[1].string
+                    link = item.contents[1]['href']
+                    date = item.contents[3]
 
-                                    date = item.contents[2]
+                    searches.append((query, link, date))
 
-                                    linkValues = (link, date)
-                                    links.append(linkValues)
+            val_youtube["watches"] = watches
+            val_youtube["searches"] = searches
 
-                            elif len(item.contents) == 4:
-                                if "Viewed" in item.contents[0]:
-                                    link = item.contents[1]['href']
-                                    date = item.contents[3]
+            Dict[key_youtube] = val_youtube
 
-                                    viewValues = (link, date)
-                                    views.append(viewValues)
+        else: print("activity dir path not found")
+        """
+        # ---------- Profile Data ----------
+        if os.path.exists(profileDirPath):
 
-                                elif "Searched" in str(item.contents[0]):
-                                    try:
-                                        link = item.contents[1]['href']
-                                    except:
-                                        link = ""
+            file_profile = profileDirPath + "/Profile.json"
+            data_profile = genericParser.jsonToDict(file_profile, ())
 
-                                    date = item.contents[3]
+            key_profile = "profile_info"
+            val_profile = {}
 
-                                    searchValues = (link, date)
-                                    searches.append(searchValues)
+            val_profile["name"] = data_profile["displayName"]
+            val_profile["emails"] = data_profile["emails"]
+            val_profile["orgs"] = data_profile["organizations"]
 
-                                elif "Called" in str(item.contents[0]):
-                                    try:
-                                        link = item.contents[1]['href']
-                                    except:
-                                        link = ""
+            Dict[key_profile] = val_profile
+            print(Dict)
 
-                                    date = item.contents[3]
-
-                                    callValues = (link, date)
-                                    calls.append(callValues)
-
-                            elif len(item.contents) == 8:
-                                try:
-                                    link = item.contents[1]['href']
-                                except:
-                                    link = ""
-
-                                origin = item.contents[3]
-                                dest = item.contents[5]
-                                date = item.contents[7]
-
-                                dirValues = (link, origin, dest, date)
-                                directions.append(dirValues)
-
-                            else: 
-                                others.append(item.contents)
-                                print(item.contents)
-                                print()
-
-                    val_maps["usages"] = usages
-                    val_maps["links"] = links
-                    val_maps["views"] = views
-                    val_maps["searches"] = searches
-                    val_maps["calls"] = calls
-                    val_maps["directions"] = directions 
-                    #val_maps["others"] = others   
-
-                    Dict[key_maps] = val_maps
-
-                    # -----  -----
-                    file_search = "/Search/MyActivity.html"
-
-                    key_search = "search_activity"
-                    val_search = {}
-
-
-
-
-                    file_youtube = "/YouTube/MyActivity.html"
-
-                elif categoryDirName == "Profile":
-
-                    file_profile = "Profile.json"
-
-                elif categoryDirName == "Saved":
-
-                    file_places = "Favorite_places.json"
-
-                elif categoryDirName == "YouTube":
-
-                    file_likes = "/playlists/likes.json"
-
-                    file_love = "/playlists/Love.json"
-
-                    file_watch_later = "watch-later.json"
-
-                    file_subscriptions = "/subscriptions/subscriptions.json"
+        else: print("profile dir path not found")
 
     else: print("path does not exist")
 
