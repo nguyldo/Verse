@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import axios from "axios";
+//import axios from "axios";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
@@ -108,6 +108,22 @@ export default class Results extends Component {
     // decides whether or not to show the visuals for each section
     if ("facebook" in this.state.compiledRequest) {
       console.log("facebook data was loaded");
+      this.state.name = this.state.compiledRequest.facebook["name_category_header"]["0"];
+      this.state.category = this.state.compiledRequest.facebook["name_category_header"]["1"];
+      this.state.full_locations = this.state.compiledRequest.facebook["locations_piechart"];
+      this.state.your_posts = this.state.compiledRequest.facebook["posts_linegraph"]["0"];
+      this.state.other_posts = this.state.compiledRequest.facebook["posts_linegraph"]["1"];
+      this.state.comments = this.state.compiledRequest.facebook["posts_linegraph"];
+      this.state.reactions = this.state.compiledRequest.facebook["reactions_pictograph"];
+      this.state.sites = this.state.compiledRequest.facebook["websites_list"];
+      this.state.sites_num = this.state.compiledRequest.facebook["websites_count"];
+      this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
+      this.state.companies_num = this.state.companies.length;
+      this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
+      //this.state.vals = "hi"
+      this.forceUpdate();
+      this.populateSelect();
+      this.populateLocationDict();
     } else {
       console.log("facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
@@ -134,25 +150,7 @@ export default class Results extends Component {
     /*
     axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
     ).then((response) => {
-      this.state.facebookData = response.data.data;
-      console.log("Facebook analyze return success");
-      console.log(this.state.facebookData);
-      this.state.name = this.state.facebookData["name_category_header"]["0"];
-      this.state.category = this.state.facebookData["name_category_header"]["1"];
-      this.state.full_locations = this.state.facebookData["locations_piechart"];
-      this.state.your_posts = this.state.facebookData["posts_linegraph"]["0"];
-      this.state.other_posts = this.state.facebookData["posts_linegraph"]["1"];
-      this.state.comments = this.state.facebookData["posts_linegraph"];
-      this.state.reactions = this.state.facebookData["reactions_pictograph"];
-      this.state.sites = this.state.facebookData["websites_list"];
-      this.state.sites_num = this.state.facebookData["websites_count"];
-      this.state.companies = this.state.facebookData["advertisers_list"];
-      this.state.companies_num = this.state.companies.length;
-      this.state.off_num = this.state.facebookData["off-facebook_activity_count"];
-      //this.state.vals = "hi"
-      this.forceUpdate();
-      this.populateSelect();
-      this.populateLocationDict();
+      
     });
     */
   }
