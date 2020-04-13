@@ -20,6 +20,9 @@ export default class Upload extends Component {
       appleFiles: null,
       appleRequest: "",
 
+      netflixFiles: null,
+      netflixRequest: "",
+
       facebookData: {},
       facebookButton: "Choose a file...",
       facebookTitle: "Facebook",
@@ -29,6 +32,9 @@ export default class Upload extends Component {
 
       appleButton: "Choose a file...",
       appleTitle: "Apple",
+
+      netflixButton: "Choose a file...",
+      netflixTitle: "Netflix",
 
       // google state
 
@@ -96,6 +102,14 @@ export default class Upload extends Component {
       } else {
         this.setState({ appleButton: e.target.files[0].name });
       }
+    } else if (specifiedCompany == "netflixupload") {
+      this.setState({ netflixFile: e.target.files[0] });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ netflixButton: label });
+      } else {
+        this.setState({ netflixButton: e.target.files[0].name });
+      }
     }
 
   }
@@ -114,6 +128,9 @@ export default class Upload extends Component {
     } else if (specifiedId == "appleuploadconfirm") {
       file = this.state.appleFile;
       company = "apple";
+    } else if (specifiedId == "netflixuploadconfirm") {
+      file = this.state.netflixFile;
+      company = "netflix";
     } else {
       console.log("Error in confirming upload");
     }
@@ -132,6 +149,9 @@ export default class Upload extends Component {
     } else if (company == "apple") {
       document.getElementById("appleoption").style.display = "none";
       this.setState({ appleTitle: "Apple: Loading..." });
+    } else if (company == "netflix") {
+      document.getElementById("netflixoption").style.display = "none";
+      this.setState({ netflixTitle: "Netflix: Loading..." });
     } else {
       console.log("internal error");
     }
@@ -167,6 +187,10 @@ export default class Upload extends Component {
           this.setState({ appleRequest: promise.data.fileName });
           document.getElementById("appleoption").style.display = "none";
           this.setState({ appleTitle: "Apple: Upload Success!" });
+        } else if (company == "netflix") {
+          this.setState({ netflixRequest: promise.data.fileName });
+          document.getElementById("netflixoption").style.display = "none";
+          this.setState({ netflixTitle: "Netflix: Upload Success!" });
         } else {
           console.log("internal error");
         }
@@ -174,14 +198,17 @@ export default class Upload extends Component {
     } catch {
       console.log(company)
       if (company == "facebook") {
-        document.getElementById("appleoption").style.display = "block";
+        document.getElementById("facebookoption").style.display = "block";
         this.setState({ facebookTitle: "Facebook: Upload Failed..." });
       } else if (company == "google") {
-        document.getElementById("appleoption").style.display = "block";
+        document.getElementById("googleoption").style.display = "block";
         this.setState({ googleTitle: "Google: Upload Failed..." });
       } else if (company == "apple") {
         document.getElementById("appleoption").style.display = "block";
         this.setState({ appleTitle: "Apple: Upload Failed..." });
+      } else if (company == "netflix") {
+        document.getElementById("netflixoption").style.display = "block";
+        this.setState({ netflixTitle: "Netflix: Upload Failed..." });
       } else {
         console.log("internal error");
       }
@@ -332,6 +359,14 @@ export default class Upload extends Component {
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
               <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
               <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+            </form>
+          </div>
+          <div class="uploadoption">
+            <p>{this.state.netflixTitle}</p>
+            <form id="netflixoption">
+              <label for="netflixupload" class="customupload">{this.state.netflixButton}</label>
+              <input multiple id="netflixupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <button type="button" id="netflixuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <Link to={{

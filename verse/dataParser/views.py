@@ -12,7 +12,7 @@ import os
 import zipfile 
 
 from dataParser import visualizationData
-from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer
+from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer, netflixParser
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -68,15 +68,22 @@ def upload(request):
         #print("Debug: " + uploadedFiles)
         #for uploadedFile in uploadedFiles:
         #    fss.save(uploadedFile.name, uploadedFile)
-        fss.save(uploadedFiles.name, uploadedFiles)
 
-        #dev-connectAPIs
-        zipPath = fss.location + "/" + uploadedFiles.name
-        mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
+        if serviceName != "netflix":
+            fss.save(uploadedFiles.name, uploadedFiles)
+
+            #dev-connectAPIs
+            zipPath = fss.location + "/" + uploadedFiles.name
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
 
             # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
-        with zipfile.ZipFile(zipPath, "r") as zip_ref:
-            zip_ref.extractall(mediaDirPath)        
+            with zipfile.ZipFile(zipPath, "r") as zip_ref:
+                zip_ref.extractall(mediaDirPath)        
+        else:
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName
+            fss = FileSystemStorage(location=mediaDirPath)
+            fss.save(uploadedFiles.name, uploadedFiles)
+
 
         # call the parser corresponding to the service
         fileName = ""
@@ -108,6 +115,11 @@ def upload(request):
 
         #elif serviceName == "google":
         
+        elif serviceName == "netflix":
+            fileName = uploadedFiles.name
+            netflixParser.parseNetflixData(fileName)
+
+
         else: print("service name not recognized")
 
 
