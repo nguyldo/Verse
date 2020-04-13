@@ -1,14 +1,24 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
+// import React from "react";
+import Modal from "react-bootstrap/Modal";
+import "bootstrap/dist/css/bootstrap.min.css";
+import ModalBody from "react-bootstrap/ModalBody";
+import ModalHeader from "react-bootstrap/ModalHeader";
+import ModalFooter from "react-bootstrap/ModalFooter";
+import ModalTitle from "react-bootstrap/ModalTitle";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
+// import "./../../css/upload.css";
 
 export default class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
 
       // facebook state
       facebookFiles: null,
@@ -37,6 +47,8 @@ export default class Upload extends Component {
 
     };
   }
+
+
 
   // shuffles and array, taken from 
   // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -290,24 +302,31 @@ export default class Upload extends Component {
     }
     formData.append("filename", file.name)
 
-
+    
     axios({
       url: "http://localhost:8000/upload/",
       method: "POST",
       data: formData
     })
-
+    
     console.log(file);
     for (let vals of formData.values()) {
       console.log("Test: " + vals);
     }
   }
   */
-
-  render() {
-    return (
-      <div id="uploadpage">
-        <Header />
+ 
+ render() {
+   return (
+     <div id="uploadpage">
+      <Header />
+      <Modal show={true}>
+      <Modal.Header>
+        <ModalTitle>Hi</ModalTitle>
+      </Modal.Header>
+      <Modal.Body>asdfasdf</Modal.Body>
+      <Modal.Footer>This is the footer</Modal.Footer>
+      </Modal>
         <h1>Upload file</h1>
         <body>
           <div class="uploadoption">
@@ -347,4 +366,7 @@ export default class Upload extends Component {
     )
   }
 }
+// const rootElement = document.getElementById("root");
+// ReactDOM.render(<Upload />, rootElement);
+
 
