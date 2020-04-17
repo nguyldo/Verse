@@ -50,14 +50,16 @@ def parseNetflixData(netflixDataDumpName):
                 movies.append(item["Title"])
 
         # print("Shows")
-        print(shows)
+        # print(shows)
         # print("Movies")
         # print(movies)
 
         analyzedData = {}
 
-        totalWatchCount = len(shows) + len(movies)
+        totalWatchCount = len(netflixData)
 
+        # print(totalWatchCount)
+        
         topTenShows = []
 
         for show in shows:
@@ -65,5 +67,17 @@ def parseNetflixData(netflixDataDumpName):
         
         topTenShows = heapq.nlargest(10, topTenShows)
 
-        print("Top 10 shows")
-        print(topTenShows)
+        # print("Top 10 shows")
+        # print(topTenShows)
+
+        pieChartTopTenShows = []
+        for show in topTenShows:
+            pieChartTopTenShows.append({"id": show[1], "value": show[0]})
+
+        analyzedData["topTenShowsPieChart"] = pieChartTopTenShows
+        analyzedData["totalCount"] = totalWatchCount
+        analyzedData["movies"] = movies
+        analyzedData["shows"] = shows
+        print(analyzedData)
+
+        
