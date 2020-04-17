@@ -3,6 +3,7 @@ import csv
 import pandas as pd #parse csv
 import numpy as np
 import json
+from bs4 import BeautifulSoup
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
@@ -102,6 +103,18 @@ def csvToDict(filePath, fieldNames):
     df = df.loc[:, fieldNames].to_dict('records')
     
     return df
+
+def htmlToSoup(filePath, findElement, findClass):
+
+    with open(filePath, "rb") as infile:
+        soup = BeautifulSoup(infile, 'lxml')
+
+        if findClass != "":
+            entries = soup.find_all(findElement, {"class": findClass})
+        else:
+            entries = soup.find_all(findElement)
+
+    return entries
 
 # Function to delete a directory and all of its contents
 def deleteData(rootPath):
