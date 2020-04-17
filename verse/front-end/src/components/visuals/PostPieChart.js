@@ -47,7 +47,7 @@ class PostPieChart extends React.Component {
           />
           <CardContent>
             <div style={{height: 200}}>
-              <PieChart data={data}/>
+              <PieChart data={this.props.data}/>
             </div>
           </CardContent>
         </Card>

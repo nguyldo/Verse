@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import axios from "axios";
+//import axios from "axios";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
@@ -29,6 +29,9 @@ export default class Results extends Component {
     super(props);
     console.log(props.location.state);
     this.state = props.location.state;
+
+    // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
+
     this.setState = ({
       //vals: "hi",
       name: "",
@@ -73,11 +76,13 @@ export default class Results extends Component {
       games_timeline: []
 
     });
-    this.getFacebookData = this.getFacebookData.bind(this);
-    this.getAppleData = this.getAppleData.bind(this);
+    // this.getFacebookData = this.getFacebookData.bind(this);
+    // this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentDidMount() {
+  componentMount() {
+    
+    /*
     if (this.state.facebookRequest != "") {
       this.getFacebookData();
     } else {
@@ -93,32 +98,61 @@ export default class Results extends Component {
     } else {
       document.getElementById("applevisuals").style.display = "none";
     }
+    */
   }
 
-  async getFacebookData() {
-    
-    axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
-    ).then((response) => {
-      this.state.facebookData = response.data.data;
-      console.log("Facebook analyze return success");
-      console.log(this.state.facebookData);
-      this.state.name = this.state.facebookData["name_category_header"]["0"];
-      this.state.category = this.state.facebookData["name_category_header"]["1"];
-      this.state.full_locations = this.state.facebookData["locations_piechart"];
-      this.state.your_posts = this.state.facebookData["posts_linegraph"]["0"];
-      this.state.other_posts = this.state.facebookData["posts_linegraph"]["1"];
-      this.state.comments = this.state.facebookData["posts_linegraph"];
-      this.state.reactions = this.state.facebookData["reactions_pictograph"];
-      this.state.sites = this.state.facebookData["websites_list"];
-      this.state.sites_num = this.state.facebookData["websites_count"];
-      this.state.companies = this.state.facebookData["advertisers_list"];
+  componentDidMount() {
+    console.log("Did mount");
+    console.log(this.state);
+
+    // decides whether or not to show the visuals for each section
+    if ("facebook" in this.state.compiledRequest) {
+      console.log("facebook data was loaded");
+      this.state.name = this.state.compiledRequest.facebook["name_category_header"]["0"];
+      this.state.category = this.state.compiledRequest.facebook["name_category_header"]["1"];
+      this.state.full_locations = this.state.compiledRequest.facebook["locations_piechart"];
+      this.state.your_posts = this.state.compiledRequest.facebook["posts_linegraph"]["0"];
+      this.state.other_posts = this.state.compiledRequest.facebook["posts_linegraph"]["1"];
+      this.state.comments = this.state.compiledRequest.facebook["posts_linegraph"];
+      this.state.reactions = this.state.compiledRequest.facebook["reactions_pictograph"];
+      this.state.sites = this.state.compiledRequest.facebook["websites_list"];
+      this.state.sites_num = this.state.compiledRequest.facebook["websites_count"];
+      this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
       this.state.companies_num = this.state.companies.length;
-      this.state.off_num = this.state.facebookData["off-facebook_activity_count"];
+      this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
       //this.state.vals = "hi"
       this.forceUpdate();
       this.populateSelect();
       this.populateLocationDict();
+    } else {
+      console.log("facebook data was NOT loaded");
+      document.getElementById("facebookvisuals").style.display = "none";
+    }
+
+    if ("applegeneral" in this.state.compiledRequest) {
+      console.log("apple data was loaded");
+    } else {
+      console.log("apple data was NOT loaded");
+      document.getElementById("applevisuals").style.display = "none";
+    }
+
+    if ("google" in this.state.compiledRequest) {
+      console.log("google data was loaded");
+    } else {
+      console.log("google data was NOT loaded");
+      document.getElementById("googlevisuals").style.display = "none";
+    }
+
+  }
+
+  async getFacebookData() {
+    
+    /*
+    axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
+    ).then((response) => {
+      
     });
+    */
   }
 
   populateSelect() {
@@ -162,6 +196,7 @@ export default class Results extends Component {
   }
 
   async getAppleData() {
+    /*
     axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest
     ).then((response) => {
       this.state.appleGeneralData = response.data.data;
@@ -206,6 +241,7 @@ export default class Results extends Component {
       this.forceUpdate();
       console.log("Apple apps games return success");
     });
+    */
   }
 
   exportToImage(e) {
@@ -273,13 +309,13 @@ export default class Results extends Component {
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
               <div class="chart">
-                <IPAdressChart/>
+                <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
               </div>
               <div class="chart">
-                <PostPieChart/>
+                <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
               </div>
               <div class="chart">
-                <ReactionBarChart/>
+                <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
               </div>
               <p>List of Websites You Have Logged Into Using Facebook:</p>
               <select id="select_sites" size="5"></select>

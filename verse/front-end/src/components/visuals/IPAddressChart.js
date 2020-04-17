@@ -49,7 +49,7 @@ class IPAddressChart extends React.Component {
           />
           <CardContent>
             <div style={{height: 200}}>
-              <ScrollableBarChart data={data}/>
+              <ScrollableBarChart data={this.props.data}/>
             </div>
           </CardContent>
         </Card>
