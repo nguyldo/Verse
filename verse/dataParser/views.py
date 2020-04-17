@@ -12,7 +12,8 @@ import os
 import zipfile 
 
 from dataParser import visualizationData
-from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer, netflixParser
+
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -69,14 +70,25 @@ def upload(request):
         # save and unzip files
         fss = FileSystemStorage()
 
-        fss.save(uploadedFiles.name, uploadedFiles)
+        #print("Debug: " + uploadedFiles)
+        #for uploadedFile in uploadedFiles:
+        #    fss.save(uploadedFile.name, uploadedFile)
 
-        zipPath = fss.location + "/" + uploadedFiles.name
-        mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
+        if serviceName != "netflix":
+            fss.save(uploadedFiles.name, uploadedFiles)
+
+            #dev-connectAPIs
+            zipPath = fss.location + "/" + uploadedFiles.name
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]
 
             # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
-        with zipfile.ZipFile(zipPath, "r") as zip_ref:
-            zip_ref.extractall(mediaDirPath)        
+            with zipfile.ZipFile(zipPath, "r") as zip_ref:
+                zip_ref.extractall(mediaDirPath)        
+        else:
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName
+            fss = FileSystemStorage(location=mediaDirPath)
+            fss.save(uploadedFiles.name, uploadedFiles)
+
 
         # call the parser corresponding to the service
         fileName = ""
@@ -106,11 +118,15 @@ def upload(request):
             appleAnalyzer.analyzeMusicAppleData(fileName)
             appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
+        elif serviceName == "netflix":
+            fileName = uploadedFiles.name
+            netflixParser.parseNetflixData(fileName)
+
         elif serviceName == "google":
             fileName = uploadedFiles.name[:-4]
             googleParser.parseGoogleData(fileName)
             googleAnalyzer.analyzeGoogleData(fileName)
-            
+
         else: print("service name not recognized")
 
 
