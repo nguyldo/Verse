@@ -12,7 +12,8 @@ import os
 import zipfile 
 
 from dataParser import visualizationData
-from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer, netflixParser
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer, netflixParser
+
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -48,6 +49,10 @@ def appleAppsGamesDataAPI(request, userFileName):
 
 #----- GOOGLE APIs -----
 
+@api_view(["GET"])
+def googleDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedGoogleData(userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- UPLOAD API -----
 
@@ -74,7 +79,7 @@ def upload(request):
 
             #dev-connectAPIs
             zipPath = fss.location + "/" + uploadedFiles.name
-            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]
 
             # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
             with zipfile.ZipFile(zipPath, "r") as zip_ref:
@@ -113,19 +118,19 @@ def upload(request):
             appleAnalyzer.analyzeMusicAppleData(fileName)
             appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
-        #elif serviceName == "google":
-        
         elif serviceName == "netflix":
             fileName = uploadedFiles.name
             netflixParser.parseNetflixData(fileName)
 
+        elif serviceName == "google":
+            fileName = uploadedFiles.name[:-4]
+            googleParser.parseGoogleData(fileName)
+            googleAnalyzer.analyzeGoogleData(fileName)
 
         else: print("service name not recognized")
 
 
         #TODO: implement progress bar on frontend
-
-        #default_storage.delete(uploadedFile.name)
 
         print(fileName)
         return Response(status=status.HTTP_200_OK, data={"fileName" : fileName})
