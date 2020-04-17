@@ -1,0 +1,36 @@
+#p {
+    font-size: 15px;
+    text-align: left;
+    padding-left: 70px;
+}
+
+#list {
+    font-size: 15px;
+    text-align: left;
+    padding-left: 80px;
+}
+
+#hdr {
+    font-size: 45px;
+}
+
+#hdr-companies {
+    font-size: 30px;
+}
+
+#hyperlink {
+    font-size: 20px;
+    padding: 10px;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    background-color: rgb(165, 164, 164);
+    box-shadow: 1px 2px 1px #29648A;
+    /* box-shadow: 1px 4px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+}
+
+#pic {
+    margin-left: 100px;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
