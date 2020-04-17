@@ -309,13 +309,13 @@ export default class Results extends Component {
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
               <div class="chart">
-                <IPAdressChart/>
+                <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
               </div>
               <div class="chart">
-                <PostPieChart/>
+                <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
               </div>
               <div class="chart">
-                <ReactionBarChart/>
+                <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
               </div>
               <p>List of Websites You Have Logged Into Using Facebook:</p>
               <select id="select_sites" size="5"></select>

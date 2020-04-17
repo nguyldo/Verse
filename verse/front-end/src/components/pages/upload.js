@@ -143,10 +143,10 @@ export default class Upload extends Component {
     } catch {
       console.log(company)
       if (company == "facebook") {
-        document.getElementById("appleoption").style.display = "block";
+        document.getElementById("facebookoption").style.display = "block";
         this.setState({ facebookTitle: "Facebook: Upload Failed..." });
       } else if (company == "google") {
-        document.getElementById("appleoption").style.display = "block";
+        document.getElementById("googleoption").style.display = "block";
         this.setState({ googleTitle: "Google: Upload Failed..." });
       } else if (company == "apple") {
         document.getElementById("appleoption").style.display = "block";
