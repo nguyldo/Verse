@@ -65,7 +65,7 @@ def upload(request):
     if request.method == "POST":
 
         serviceName = request.data.get("company")
-        uploadedFile = request.data.get("files")
+        uploadedFiles = request.data.get("files")
         userId = request.session.session_key
 
         # save and unzip files
@@ -94,7 +94,7 @@ def upload(request):
         # call the parser corresponding to the service
         fileName = ""
         if serviceName == "facebook":
-            fileName = uploadedFile.name[:-4]
+            fileName = uploadedFiles.name[:-4]
             facebookParser.parseFacebookData(fileName)
             facebookAnalyzer.analyzeFacebookData(fileName)
 
@@ -113,7 +113,7 @@ def upload(request):
             fileName = newDirName
             """
 
-            fileName = uploadedFile.name[:-4]
+            fileName = uploadedFiles.name[:-4]
             appleParser.parseAppleData(fileName)
             appleAnalyzer.analyzeGeneralAppleData(fileName)
             appleAnalyzer.analyzeMusicAppleData(fileName)
@@ -130,7 +130,7 @@ def upload(request):
 
         else: print("service name not recognized")
 
-        fss.delete(uploadedFile.name)
+        fss.delete(uploadedFiles.name)
 
         #TODO: implement progress bar on frontend
 
