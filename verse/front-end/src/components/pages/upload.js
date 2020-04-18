@@ -193,6 +193,9 @@ export default class Upload extends Component {
       );
     }
     if (this.state.googleRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/googleData/" + this.state.googleRequest)
+      )
       
     }
     if (this.state.appleRequest != "") {
