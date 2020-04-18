@@ -1,221 +1,350 @@
+#!/usr/bin/env python3
+
 import os
-from os import path
 import string
-import json
-from pprint import pprint
 import sqlite3 as lite 
 from sqlite3 import Error
-import mailbox
-from verse.dataParser import genericParser
 
-def parseGoogleData(googleMediaRoot):
+import pandas as pd
+from bs4 import BeautifulSoup
+
+#TODO: uncomment first if running through django and second if through python
+from dataParser import genericParser  
+#import genericParser
+
+# Function: extracts json data from the root directory of facebook data 
+# Return: a dictionary with parsed data
+def parseGoogleData(googleDataDumpName): 
     # Define dictionary to map json data to
-    Dict = {}
-
-    # Define tuple to store all possible root directory names in the data dump
-    rootCategories = ("Bookmarks", "Chrome", "Drive", "Keep", "Mail", "Maps", "My Activity", "News", "Profile", "Saved", "Tasks", "YouTube")
+    Dict = {}   
 
     # Define tuple to store root directory names of interest
-    rootCategoriesOfInterest = ("Chrome", "Drive", "Mail", "My Activity", "Profile", "YouTube")
+    rootCategoriesOfInterest = ("Bookmarks", "Chrome", "Maps (your places)", 
+                                    "My Activity", "Profile", "Saved", "YouTube")
 
-    # Parse through google media root directory and extract json data
-    pathVerseGoogleMedia = "media/unzippedFiles/google/"
-    if(path.exists(pathVerseGoogleMedia)):
-        pathName = pathVerseGoogleMedia + googleMediaRoot
+    # Parse through apple media root directory
+    #TODO: uncomment first if running through django and second if through python
+    rootPathName = "./media/unzippedFiles/google/" + googleDataDumpName
+    #rootPathName = "../media/unzippedFiles/google/" + googleDataDumpName
+    
+    if os.path.exists(rootPathName):
+        # Get total size
+        Dict["totalSizeInGB"] = genericParser.getDirSizeInGB(rootPathName)
+        #TODO: double check, this number doesn't make sense
 
-        conn = None
-        try:
-            conn = lite.connect(r"pythonsqlite.db")
-        except Error as e:
-            print(e)
-
-        unique_id = '0'
-        size = '10'
-        browserhistory = 'no browser history info'
-        drive = 'no drive info'
-        mail = 'no mail info'
-        # Activity info
-        android = 'no android info'
-        maps = 'no maps info'
-        search = 'no search info'
-        voiceAudio = 'no voice and audio info'
-        profile = 'no profile info'
-        # Youtube info
-        youtubeHistory = 'no youtube info'
-        youtubeComments = 'no youtube coments'
-        youtubePlaylists = 'no youtube playlists'
-        youtubeSubscriptions = 'no youtube subscriptions'
-
+        #Extract data
+        bookmarksDirPath = rootPathName + "/Bookmarks"
+        mapsDirPath = rootPathName + "/Maps (your places)"
+        activityDirPath = rootPathName + "/My Activity"
+        profileDirPath = rootPathName + "/Profile"
         
-        for root, dirs, files in walklevel(pathName, level=1):
-            # from https://stackoverflow.com/a/7253830
-            rootDir = root.rsplit('/', 1)[-1]
-            rootMyActivityAndroid = rootDir + "/Android"
-            rootMyActivityMaps = rootDir + "/Maps"
-            rootMyActivitySearch = rootDir + "/Search"
-            rootMyActivityVoiceAudio = rootDir + "/Voice and Audio"
-            rootYoutubeHistory = rootDir + "/history"
-            rootYoutubeComments = rootDir + "/my-comments"
-            rootYoutubePlaylists = rootDir + "/playlists"
-            rootYoutubeSubscriptions = rootDir + "/subscriptions"
+        # ---------- Bookmarks Data ---------- 
+        bookmarksFilePath = bookmarksDirPath + "/Bookmarks.html"
+        if os.path.exists(bookmarksFilePath):
+            file_bookmarks = bookmarksFilePath
 
+            key_bookmarks = "bookmarks"
+            val_bookmarks = []
 
+            bookmarks = genericParser.htmlToSoup(file_bookmarks, "dl", "")
+            val_bookmarks = list(filter(None, bookmarks[0].text.split("\n")))
 
+            Dict[key_bookmarks] = val_bookmarks
+
+        else: print("bookmarks dir path not found")
+
+        # ---------- Maps Data ----------
+        savedPlacesFilePath = mapsDirPath + "/Saved Places.json"
+        if os.path.exists(savedPlacesFilePath):
+            file_saved_places = savedPlacesFilePath
+            data_saved_places = genericParser.jsonToDict(file_saved_places, ())
+            data_saved_places = data_saved_places["features"]
+
+            key_saved_places = "saved_places"
+
+            val_saved_places = []
+            for data_pt in data_saved_places:
+                place = []
+
+                name = data_pt["properties"]["Title"]
+                place.append(name)
+
+                locations = data_pt["properties"]["Location"]
             
-            # Android, Assistant, Gmail, Maps, Search, Sound Search, and Voice and Audio
-            # if category is valid,
-            # add category as key and 
-            # directory contents as value 
-            # to dictionary
-            if any(rootDir in category for category in rootCategoriesOfInterest):
-                print(rootDir + ": ")
+                if "Geo Coordinates" in locations.keys() and "Address" in locations.keys():
+                    address = locations["Address"]
+                    coords = locations["Geo Coordinates"]
 
-                if rootDir == "Chrome":
+                    place.append(address)
+                    place.append(coords)
 
-                    fileOfInterest = "BrowserHistory"
-                    key, value = jsonFileToString(pathName, rootDir, fileOfInterest)
-                    Dict[key] = value
-                    browserhistory = value
+                else: 
+                    coords = locations
+                    place.append(coords)
 
-                elif rootDir == "Drive":
-                    # Inside Drive is all of the user's material that is saved inside their Google Drive.
-                    # There isn't much to look at except the number of files?
-                    # Number of different files
+                val_saved_places.append(place)
 
-                    # TODO: Parse the number of files?
-                    drive = len([name for name in os.listdir('.')])
-                    
-                elif rootDir == "Mail":
-                    fileOfInterest = "All mail Including Spam and Trash.mbox"
-                    # TODO: Parse a mbox file
+            Dict[key_saved_places] = val_saved_places
 
-                    message = mailbox.mbox(fileOfInterest)
-                    content = ''.join(part.get_payload(decode=True) for part in message.get_payload())
+        else: print("maps dir path not found")
 
-                    Dict["mail"] = content
-                    mail = content
+        # ---------- Activity Data ----------
+        adsFilePath = activityDirPath + "/Ads/MyActivity.html"
+        mapsFilePath = activityDirPath + "/Maps/MyActivity.html"
+        searchFilePath = activityDirPath + "/Search/MyActivity.html"
+        youtubeFilePath = activityDirPath + "/YouTube/MyActivity.html"
 
-                elif rootDir == "My Activity":
-                    # My Activity has a lot of folders listing activities done in all available apps including
-                    # Android, Assistant, Gmail, Maps, Search, Sound Search, and Voice and Audio
+        # -----  -----
+        if os.path.exists(adsFilePath):           
+            file_ads = adsFilePath
 
-                    # Android (html): File of app accesses on your Andoird phone and time accessed
-                    # DON'T USE - Assistant (mp3): List of audio files from times using assistant ("Hey Google")
-                    # DON'T USE - Gmail (html): File of searches done in gmail
-                    # Maps (html): File of searches, directions, and accesses of Google Maps
-                    # Search (html): File of google searches
-                    # Voice and Audio (mp3): More complete list of audio files from times using assistant ("Hey Google")
+            # list of (link, date) tuples
+            key_ads = "ads_activity"
+            val_ads = []
 
-                    # TODO: Parse these folders and the files inside them
+            ads = genericParser.htmlToSoup(file_ads, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
+                
+            for ad in ads:
+                if len(ad.contents) == 4:
+                    link = ad.contents[1]['href']
+                    date = ad.contents[3]
 
-                    if os.path.exists(rootMyActivityAndroid):
-                        # address = 'file.html' #this html file is stored on the same folder of the code file
-                        fileAddress = rootMyActivityAndroid + "/MyActivity.html"
-                        html_file = open(fileAddress, 'r')
-                        source_code = html_file.read()
+                    val_ads.append((link, date))
 
+            Dict[key_ads] = val_ads
 
-                             
-                    if os.path.exists(rootMyActivityMaps):
-                        fileAddress = rootMyActivityMaps + "/MyActivity.html"
-                        html_file = open(fileAddress, 'r')
-                        source_code = html_file.read()
+        # -----  -----
+        elif os.path.exists(mapsFilePath):           
+            file_maps = mapsFilePath
 
-                    if os.path.exists(rootMyActivitySearch):
-                        fileAddress = rootMyActivitySearch + "/MyActivity.html"
-                        html_file = open(fileAddress, 'r')
-                        source_code = html_file.read()
+            # dict of lists of (link, date) tuples
+            key_maps = "maps_activity"
+            val_maps = {}
 
-                    if os.path.exists(rootMyActivityVoiceAudio):
-                        voiceAudio = len([name for name in os.listdir('.') if os.path.isfile(rootMyActivityVoiceAudio)])
-                    
+            usages = []     #list of timestamps maps was used
+            links = []      
+            views = []      
+            searches = []   
+            calls = []      
+            directions = []
+            others = []
 
+            maps = genericParser.htmlToSoup(file_maps, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
 
-                elif rootDir == "Profile":
-                    fileOfInterest1 = "Profile"
-                    value1 = jsonFileToString(pathName, rootDir, fileOfInterest1)
-                    Dict["profile"] = value1
-                    profile = value1 
+            for item in maps:
 
-                elif rootDir == "YouTube":
-                    # YouTube has folders containing the different information for each field including
-                    # history, my-comments, playlists, and subscriptions
+                if len(item.contents) == 3:
+                    if "Used" in str(item.contents[0]):
+                        date = item.contents[2]
 
-                    # history (html): File of watch history
-                    # my-comments (html): File of comments posted with time
-                    # playlists (json): List of json youtube playlists
-                    # subscriptions (html): File of subscriptions
+                        usages.append(date)
 
-                    # TODO: Parse these folders and the files inside them
+                    elif "Viewed" in str(item.contents[0]):
+                        try:
+                            link = item.contents[0]['href']
+                        except: link = ""
+                        date = item.contents[2]
 
-                    if os.path.exists(rootYoutubeHistory):
-                        fileAddress = rootYoutubeHistory + "/watch-history.html"
-                        html_file = open(fileAddress, 'r')
-                        source_code = html_file.read()
+                        views.append((link, date))
 
-                        youtubeHistory = source_code
-                    
-                    if os.path.exists(rootYoutubeComments):
-                        fileAddress = rootYoutubeComments + "/my-comments.html"
-                        html_file = open(fileAddress, 'r')
-                        source_code = html_file.read()
+                    else:
+                        try:
+                            link = item.contents[0]['href']
+                        except: link = ""
+                        date = item.contents[2]
 
-                        youtubeComments = source_code
-                    
-                    if os.path.exists(rootYoutubePlaylists):
-                        youtubePlaylists = len([name for name in os.listdir('.') if os.path.isfile(rootYoutubePlaylists)])
-                    
-                    if os.path.exists(rootYoutubeSubscriptions):
-                        fileAddress = rootYoutubeSubscriptions + "/subscriptions.html"
-                        html_file = open(fileAddress, 'r')
-                        source_code = html_file.read()
+                        links.append((link, date))
 
-                        youtubeSubscriptions = source_code
-                    
+                elif len(item.contents) == 4:
+                    if "Viewed" in str(item.contents[0]):
+                        try:
+                            link = item.contents[1]['href']
+                        except: link = ""
+                        date = item.contents[3]
 
+                        views.append((link, date))
 
-        if conn is not None:
-            sql_insert = """INSERT INTO google ( 
-                                            id, 
-                                            total_size, 
-                                            browserhistory, 
-                                            drive, 
-                                            mail, 
-                                            android, 
-                                            maps, 
-                                            search, 
-                                            voiceAudio, 
-                                            profile, 
-                                            youtubeHistory, 
-                                            youtubeComments, 
-                                            youtubePlaylists, 
-                                            youtubeSubscriptions
-                                        )
-                                        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
-                        """
+                    elif "Searched" in str(item.contents[0]):
+                        try:
+                            link = item.contents[1]['href']
+                        except: link = ""
+                        date = item.contents[3]
 
-            try:
-                c = conn.cursor()
-                with conn:
-                    # TODO: finish the data_tuple
-                    data_tuple = (int(unique_id), int(size))
-                    c.execute(sql_insert, data_tuple)
-                    # print the contents of the database
-                    c.execute("SELECT * FROM google")
-                    print(c.fetchall())
-                    # delete contents of the database
-                    c.execute("DELETE FROM google")
-            except Error as e:
-                print(e)
+                        searches.append((link, date))
+
+                    elif "Called" in str(item.contents[0]):
+                        try:
+                            link = item.contents[1]['href']
+                        except: link = ""
+                        date = item.contents[3]
+
+                        calls.append((link, date))
+
+                elif len(item.contents) == 8:
+                    try:
+                        link = item.contents[1]['href']
+                    except: link = ""
+                    origin = item.contents[3]
+                    dest = item.contents[5]
+                    date = item.contents[7]
+
+                    directions.append((link, origin, dest, date))
+
+                else: 
+                    others.append(item.contents)
+
+            val_maps["usages"] = usages
+            val_maps["links"] = links
+            val_maps["views"] = views
+            val_maps["searches"] = searches
+            val_maps["calls"] = calls
+            val_maps["directions"] = directions 
+            #val_maps["others"] = others   
+
+            Dict[key_maps] = val_maps
+
+        # -----  -----
+        elif os.path.exists(searchFilePath):     
+            file_search = searchFilePath
+
+            # dict of lists of (link, date) tuples
+            key_searches = "search_activity"
+            val_searches = {}
+
+            views = []
+            visits = []
+            searches = []
+
+            engineSearches = genericParser.htmlToSoup(file_search, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
+
+            for item in engineSearches:
+
+                if len(item.contents) == 4:
+
+                    if "Viewed" in str(item.contents[0]):
+                        view = item.contents[1].string
+                        link = item.contents[1]['href']
+                        date = item.contents[3]
+
+                        caption = item.next_sibling.next_sibling.contents
+                        if len(caption) > 4 and "Locations" in str(caption[4]):
+                            coordLink = caption[7]['href']
+
+                            if "center" in str(coordLink):
+                                coords = coordLink.split("center")[1][1:21]
+                            else:
+                                coords = coordLink.split("=")[2][1:21]
+
+                            views.append((view, link, date, coords))
+                        
+                        else: views.append((view, link, date))
+
+                    elif "Visited" in str(item.contents[0]):
+                        visit = item.contents[1].string
+                        link = item.contents[1]['href']
+                        date = item.contents[3]
+
+                        caption = item.next_sibling.next_sibling.contents
+                        if len(caption) > 4 and "Locations" in str(caption[4]):
+                            coordLink = caption[7]['href']
+
+                            if "center" in str(coordLink):
+                                coords = coordLink.split("center")[1][1:21]
+                            else:
+                                coords = coordLink.split("=")[2][1:21]
+
+                            visits.append((visit, link, date, coords))
+                        
+                        else: visits.append((visit, link, date))
+
+                    elif "Searched" in str(item.contents[0]):
+                        search = item.contents[1].string
+                        link = item.contents[1]['href']
+                        date = item.contents[3]
+
+                        caption = item.next_sibling.next_sibling.contents
+                        if len(caption) > 4 and "Locations" in str(caption[4]):
+                            coordLink = caption[7]['href']
+
+                            if "center" in str(coordLink):
+                                coords = coordLink.split("center")[1][1:21]
+                            else:
+                                coords = coordLink.split("=")[2][1:21]
+
+                            searches.append((search, link, date, coords))
+                        
+                        else: searches.append((search, link, date))
+
+            val_searches["views"] = views
+            val_searches["visits"] = visits
+            val_searches["searches"] = searches
+                
+            Dict[key_searches] = val_searches
+            
+        # -----  -----
+        elif os.path.exists(youtubeFilePath):
+            file_youtube = youtubeFilePath
+            
+            key_youtube = "youtube_activity"
+            val_youtube = {}
+
+            watches = []
+            searches = []
+
+            youtubeActions = genericParser.htmlToSoup(file_youtube, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
+
+            for item in youtubeActions:
+                
+                if len(item.contents) == 6 and "Watched" in str(item.contents[0]):
+                    video = item.contents[1].string
+                    link = item.contents[1]['href']
+                    uploader = item.contents[3].string
+                    date = item.contents[5]
+
+                    watches.append((video, link, uploader, date))
+
+                elif len(item.contents) == 4 and "Searched" in str(item.contents[0]):
+                    query = item.contents[1].string
+                    link = item.contents[1]['href']
+                    date = item.contents[3]
+
+                    searches.append((query, link, date))
+
+            val_youtube["watches"] = watches
+            val_youtube["searches"] = searches
+
+            Dict[key_youtube] = val_youtube
+
+        else: print("activity dir path not found")
         
-        #print("\n\n\nDictionary\n")
-        #print(Dict["posts>your_posts_1"])
+        # ---------- Profile Data ----------
+        profileFilePath = profileDirPath + "/Profile.json"
+        if os.path.exists(profileFilePath):
+
+            file_profile = profileFilePath
+            data_profile = genericParser.jsonToDict(file_profile, ())
+
+            key_profile = "profile_info"
+            val_profile = {}
+
+            val_profile["name"] = data_profile["displayName"]
+            val_profile["emails"] = data_profile["emails"]
+
+            Dict[key_profile] = val_profile
+
+        else: print("profile dir path not found")
 
     else: print("path does not exist")
 
+    #write parsed data dictionary to json file
+    genericParser.writeToJsonFile(Dict, './media/processedData/google/' + googleDataDumpName + '/parsedGoogleData.json')
+    #genericParser.writeToJsonFile(Dict, '../media/processedData/google/' + googleDataDumpName + '/parsedGoogleData.json')
+
+"""
 def main():
-    root = "takeout-20200124T220752Z-001"
+    root = "google-lisa"
     parseGoogleData(root)
 
 if __name__ == "__main__":
-    main()
+    main() 
+"""

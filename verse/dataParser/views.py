@@ -11,8 +11,8 @@ import os
 
 import zipfile 
 
-from dataParser import visualizationData
-from dataParser import facebookParser, appleParser, facebookAnalyzer, appleAnalyzer
+from dataParser import visualizationData, genericParser
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer, netflixParser
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -27,6 +27,8 @@ def index(request):
 @api_view(["GET"])
 def facebookDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedFacebookData(userFileName)
+    rootPathName = "./media/processedData/facebook/" + userFileName
+    genericParser.deleteData(rootPathName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
     
 #----- APPLE APIs -----
@@ -48,6 +50,10 @@ def appleAppsGamesDataAPI(request, userFileName):
 
 #----- GOOGLE APIs -----
 
+@api_view(["GET"])
+def googleDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedGoogleData(userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- UPLOAD API -----
 
@@ -59,7 +65,7 @@ def upload(request):
     if request.method == "POST":
 
         serviceName = request.data.get("company")
-        uploadedFiles = request.data.get("files")
+        uploadedFile = request.data.get("files")
         userId = request.session.session_key
 
         # save and unzip files
@@ -68,20 +74,27 @@ def upload(request):
         #print("Debug: " + uploadedFiles)
         #for uploadedFile in uploadedFiles:
         #    fss.save(uploadedFile.name, uploadedFile)
-        fss.save(uploadedFiles.name, uploadedFiles)
 
-        #dev-connectAPIs
-        zipPath = fss.location + "/" + uploadedFiles.name
-        mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]        
+        if serviceName != "netflix":
+            fss.save(uploadedFiles.name, uploadedFiles)
+
+            #dev-connectAPIs
+            zipPath = fss.location + "/" + uploadedFiles.name
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName + "/" + uploadedFiles.name[:-4]
 
             # from: https://stackoverflow.com/questions/3451111/unzipping-files-in-python #
-        with zipfile.ZipFile(zipPath, "r") as zip_ref:
-            zip_ref.extractall(mediaDirPath)        
+            with zipfile.ZipFile(zipPath, "r") as zip_ref:
+                zip_ref.extractall(mediaDirPath)        
+        else:
+            mediaDirPath = fss.location + "/unzippedFiles/" + serviceName
+            fss = FileSystemStorage(location=mediaDirPath)
+            fss.save(uploadedFiles.name, uploadedFiles)
+
 
         # call the parser corresponding to the service
         fileName = ""
         if serviceName == "facebook":
-            fileName = uploadedFiles.name[:-4]
+            fileName = uploadedFile.name[:-4]
             facebookParser.parseFacebookData(fileName)
             facebookAnalyzer.analyzeFacebookData(fileName)
 
@@ -100,20 +113,26 @@ def upload(request):
             fileName = newDirName
             """
 
-            fileName = uploadedFiles.name[:-4]
+            fileName = uploadedFile.name[:-4]
             appleParser.parseAppleData(fileName)
             appleAnalyzer.analyzeGeneralAppleData(fileName)
             appleAnalyzer.analyzeMusicAppleData(fileName)
             appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
-        #elif serviceName == "google":
-        
+        elif serviceName == "netflix":
+            fileName = uploadedFiles.name
+            netflixParser.parseNetflixData(fileName)
+
+        elif serviceName == "google":
+            fileName = uploadedFiles.name[:-4]
+            googleParser.parseGoogleData(fileName)
+            googleAnalyzer.analyzeGoogleData(fileName)
+
         else: print("service name not recognized")
 
+        fss.delete(uploadedFile.name)
 
         #TODO: implement progress bar on frontend
-
-        #default_storage.delete(uploadedFile.name)
 
         print(fileName)
         return Response(status=status.HTTP_200_OK, data={"fileName" : fileName})
