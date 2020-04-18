@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 // import React from "react";
-import Modal from "react-bootstrap/Modal";
+// import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
-import ModalBody from "react-bootstrap/ModalBody";
-import ModalHeader from "react-bootstrap/ModalHeader";
-import ModalFooter from "react-bootstrap/ModalFooter";
-import ModalTitle from "react-bootstrap/ModalTitle";
+// import ModalBody from "react-bootstrap/ModalBody";
+// import ModalHeader from "react-bootstrap/ModalHeader";
+// import ModalFooter from "react-bootstrap/ModalFooter";
+// import ModalTitle from "react-bootstrap/ModalTitle";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -18,48 +19,85 @@ export default class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
-
+      modal: false,
+      name: '',
+      team : '',
+      country: '',
+      
       // facebook state
       facebookFiles: null,
       facebookRequest: "",
-
+      
       googleFiles: null,
       googleRequest: "",
-
+      
       appleFiles: null,
       appleRequest: "",
-
+      
       facebookData: {},
       facebookButton: "Choose a file...",
       facebookTitle: "Facebook",
-
+      
       googleButton: "Choose a file...",
       googleTitle: "Google",
-
+      
       appleButton: "Choose a file...",
       appleTitle: "Apple",
-
+      
       // google state
-
-
+      
+      
       // apple state
-
+      
     };
+
+    this.toggle = this.toggle.bind(this);
+    this.handleChangeName = this.handleChangeName.bind(this);
+    this.handleChangeTeam = this.handleChangeTeam.bind(this);
+    this.handleChangeCountry = this.handleChangeCountry.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  
+  // const [isOpen, setIsOpen] = React.useState(false);
+  
+  // const showModal = () => {
+  //   setIsOpen(true);
+  // };
+  
+  // const hideModal = () => {
+  //   setIsOpen(false);
+  // };
+  
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+  handleChangeName(event) {
+    this.setState({name: event.target.value});
+  }
+  handleChangeTeam(event) {
+    this.setState({team: event.target.value});
+  }
+  handleChangeCountry(event) {
+    this.setState({country: event.target.value});
   }
 
-
-
+  handleSubmit(event) {
+    event.preventDefault();
+     }
+  
+  
   // shuffles and array, taken from 
   // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
   shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-
+    
     while (0 !== currentIndex) {
-
+      
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-
+      
       temporaryValue = array[currentIndex];
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
@@ -317,16 +355,54 @@ export default class Upload extends Component {
   */
  
  render() {
+  
    return (
      <div id="uploadpage">
       <Header />
-      <Modal show={true}>
-      <Modal.Header>
-        <ModalTitle>Hi</ModalTitle>
-      </Modal.Header>
-      <Modal.Body>asdfasdf</Modal.Body>
-      <Modal.Footer>This is the footer</Modal.Footer>
-      </Modal>
+      {/* <button onClick={showModal}>Display Modal</button>
+      <Modal show={isOpen} onHide={hideModal}>
+        <Modal.Header>
+          <Modal.Title>Hi</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>The body</Modal.Body>
+        <Modal.Footer>
+          <button onClick={hideModal}>Cancel</button>
+          <button>Save</button>
+        </Modal.Footer>
+      </Modal> */}
+      <div>
+          <h1>React Bootstrap Modal Example</h1>
+        <Button color="success" onClick={this.toggle}>React Modal</Button>
+        <Modal isOpen={this.state.modal}>
+        <form onSubmit={this.handleSubmit}>
+          <ModalHeader>IPL 2018</ModalHeader>
+          <ModalBody>
+          <div className="row">
+            <div className="form-group col-md-4">
+            <label>Name:</label>
+            <input type="text" value={this.state.name} onChange={this.handleChangeName} className="form-control" />
+              </div>
+              </div>
+            <div className="row">
+             <div className="form-group col-md-4">
+            <label>Team:</label>
+                <input type="text" value={this.state.team} onChange={this.handleChangeTeam} className="form-control" />
+               </div>
+              </div>
+            <div className="row">
+             <div className="form-group col-md-4">
+              <label>Country:</label>
+                <input type="text" value={this.country} onChange={this.handleChangeCountry} className="form-control" />
+               </div>
+              </div>
+          </ModalBody>
+          <ModalFooter>
+            <input type="submit" value="Submit" color="primary" className="btn btn-primary" />
+            <Button color="danger" onClick={this.toggle}>Cancel</Button>
+          </ModalFooter>
+          </form>
+        </Modal>
+        </div>
         <h1>Upload file</h1>
         <body>
           <div class="uploadoption">
