@@ -141,6 +141,7 @@ export default class Results extends Component {
     } else {
       console.log("facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
+      document.getElementById("showfacebookvisuals").style.display = "none";
     }
 
     if ("applegeneral" in this.state.compiledRequest) {
@@ -148,6 +149,7 @@ export default class Results extends Component {
     } else {
       console.log("apple data was NOT loaded");
       document.getElementById("applevisuals").style.display = "none";
+      document.getElementById("showapplevisuals").style.display = "none";
     }
 
     if ("google" in this.state.compiledRequest) {
@@ -155,6 +157,7 @@ export default class Results extends Component {
     } else {
       console.log("google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
+      document.getElementById("showgooglevisuals").style.display = "none";
     }
 
   }
@@ -320,7 +323,7 @@ export default class Results extends Component {
           </div>
           <div id="mainvisuals">
             <div class="visualssection" id="facebookvisuals">
-              <h1>Name: {this.state.fb_name}</h1>
+              <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
               <div class="chart">
                 <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />

@@ -19,7 +19,7 @@ export default class About extends Component {
                 <Header />
 
                 <div class="i1">
-                <h1 id="box">About Verse</h1>
+                <h1 id="box" class="pagetitle">About Verse</h1>
 
                 <p id="paragraph" >
                     The average person likely isn’t aware of how much and what kind 

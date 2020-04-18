@@ -15,7 +15,7 @@ export default class Help extends Component {
         return (
             <div id="helppage">
                 <Header />
-                <h1 id="hdr">How to Download Your Data Files</h1>
+                <h1 id="hdr" class="pagetitle">How to Download Your Data Files</h1>
 
                 {/* <a href="#hdr_facebook">Click here to see the content below.</a> */}
                 {/* <a href="#INSERT_YOUR_OBJECT_NAME_HERE">Click here to see the content below.</a> */}
