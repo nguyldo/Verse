@@ -1,4 +1,57 @@
-.App {
-    font-family: sans-serif;
-    text-align: center;
-  }
+#modal {
+  margin: auto !important;
+  width: 190% !important;
+  color: black;
+  border: 30px;
+  padding: 50px;
+}
+
+#modalBody {
+  margin: auto !important;
+  width: 1000px !important;
+}
+
+#title {
+  /* font-style: normal; */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 10px;
+}
+
+#toResults {
+  size: 20px;
+  color: white;
+  margin-left: 88%;
+  background-color: #29648A;
+}
+
+#paragraphU {
+  /* font-style: italic; */
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  background-color: rgba(218, 218, 218, 0.548);
+
+  
+  /* align-self: center; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  width: 800px;
+  border: 18px solid #29648A;
+  line-height: 30px;
+  padding: 50px;
+  /* margin: 20px; */
+  text-align: left;
+  text-indent: 30px;
+  /* transition: 3s; */
+}
+
+
+#button {
+  color: white;
+  background-color: #29648A;
+}

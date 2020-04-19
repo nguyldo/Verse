@@ -19,7 +19,7 @@ export default class About extends Component {
                 <Header />
 
                 <div class="i1">
-                <h1 id="box">About Verse</h1>
+                <h1 id="box" id="title">About Verse</h1>
 
                 <p id="paragraph" >
                     The average person likely isn’t aware of how much and what kind 
@@ -36,7 +36,7 @@ export default class About extends Component {
                 </div>
 
                 <div class="i2">
-                <h1>What is Verse?</h1>
+                <h1 id="title">What is Verse?</h1>
 
                 <p id="paragraph" >
                 For some, privacy is a top concern, but for others, it’s merely a peripheral concept 
@@ -57,7 +57,7 @@ export default class About extends Component {
                 </div>
 
                 <div class="i3">
-                <h1>So what happens when you submit your data?</h1>
+                <h1 id="title">So what happens when you submit your data?</h1>
 
                 <p id="paragraph" >
                     Once you submit your data, we will be looking through your data with our parser and put together 
@@ -68,7 +68,7 @@ export default class About extends Component {
                 </div>
 
                 <div class="i4">
-                <h1>So will our data dump information will be shared?</h1>
+                <h1 id="title">So will our data dump information will be shared?</h1>
 
                 <p id="paragraph" >
                     Absolutely not. We want to show how much data other companies have accumulated, not contribute to it. 
@@ -80,7 +80,7 @@ export default class About extends Component {
                 </div>
 
                 <div class="i5">
-                <h1>What happens when Verse parses our data?</h1>
+                <h1 id="title">What happens when Verse parses our data?</h1>
 
                 <p id="paragraph" >
                     Your raw data is uploaded onto the server, where our parser will look through each file line by line. 

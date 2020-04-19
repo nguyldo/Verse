@@ -13,16 +13,17 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
-// import "./../../css/upload.css";
+import { lightBlue } from "@material-ui/core/colors";
+import "./../../css/upload.css";
 
 export default class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal: false,
-      name: '',
-      team : '',
-      country: '',
+      modal: true,
+      // name: '',
+      // team : '',
+      // country: '',
       
       // facebook state
       facebookFiles: null,
@@ -52,10 +53,10 @@ export default class Upload extends Component {
     };
 
     this.toggle = this.toggle.bind(this);
-    this.handleChangeName = this.handleChangeName.bind(this);
-    this.handleChangeTeam = this.handleChangeTeam.bind(this);
-    this.handleChangeCountry = this.handleChangeCountry.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleChangeName = this.handleChangeName.bind(this);
+    // this.handleChangeTeam = this.handleChangeTeam.bind(this);
+    // this.handleChangeCountry = this.handleChangeCountry.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
   
   // const [isOpen, setIsOpen] = React.useState(false);
@@ -73,19 +74,19 @@ export default class Upload extends Component {
       modal: !this.state.modal
     });
   }
-  handleChangeName(event) {
-    this.setState({name: event.target.value});
-  }
-  handleChangeTeam(event) {
-    this.setState({team: event.target.value});
-  }
-  handleChangeCountry(event) {
-    this.setState({country: event.target.value});
-  }
+  // handleChangeName(event) {
+  //   this.setState({name: event.target.value});
+  // }
+  // handleChangeTeam(event) {
+  //   this.setState({team: event.target.value});
+  // }
+  // handleChangeCountry(event) {
+  //   this.setState({country: event.target.value});
+  // }
 
-  handleSubmit(event) {
-    event.preventDefault();
-     }
+  // handleSubmit(event) {
+  //   event.preventDefault();
+  //    }
   
   
   // shuffles and array, taken from 
@@ -359,51 +360,47 @@ export default class Upload extends Component {
    return (
      <div id="uploadpage">
       <Header />
-      {/* <button onClick={showModal}>Display Modal</button>
-      <Modal show={isOpen} onHide={hideModal}>
-        <Modal.Header>
-          <Modal.Title>Hi</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>The body</Modal.Body>
-        <Modal.Footer>
-          <button onClick={hideModal}>Cancel</button>
-          <button>Save</button>
-        </Modal.Footer>
-      </Modal> */}
-      <div>
-          <h1>React Bootstrap Modal Example</h1>
-        <Button color="success" onClick={this.toggle}>React Modal</Button>
-        <Modal isOpen={this.state.modal}>
-        <form onSubmit={this.handleSubmit}>
-          <ModalHeader>IPL 2018</ModalHeader>
-          <ModalBody>
-          <div className="row">
-            <div className="form-group col-md-4">
-            <label>Name:</label>
-            <input type="text" value={this.state.name} onChange={this.handleChangeName} className="form-control" />
+        <div>
+          <Modal id="modal" isOpen={this.state.modal} size="xl">
+            <ModalHeader>About Your Data Dump</ModalHeader>
+            <ModalBody id="modalBody">
+              <div>
+                  <h1>So what happens when you submit your data?</h1>
+
+                  <p id="paragraphU" >
+                      Once you submit your data, we will be looking through your data with our parser and put together 
+                      a big summary of what data companies have on you. It may take a while for our parser to get 
+                      through all of your data, but once it is done, it will show a success and you can proceed to 
+                      the visual results.
+                  </p>
+
+                  <h1>So will our data dump information will be shared?</h1>
+
+                  <p id="paragraphU" >
+                      Absolutely not. We want to show how much data other companies have accumulated, not contribute to it. 
+                      So, once we finish making the summary for your files, we will delete the contents as well as the data 
+                      gained from said files and the parsed data once you leave the results screen. Just take care not 
+                      to close the website before downloading your new consolidated data, as you won't be able to 
+                      access it afterwards without submitting the files again.
+                  </p>
+
+                  <h1>What happens when Verse parses our data?</h1>
+
+                  <p id="paragraphU" >
+                      Your raw data is uploaded onto the server, where our parser will look through each file line by line. 
+                      The data that we gain from it will go into our analyzer, which will count up and pick out some vital 
+                      information that can be gleaned from your data dump. After the analyzer is done going through your 
+                      data, the consolidated information will go straight to your results page, and 
+                      all of the data that you submitted will be deleted. <b>Your data will not be shared with any outside parties.</b>
+                  </p>
               </div>
-              </div>
-            <div className="row">
-             <div className="form-group col-md-4">
-            <label>Team:</label>
-                <input type="text" value={this.state.team} onChange={this.handleChangeTeam} className="form-control" />
-               </div>
-              </div>
-            <div className="row">
-             <div className="form-group col-md-4">
-              <label>Country:</label>
-                <input type="text" value={this.country} onChange={this.handleChangeCountry} className="form-control" />
-               </div>
-              </div>
-          </ModalBody>
-          <ModalFooter>
-            <input type="submit" value="Submit" color="primary" className="btn btn-primary" />
-            <Button color="danger" onClick={this.toggle}>Cancel</Button>
-          </ModalFooter>
-          </form>
-        </Modal>
+            </ModalBody>
+            <ModalFooter>
+              <Button id="button" onClick={this.toggle}>I Have Read This Message</Button>
+            </ModalFooter>
+          </Modal>
         </div>
-        <h1>Upload file</h1>
+        <h1 id="title" >Upload Your Files Here</h1>
         <body>
           <div class="uploadoption">
             <p>{this.state.facebookTitle}</p>
@@ -436,7 +433,7 @@ export default class Upload extends Component {
               googleRequest: this.state.googleRequest,
               appleRequest: this.state.appleRequest
             }
-          }} className="link">Create Visuals</Link>
+          }} className="link" id="toResults">Create Visuals</Link>
         </body>
       </div>
     )
