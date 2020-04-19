@@ -396,7 +396,7 @@ export default class Upload extends Component {
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button id="button" onClick={this.toggle}>I Have Read This Message</Button>
+              <Button id="buttonU" onClick={this.toggle}>I Have Read This Message</Button>
             </ModalFooter>
           </Modal>
         </div>
