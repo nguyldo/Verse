@@ -4,8 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import PieChart from "./atomicGraphs/PieChart";
-import data from "./data/postData"; 
+import LineChart from "./atomicGraphs/LineChart";
 
 const styles = theme => ({
   card: {
@@ -30,7 +29,7 @@ const styles = theme => ({
   },
 });
 
-class ChannelPieChart extends React.Component {
+class SearchLineChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -42,11 +41,11 @@ class ChannelPieChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-            title="Number of Videos Watched per YouTube Channel"
+            title="Total Number of Searches in Each Month"
           />
           <CardContent>
             <div style={{height: 200}}>
-              <PieChart data={this.props.data}/>
+              <LineChart data={this.props.data}/>
             </div>
           </CardContent>
         </Card>
@@ -54,5 +53,4 @@ class ChannelPieChart extends React.Component {
     );
   }
 }
-
-export default withStyles(styles)(ChannelPieChart);
+export default withStyles(styles)(SearchLineChart);

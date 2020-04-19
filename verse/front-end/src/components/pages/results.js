@@ -10,9 +10,12 @@ import Grid from '@material-ui/core/Grid';
 import IPAdressChart from "../visuals/IPAddressChart";
 import ReactionBarChart from "../visuals/ReactionBarChart";
 import PostPieChart from "../visuals/PostPieChart.js";
-import LocationPieChart from "../visuals/LocationPieChart.js";
+
+//Google Visuals
+import SearchLineChart from "../visuals/SearchLineChart.js"
 import DrivePieChart from "../visuals/DrivePieChart.js";
 import ChannelPieChart from "../visuals/ChannelPieChart.js";
+
 
 //Apple Visuals
 import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
@@ -49,18 +52,25 @@ export default class Results extends Component {
       off_num: 0,
       sites: [],
       sites_num: 0,
+      fb_loc_bar: [],
+      fb_post_pie: [],
+      fb_react_bar: [],
       facebookData: {},
 
       google_name: "",
       email: "",
-      assistant_num: 0,
-      google_sites_num: 0,
+      google_ads_num: 0,
       subscriptions: 0,
-      prof_pic_num: 0,
+      google_routes_num: 0,
       playlists: 0,
       contacts: "",
-      google_ad: "",
-      google_sites: "",
+      google_ads: [],
+      google_searches_num: 0,
+      google_bookmarks: [],
+      google_bookmarks_num: 0,
+      google_loc_pie: [],
+      google_channel_pie: [],
+      google_drive_pie: [],
       googleData: {},
 
       vals: "testing",
@@ -134,9 +144,12 @@ export default class Results extends Component {
       this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
       this.state.companies_num = this.state.companies.length;
       this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
+      this.state.fb_react_bar = this.state.compiledRequest.facebook.reactions_barchart;
+      this.state.fb_post_pie = this.state.compiledRequest.facebook.posts_piechart;
+      this.state.fb_loc_bar = this.state.compiledRequest.facebook.locations_barchart;
       //this.state.vals = "hi"
       this.forceUpdate();
-      this.populateSelect();
+      this.populateFacebookSelect();
       this.populateLocationDict();
     } else {
       console.log("facebook data was NOT loaded");
@@ -152,6 +165,27 @@ export default class Results extends Component {
 
     if ("google" in this.state.compiledRequest) {
       console.log("google data was loaded");
+      this.state.google_ads = this.state.compiledRequest.google["ads_timeline"];
+      this.state.google_ads_num = this.state.google_ads.length;
+      this.state.google_searches_num = this.state.compiledRequest.google["search_timeline"]["searches"].length;
+
+      var name = this.state.compiledRequest.google["personal_info_header"]["name"];
+      var i = 0;
+      for (i; i < name.length; i++) {
+        if (name.charAt(i) == ' ') {
+          break;
+        }
+      }
+      this.state.google_name = name.substring(0, i);
+
+      this.state.email = this.state.compiledRequest.google["personal_info_header"]["emails"][0]["value"];
+      this.state.google_routes_num = this.state.compiledRequest.google["maps_timeline"]["directions"].length;
+      this.state.google_bookmarks = this.state.compiledRequest.google["bookmarks_list"];
+      this.state.google_bookmarks_num = this.state.google_bookmarks.length;
+      /*this.state.subscriptions
+      this.state.playlists*/
+      this.populateGoogleSelect();
+      this.forceUpdate();
     } else {
       console.log("google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
@@ -169,7 +203,7 @@ export default class Results extends Component {
     */
   }
 
-  populateSelect() {
+  populateFacebookSelect() {
     var select = document.getElementById("select_sites");
     var options = this.state.sites;
     for (var i = 0; i < this.state.sites_num; i ++) {
@@ -207,6 +241,37 @@ export default class Results extends Component {
     }
     this.locations = dict;
     console.log(this.locations);
+  }
+
+  populateGoogleSelect() {
+    var select = document.getElementById("select_google_ad");
+    var options = this.state.google_ads;
+    for (var i = 0; i < this.state.google_ads_num; i ++) {
+      var opt = options[i][0];
+      if (opt.length > 37) {
+        var count = 37;
+        for (count; count < opt.length; count++) {
+          if (opt.charAt(count) == '/') {
+            break;
+          }  
+        }
+        opt = opt.substring(37, count);
+      }
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+
+    select = document.getElementById("google_select_bookmarks");
+    options = this.state.google_bookmarks;
+    for (var i = 0; i < this.state.google_bookmarks_num; i ++) {
+      var opt = options[i];
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
   }
 
   async getAppleData() {
@@ -307,6 +372,10 @@ export default class Results extends Component {
 
     const { classes } = this.props;
 
+    /*<div class="chart">
+                <PostPieChart data={this.state.fb_post_pie} />
+              </div>*/
+
     return (
       <div id="resultspage">
         <Header />
@@ -323,13 +392,11 @@ export default class Results extends Component {
               <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.category}</h2>
               <div class="chart">
-                <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
+                <IPAdressChart data={this.state.fb_loc_bar} />
               </div>
+              
               <div class="chart">
-                <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
-              </div>
-              <div class="chart">
-                <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
+                <ReactionBarChart data={this.state.fb_react_bar} />
               </div>
               <p>List of Websites You Have Logged Into Using Facebook:</p>
               <select id="select_sites" size="5"></select>
@@ -343,24 +410,25 @@ export default class Results extends Component {
               <h1>Name: {this.state.google_name}</h1>
               <h2>Gmail: {this.state.email}</h2>
               <div class="chart">
-                <LocationPieChart/>
+                <SearchLineChart data={this.state.compiledRequest.google.line_year_searches}/>
               </div>
               <div class="chart">
-                <DrivePieChart/>
+                <DrivePieChart data={this.state.google_drive_pie}/>
               </div>
               <div class="chart">
-                <ChannelPieChart/>
+                <ChannelPieChart data={this.state.compiledRequest.google.youtube_pie_chart}/>
               </div>
-              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
-              <p>List of Websites You Have Logged Into Using Google:</p>
-              <select id="select_google_sites" size="5"></select>
-              <p>Total Number: {this.state.google_sites_num}</p>
+              <p>Total Number of Searches: {this.state.google_searches_num}</p>
+              <p>Number of Routes Created Using Maps: {this.state.google_routes_num}</p>
+              <p>Your Chrome Bookmarks:</p>
+              <select id="google_select_bookmarks" size="5" width="300" style={{width: 300}}></select>
+              <p>Total Number: {this.state.google_bookmarks_num}</p>
               <p>List of Websites that have advertised to you through Google:</p>
-              <select id="select_google_comp" size="5"></select>
+              <select id="select_google_ad" size="5" width="300" style={{width: 300}}></select>
+              <p>Total Number: {this.state.google_ads_num}</p>
               <p>Your Google contacts:</p>
               <select id="select_google_contacts" size="5"></select>
               <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
-              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
               <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
             <div class="visualssection" id="applevisuals">
