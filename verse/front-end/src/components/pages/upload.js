@@ -206,6 +206,11 @@ export default class Upload extends Component {
         axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest)
       );
     }
+    if (this.state.netflixRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/netflixData/" + this.state.netflixRequest)
+      );
+    }
     axios.all(requests).then(axios.spread((...responses) => {
       console.log("Requests successful!")
       console.log(responses)
@@ -226,6 +231,10 @@ export default class Upload extends Component {
         retrievedData["applemusic"] = responses[count].data.data;
         count++;
         retrievedData["applegames"] = responses[count].data.data;
+        count++;
+      }
+      if (this.state.netflixRequest != "") {
+        retrievedData["netflix"] = responses[count].data.data;
         count++;
       }
 

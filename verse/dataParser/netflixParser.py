@@ -80,4 +80,6 @@ def parseNetflixData(netflixDataDumpName):
         analyzedData["shows"] = shows
         print(analyzedData)
 
+        genericParser.writeToJsonFile(analyzedData, "media/processedData/netflix/" + netflixDataDumpName)
+
         

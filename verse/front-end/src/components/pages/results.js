@@ -143,6 +143,13 @@ export default class Results extends Component {
       document.getElementById("googlevisuals").style.display = "none";
     }
 
+    if ("netflix" in this.state.compiledRequest) {
+      console.log("netflix data was loaded");
+    } else {
+      console.log("netflix data was NOT loaded");
+      document.getElementById("netflixvisuals").style.display = "none";
+    }
+
   }
 
   async getFacebookData() {
@@ -267,11 +274,17 @@ export default class Results extends Component {
       } else {
         document.getElementById("googlevisuals").style.display = "none";
       }
-    } else {
+    } else if (id == "showapplevisuals") {
       if (document.getElementById("applevisuals").style.display == "none") {
         document.getElementById("applevisuals").style.display = "block";
       } else {
         document.getElementById("applevisuals").style.display = "none";
+      }
+    } else {
+      if (document.getElementById("netflixvisuals").style.display == "none") {
+        document.getElementById("netflixvisuals").style.display = "block";
+      } else {
+        document.getElementById("netflixvisuals").style.display = "none";
       }
     }
   }
@@ -303,6 +316,7 @@ export default class Results extends Component {
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
             <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
             <button class="showvisualsbutton" id="showapplevisuals" onClick={(e) => this.toggleSection(e)}>Apple</button>
+            <button class="showvisualsbutton" id="shownetflixvisuals" onClick={(e) => this.toggleSection(e)}>Netflix</button>
           </div>
           <div id="mainvisuals">
             <div class="visualssection" id="facebookvisuals">
@@ -366,6 +380,14 @@ export default class Results extends Component {
               <ArtistsBarChart />
               <TracksBarChart />
               <MusicLibraryGanttChart />
+            </div>
+            <div class="visualssection" id="netflixvisuals">
+              <p>sample netflix</p>
+              <p>sample netflix</p>
+              <p>sample netflix</p>
+              <p>sample netflix</p>
+              <p>sample netflix</p>
+              <p>sample netflix</p>
             </div>
           </div>
         </div>
