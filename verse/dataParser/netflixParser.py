@@ -71,10 +71,12 @@ def parseNetflixData(netflixDataDumpName):
         # print(topTenShows)
 
         pieChartTopTenShows = []
+        count = 0
         for show in topTenShows:
-            pieChartTopTenShows.append({"id": show[1], "value": show[0]})
+            pieChartTopTenShows.append({"id": count, "label": show[1], "value": show[0]})
+            count += 1
 
-        analyzedData["topTenShowsPieChart"] = pieChartTopTenShows
+        analyzedData["shows_piechart"] = pieChartTopTenShows
         analyzedData["totalCount"] = totalWatchCount
         analyzedData["movies"] = movies
         analyzedData["shows"] = shows

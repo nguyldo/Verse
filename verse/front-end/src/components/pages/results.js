@@ -23,6 +23,10 @@ import TracksBarChart from "../visuals/TracksBarChart";
 import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart";
 
 
+import ShowsPieChart from "../visuals/ShowsPieChart.js";
+import ShowsBarChart from "../visuals/ShowsBarChart.js";
+
+
 export default class Results extends Component {
 
   constructor(props) {
@@ -34,6 +38,14 @@ export default class Results extends Component {
 
     this.setState = ({
       //vals: "hi",
+      
+      // ERROR HANDLING
+      facebook: {
+        locations_barchart: [{}],
+        posts_piechart: [{}],
+        reactions_barchart: [{}]
+      },
+
       name: "",
       category: "",
       full_locations: [],
@@ -80,32 +92,8 @@ export default class Results extends Component {
     // this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentMount() {
+  componentWillMount() {
     
-    /*
-    if (this.state.facebookRequest != "") {
-      this.getFacebookData();
-    } else {
-      document.getElementById("facebookvisuals").style.display = "none";
-    }
-    if (this.state.googleRequest != "") {
-      // get google data
-    } else {
-      document.getElementById("googlevisuals").style.display = "none";
-    }
-    if (this.state.appleRequest != "") {
-      this.getAppleData();
-    } else {
-      document.getElementById("applevisuals").style.display = "none";
-    }
-    */
-  }
-
-  componentDidMount() {
-    console.log("Did mount");
-    console.log(this.state);
-
-    // decides whether or not to show the visuals for each section
     if ("facebook" in this.state.compiledRequest) {
       console.log("facebook data was loaded");
       this.state.name = this.state.compiledRequest.facebook["name_category_header"]["0"];
@@ -120,31 +108,105 @@ export default class Results extends Component {
       this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
       this.state.companies_num = this.state.companies.length;
       this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
+      this.state.facebook = this.state.compiledRequest.facebook;
+
+    } else {
+      console.log("facebook data was NOT loaded");
+      this.state.facebook = {
+        locations_barchart: [{id: 0, label: "", value: 0}],
+        posts_piechart: [{id: 0, label: "", value: 0}],
+        reactions_barchart: [{id: 0, label: "", value: 0}]
+      };
+    }
+
+    if ("applegeneral" in this.state.compiledRequest) {
+      console.log("apple data was loaded");
+      this.state.applegeneral = this.state.compiledRequest.applegeneral;
+      this.state.applemusic = this.state.compiledRequest.applemusic;
+      this.state.applegames = this.state.compiledRequest.applegames;
+    } else {
+      console.log("apple data was NOT loaded");
+    }
+
+    if ("google" in this.state.compiledRequest) {
+      console.log("google data was loaded");
+      this.state.google = this.state.compiledRequest.google;
+    } else {
+      console.log("google data was NOT loaded");
+    }
+
+    if ("netflix" in this.state.compiledRequest) {
+      console.log("netflix data was loaded");
+      this.state.netflix = this.state.compiledRequest.netflix;
+    } else {
+      console.log("netflix data was NOT loaded");
+    }
+
+  }
+
+  componentDidMount() {
+    console.log("Did mount");
+    console.log(this.state);
+
+    // decides whether or not to show the visuals for each section
+    if ("facebook" in this.state.compiledRequest) {
+      /*
+      console.log("facebook data was loaded");
+      this.state.name = this.state.compiledRequest.facebook["name_category_header"]["0"];
+      this.state.category = this.state.compiledRequest.facebook["name_category_header"]["1"];
+      this.state.full_locations = this.state.compiledRequest.facebook["locations_piechart"];
+      this.state.your_posts = this.state.compiledRequest.facebook["posts_linegraph"]["0"];
+      this.state.other_posts = this.state.compiledRequest.facebook["posts_linegraph"]["1"];
+      this.state.comments = this.state.compiledRequest.facebook["posts_linegraph"];
+      this.state.reactions = this.state.compiledRequest.facebook["reactions_pictograph"];
+      this.state.sites = this.state.compiledRequest.facebook["websites_list"];
+      this.state.sites_num = this.state.compiledRequest.facebook["websites_count"];
+      this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
+      this.state.companies_num = this.state.companies.length;
+      this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
+      this.state.facebook = this.state.compiledRequest.facebook;*/
       //this.state.vals = "hi"
       this.forceUpdate();
       this.populateSelect();
       this.populateLocationDict();
     } else {
-      console.log("facebook data was NOT loaded");
+      //console.log("facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
+      /*
+      this.state.facebook = {
+        locations_barchart: {},
+        posts_piechart: {},
+        reactions_barchart: {}
+      };*/
     }
 
     if ("applegeneral" in this.state.compiledRequest) {
+      /*
       console.log("apple data was loaded");
+      this.state.applegeneral = this.state.compiledRequest.applegeneral;
+      this.state.applemusic = this.state.compiledRequest.applemusic;
+      this.state.applegames = this.state.compiledRequest.applegames;
+      */
     } else {
       console.log("apple data was NOT loaded");
       document.getElementById("applevisuals").style.display = "none";
     }
 
     if ("google" in this.state.compiledRequest) {
+      /*
       console.log("google data was loaded");
+      this.state.google = this.state.compiledRequest.google;
+      */
     } else {
       console.log("google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
     }
 
     if ("netflix" in this.state.compiledRequest) {
+      /*
       console.log("netflix data was loaded");
+      this.state.netflix = this.state.compiledRequest.netflix;
+      */
     } else {
       console.log("netflix data was NOT loaded");
       document.getElementById("netflixvisuals").style.display = "none";
@@ -323,13 +385,13 @@ export default class Results extends Component {
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
               <div class="chart">
-                <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
+                <IPAdressChart data={this.state.facebook.locations_barchart} />
               </div>
               <div class="chart">
-                <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
+                <PostPieChart data={this.state.facebook.posts_piechart} />
               </div>
               <div class="chart">
-                <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
+                <ReactionBarChart data={this.state.facebook.reactions_barchart} />
               </div>
               <p>List of Websites You Have Logged Into Using Facebook:</p>
               <select id="select_sites" size="5"></select>
@@ -382,12 +444,12 @@ export default class Results extends Component {
               <MusicLibraryGanttChart />
             </div>
             <div class="visualssection" id="netflixvisuals">
-              <p>sample netflix</p>
-              <p>sample netflix</p>
-              <p>sample netflix</p>
-              <p>sample netflix</p>
-              <p>sample netflix</p>
-              <p>sample netflix</p>
+              <div class="chart">
+                <ShowsPieChart data={this.state.netflix.shows_piechart} />
+              </div>
+              <div class="chart">
+                <ShowsBarChart data={this.state.netflix.shows_piechart} />
+              </div>
             </div>
           </div>
         </div>
