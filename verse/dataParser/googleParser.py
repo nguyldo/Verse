@@ -20,7 +20,7 @@ def parseGoogleData(googleDataDumpName):
 
     # Parse through apple media root directory
     #TODO: uncomment first if running through django and second if through python
-    rootPathName = "./media/unzippedFiles/google/" + googleDataDumpName
+    rootPathName = "./media/unzippedFiles/google/" + googleDataDumpName + "/Takeout"
     #rootPathName = "../media/unzippedFiles/google/" + googleDataDumpName
     
     if os.path.exists(rootPathName):
