@@ -53,7 +53,7 @@ class WebsitesList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Websites You've Logged Into Using Facebook"
+                        title="Websites/Apps You've Logged Into Using Facebook"
                         subheader={"Total: " + this.props.count}
                     />
                     <CardContent>
