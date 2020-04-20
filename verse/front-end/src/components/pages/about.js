@@ -57,7 +57,7 @@ export default class About extends Component {
                 </div>
 
                 <div class="i3">
-                <h1 id="title">So what happens when you submit your data?</h1>
+                <h1 id="title">So what happens when we submit our data?</h1>
 
                 <p id="paragraph" >
                     Once you submit your data, we will be looking through your data with our parser and put together 

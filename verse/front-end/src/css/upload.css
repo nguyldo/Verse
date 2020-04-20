@@ -26,6 +26,12 @@
   color: white;
   margin-left: 88%;
   background-color: #29648A;
+  text-decoration: none;
+  padding: 10px;
+}
+
+#toResults:hover {
+  background-color: rgb(55, 116, 156);
 }
 
 #paragraphU {
@@ -54,4 +60,17 @@
 #buttonU {
   color: white;
   background-color: #29648A;
+  margin: initial;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+#buttonU:hover {
+  background-color: rgb(55, 116, 156);
+  padding-left: 15px;
+  padding-right: 15px;
+  /* padding-top: inherit;
+  padding-bottom: inherit; */
 }

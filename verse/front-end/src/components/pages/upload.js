@@ -365,7 +365,7 @@ export default class Upload extends Component {
             <ModalHeader>About Your Data Dump</ModalHeader>
             <ModalBody id="modalBody">
               <div>
-                  <h1>So what happens when you submit your data?</h1>
+                  <h1>So what happens when we submit our data?</h1>
 
                   <p id="paragraphU" >
                       Once you submit your data, we will be looking through your data with our parser and put together 

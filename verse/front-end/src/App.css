@@ -59,7 +59,7 @@ h1 {
 }
 
 .customupload, button, .link, .link:visited {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
   color: black;
   padding: 8px;
