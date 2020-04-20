@@ -16,6 +16,21 @@ def analyzeGoogleData(googleUserFileName):
 
     Dict = {}
 
+    inOut = {}
+    inOut["totalSizeInGB"] = "total_size_bignum"
+    inOut["profile_info"] = "personal_info_header"
+    inOut["bookmarks"] = "bookmarks_list"
+    inOut["saved_places"] = "saved_places_map"
+    inOut["ads_activity"] = "ads_timeline"
+    inOut["maps_activity"] = "maps_timeline"
+    inOut["search_activity"] = "search_timeline"
+    inOut["youtube_activity"] = "youtube_timeline"
+
+    for key in inOut:
+        if key in data.keys():
+            Dict[key] = inOut[key]
+        else: print(key + " does not exist in parsed data dictionary")
+
     Dict["total_size_bignum"] = data["totalSizeInGB"]
 
     Dict["personal_info_header"] = data["profile_info"]
@@ -65,6 +80,7 @@ def analyzeGoogleData(googleUserFileName):
     Dict["line_year_searches"] = line_format_year
 
     Dict["youtube_timeline"] = data["youtube_activity"]
+
 
     channels = {}
 
