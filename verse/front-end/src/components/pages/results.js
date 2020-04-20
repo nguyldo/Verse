@@ -180,8 +180,8 @@ export default class Results extends Component {
       select.appendChild(el);
     }
 
-    var select = document.getElementById("select_comp");
-    var options = this.state.companies;
+    select = document.getElementById("select_comp");
+    options = this.state.companies;
     for (var i = 0; i < this.state.companies.length; i ++) {
       var opt = options[i];
       var el = document.createElement("option");
