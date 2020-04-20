@@ -108,6 +108,7 @@ export default class Results extends Component {
       this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
       this.state.companies_num = this.state.companies.length;
       this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
+      
       this.state.facebook = this.state.compiledRequest.facebook;
 
     } else {
