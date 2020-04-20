@@ -91,7 +91,7 @@ def parseGoogleData(googleDataDumpName):
             print("/Maps (your places)/Saved Places.json not found")
 
         # ---------- YouTube Data ----------
-        youtubeDirPath = rootPathName + "/YouTube and YoutTube Music"
+        youtubeDirPath = rootPathName + "/YouTube and YouTube Music"
 
         # -----  -----
         file_playlists = youtubeDirPath + "/playlists/all-playlists.json"
@@ -99,21 +99,29 @@ def parseGoogleData(googleDataDumpName):
 
             data_playlists = genericParser.jsonToDict(file_playlists, ())
 
-            key_playlists = "youtube_playlists"
-            val_playlists = []
+            key_playlists = "youtube_playlists_num"
+            val_playlists = len(data_playlists)
 
-        else: print("/YouTube and YoutTube Music/playlists not found")
+            Dict[key_playlists] = val_playlists
+
+        else: 
+            Dict["youtube_playlists_num"] = ""
+            print(rootPathName + "/YouTube and YouTube Music/playlists not found")
 
         # -----  -----
         subscriptionsFilePath = youtubeDirPath + "/subscriptions/subscriptions.json"
         if os.path.exists(subscriptionsFilePath):
 
-            data_subscriptions = genericParser.jsonToDict(file_subscriptions, ())
+            data_subscriptions = genericParser.jsonToDict(subscriptionsFilePath, ())
 
-            key_subscriptions = "youtube_subscriptions"
-            val_subscriptions = []
+            key_subscriptions = "youtube_subscriptions_num"
+            val_subscriptions = len(data_subscriptions)
 
-        else: print("/subscriptions/subscriptions.json not found")
+            Dict[key_subscriptions] = val_subscriptions
+
+        else: 
+            Dict["youtube_subscriptions_num"] = ""
+            print("/subscriptions/subscriptions.json not found")
 
         # ---------- Activity Data ----------
         activityDirPath = rootPathName + "/My Activity"
@@ -137,11 +145,9 @@ def parseGoogleData(googleDataDumpName):
 
             Dict[key_ads] = val_ads
         
-        else: print("/My Activity/Ads/MyActivity.html not found")
-
-        else:
+        else: 
             Dict["ads_activity"] = ""
-            print("ad activity dir path not found")
+            print("/My Activity/Ads/MyActivity.html not found")
 
         # -----  -----
         file_maps = activityDirPath + "/Maps/MyActivity.html"
@@ -233,11 +239,9 @@ def parseGoogleData(googleDataDumpName):
 
             Dict[key_maps] = val_maps
         
-        else: print("/My Activity/Maps/MyActivity.html not found")
-
         else: 
             Dict["maps_activity"] = ""
-            print("maps activity dir path not found")
+            print("/My Activity/Maps/MyActivity.html not found")
 
         # -----  -----
         searchFilePath = activityDirPath + "/Search/MyActivity.html"
@@ -325,8 +329,8 @@ def parseGoogleData(googleDataDumpName):
             
         # -----  -----
         youtubeFilePath = activityDirPath + "/YouTube/MyActivity.html"
-        i
-        f os.path.exists(youtubeFilePath):
+        
+        if os.path.exists(youtubeFilePath):
             file_youtube = youtubeFilePath
             
             key_youtube = "youtube_activity"

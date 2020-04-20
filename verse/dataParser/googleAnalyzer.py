@@ -25,6 +25,8 @@ def analyzeGoogleData(googleUserFileName):
     inOut["maps_activity"] = "maps_timeline"
     inOut["search_activity"] = "search_timeline"
     inOut["youtube_activity"] = "youtube_timeline"
+    inOut["youtube_playlists_num"] = "youtube_playlists_num"
+    inOut["youtube_subscriptions_num"] = "youtube_subscriptions_num"
 
     for key in inOut:
         if key in data.keys():
@@ -34,6 +36,10 @@ def analyzeGoogleData(googleUserFileName):
     Dict["total_size_bignum"] = data["totalSizeInGB"]
 
     Dict["personal_info_header"] = data["profile_info"]
+
+    Dict["youtube_subscriptions_num"] = data["youtube_subscriptions_num"]
+
+    Dict["youtube_playlists_num"] = data["youtube_playlists_num"]
 
     bookmarks = []
     bookmarks = data["bookmarks"]

@@ -182,8 +182,8 @@ export default class Results extends Component {
       this.state.google_routes_num = this.state.compiledRequest.google["maps_timeline"]["directions"].length;
       this.state.google_bookmarks = this.state.compiledRequest.google["bookmarks_list"];
       this.state.google_bookmarks_num = this.state.google_bookmarks.length;
-      /*this.state.subscriptions
-      this.state.playlists*/
+      this.state.subscriptions = this.state.compiledRequest.google["youtube_subscriptions_num"];
+      this.state.playlists = this.state.compiledRequest.google["youtube_playlists_num"];
       this.populateGoogleSelect();
       this.forceUpdate();
     } else {
