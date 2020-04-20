@@ -120,11 +120,14 @@ def analyzeGeneralAppleData(appleUserFileName):
 
     Dict = {}
 
-    Dict["total_size_bignum"] = data["totalSizeInGB"]
+    if "totalSizeInGB" in data.keys():
+        Dict["total_size_bignum"] = data["totalSizeInGB"]
 
-    Dict["personal_info_header"] = [data["name"], data["address"]]
+    if "name" in data.keys() and "address" in data.keys():
+        Dict["personal_info_header"] = [data["name"], data["address"]]
 
-    Dict["devices_list"] = data["devices"]
+    if "devices" in data.keys():
+        Dict["devices_list"] = data["devices"]
 
     #write analyzed data dictionary to json file
     #TODO: uncomment first if running through django and second if through python
@@ -138,88 +141,97 @@ def analyzeMusicAppleData(appleUserFileName):
     Dict = {}
 
     # -----   -----
-    play_ms = filterByField( data["apple_music_play_activity"], ("Milliseconds Since Play", "Play Duration Milliseconds"))
-    msSincePlay = [s["Milliseconds Since Play"] for s in play_ms]
-    msPlayDuration = [d["Play Duration Milliseconds"] for d in play_ms]
-    for i in range(0, len(msPlayDuration)):
-        if not isinstance(msPlayDuration[i], float):
-            msPlayDuration[i] = 0
+    if "apple_music_play_activity" in data.keys():
+        play_ms = filterByField( data["apple_music_play_activity"], ("Milliseconds Since Play", "Play Duration Milliseconds"))
+        msSincePlay = [s["Milliseconds Since Play"] for s in play_ms]
+        msPlayDuration = [d["Play Duration Milliseconds"] for d in play_ms]
+        for i in range(0, len(msPlayDuration)):
+            if not isinstance(msPlayDuration[i], float):
+                msPlayDuration[i] = 0
 
-    totalListenTime = sum(msPlayDuration)
-    totalListenTime = convertMillis(totalListenTime)
-    Dict["total_listen_time_bignum"] = { "hours" : totalListenTime[0], "minutes" : totalListenTime[1], "seconds" : totalListenTime[2]}
+        totalListenTime = sum(msPlayDuration)
+        totalListenTime = convertMillis(totalListenTime)
+        Dict["total_listen_time_bignum"] = { "hours" : totalListenTime[0], "minutes" : totalListenTime[1], "seconds" : totalListenTime[2]}
     
     # -----   -----
-    Dict["preferences_pictograph"] = data["apple_music_preferences"]
+    if "apple_music_preferences" in data.keys():
+        Dict["preferences_pictograph"] = data["apple_music_preferences"]
 
     # -----   -----
-    artist_song_endtype = filterByField( data["apple_music_play_activity"], 
-    ("Artist Name", "Content Name", "End Reason Type", "Milliseconds Since Play") )
+    if "apple_music_play_activity" in data.keys():
+        artist_song_endtype = filterByField( data["apple_music_play_activity"], 
+        ("Artist Name", "Content Name", "End Reason Type", "Milliseconds Since Play") )
 
     #TODO: infer actual favorite songs that had natural end of track rather than skip
 
     # -----   -----
-    genres = filterByField( data["apple_music_play_activity"], ("Genre",) )
-    dictGenreFreq = countFrequencies(genres, "Genre")
-    dictTopGenres = countTopTen(dictGenreFreq)
+    if "apple_music_play_activity" in data:
+        genres = filterByField( data["apple_music_play_activity"], ("Genre",) )
+        dictGenreFreq = countFrequencies(genres, "Genre")
+        dictTopGenres = countTopTen(dictGenreFreq)
 
-    dictGenreFreq = formatDictionary(dictGenreFreq, "Genre")
-    dictTopGenres = formatDictionary(dictTopGenres, "Genre")
+        dictGenreFreq = formatDictionary(dictGenreFreq, "Genre")
+        dictTopGenres = formatDictionary(dictTopGenres, "Genre")
 
-    Dict["play_activity_genres_piechart"] = dictGenreFreq
-    Dict["top_ten_genres_list"] = dictTopGenres
+        Dict["play_activity_genres_piechart"] = dictGenreFreq
+        Dict["top_ten_genres_list"] = dictTopGenres
 
-    # -----   -----
-    artists = filterByField( data["apple_music_play_activity"], ("Artist Name",) )
-    dictArtistFreq = countFrequencies(artists, "Artist Name")
-    dictTopArtists = countTopTen(dictArtistFreq)
+        # -----   -----
+        artists = filterByField( data["apple_music_play_activity"], ("Artist Name",) )
+        dictArtistFreq = countFrequencies(artists, "Artist Name")
+        dictTopArtists = countTopTen(dictArtistFreq)
 
-    dictArtistFreq = formatDictionary(dictArtistFreq, "Artist Name")
-    dictTopArtists = formatDictionary(dictTopArtists, "Artist Name")
+        dictArtistFreq = formatDictionary(dictArtistFreq, "Artist Name")
+        dictTopArtists = formatDictionary(dictTopArtists, "Artist Name")
 
-    Dict["play_activity_artists_barchart"] = dictArtistFreq
-    Dict["top_ten_artists_list"] = dictTopArtists
-
-    # -----   -----
-    tracks = filterByField( data["apple_music_play_activity"], ("Content Name", "Artist Name") )
-    dictTrackFreq = countFrequencies(tracks, "Content Name")
-    
-    dictTrackArtist = {}
-    for d in tracks:
-        #if d["Content Name"] != "" or d["Artist Name"] != "":
-        dictTrackArtist[d["Content Name"]] = d["Artist Name"]
-
-    #replace track name with track + artist name in key
-    dictTrackArtistFreq = {}
-    for track in dictTrackFreq:
-        if track in dictTrackArtist:
-            dictTrackArtistFreq[track + " - " + dictTrackArtist[track]] = dictTrackFreq[track]
-            
-    dictTopTracks = countTopTen(dictTrackArtistFreq)
-
-    dictTrackArtistFreq = formatDictionary(dictTrackArtistFreq, "Content Name")
-    dictTopTracks = formatDictionary(dictTopTracks, "Content Name")
-
-    Dict["play_activity_track_barchart"] = dictTrackArtistFreq
-    Dict["top_ten_tracks_list"] = dictTopTracks
+        Dict["play_activity_artists_barchart"] = dictArtistFreq
+        Dict["top_ten_artists_list"] = dictTopArtists
 
     # -----   -----
-    trackIP = filterByField( data["apple_music_play_activity"], ("Content Name", "Artist Name", "Client IP Address"))
-    Dict["play_activity_map"] = trackIP
+    if "apple_music_play_activity" in data.keys():
+        tracks = filterByField( data["apple_music_play_activity"], ("Content Name", "Artist Name") )
+        dictTrackFreq = countFrequencies(tracks, "Content Name")
+        
+        dictTrackArtist = {}
+        for d in tracks:
+            #if d["Content Name"] != "" or d["Artist Name"] != "":
+            dictTrackArtist[d["Content Name"]] = d["Artist Name"]
+
+        #replace track name with track + artist name in key
+        dictTrackArtistFreq = {}
+        for track in dictTrackFreq:
+            if track in dictTrackArtist:
+                dictTrackArtistFreq[track + " - " + dictTrackArtist[track]] = dictTrackFreq[track]
+                
+        dictTopTracks = countTopTen(dictTrackArtistFreq)
+
+        dictTrackArtistFreq = formatDictionary(dictTrackArtistFreq, "Content Name")
+        dictTopTracks = formatDictionary(dictTopTracks, "Content Name")
+
+        Dict["play_activity_track_barchart"] = dictTrackArtistFreq
+        Dict["top_ten_tracks_list"] = dictTopTracks
 
     # -----   -----
-    totalNumTracks = len(data["apple_music_library_tracks"])
-    Dict["total_tracks_bignum"] = totalNumTracks
+    if "apple_music_play_activity" in data.keys():
+        trackIP = filterByField( data["apple_music_play_activity"], ("Content Name", "Artist Name", "Client IP Address"))
+        Dict["play_activity_map"] = trackIP
 
     # -----   -----
-    titleArtistDates = filterByField( data["apple_music_library_tracks"], ("Title", "Artist", "Genre",
-    "Date Added To Library", "Last Played Date", "Release Date"))
-    titleArtistDatesList = formatGanttData(titleArtistDates)
-    Dict["library_song_ganttchart"] = titleArtistDatesList
+    if "apple_music_library_tracks" in data.keys():
+        totalNumTracks = len(data["apple_music_library_tracks"])
+        Dict["total_tracks_bignum"] = totalNumTracks
 
     # -----   -----
-    genre_dates = filterByField( data["apple_music_library_tracks"], ("Genre", "Last Played Date"))
-    Dict["genre_timeline"] = genre_dates
+    if "apple_music_library_tracks" in data.keys():
+        titleArtistDates = filterByField( data["apple_music_library_tracks"], ("Title", "Artist", "Genre",
+        "Date Added To Library", "Last Played Date", "Release Date"))
+        titleArtistDatesList = formatGanttData(titleArtistDates)
+        Dict["library_song_ganttchart"] = titleArtistDatesList
+
+    # -----   -----
+    if "apple_music_library_tracks" in data.keys():
+        genre_dates = filterByField( data["apple_music_library_tracks"], ("Genre", "Last Played Date"))
+        Dict["genre_timeline"] = genre_dates
 
     #write analyzed data dictionary to json file
     genericParser.writeToJsonFile(Dict, "./media/processedData/apple/" + appleUserFileName + "/analyzedMusicAppleData.json")
@@ -232,15 +244,18 @@ def analyzeAppsGamesAppleData(appleUserFileName):
     Dict = {}
 
     # -----   -----
-    Dict["games_timeline"] = data["games"]
+    if "games" in data.keys():
+        Dict["games_timeline"] = data["games"]
 
     # -----   -----
-    app_date = filterByField(data["apps"], ("Activity Date", "Item Description"))
-    Dict["apps_timeline"] = app_date
+    if "apps" in data.keys():
+        app_date = filterByField(data["apps"], ("Activity Date", "Item Description"))
+        Dict["apps_timeline"] = app_date
 
     # -----   -----
-    app_ip = filterByField(data["apps"], ("Device IP Address", "Item Description"))
-    Dict["apps_map"] = app_ip
+    if "apps" in data.keys():
+        app_ip = filterByField(data["apps"], ("Device IP Address", "Item Description"))
+        Dict["apps_map"] = app_ip
 
     #write analyzed data dictionary to json file
     genericParser.writeToJsonFile(Dict, "./media/processedData/apple/" + appleUserFileName + "/analyzedAppsGamesAppleData.json")
