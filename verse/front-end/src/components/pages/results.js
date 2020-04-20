@@ -13,6 +13,9 @@ import PostPieChart from "../visuals/PostPieChart.js";
 import LocationPieChart from "../visuals/LocationPieChart.js";
 import DrivePieChart from "../visuals/DrivePieChart.js";
 import ChannelPieChart from "../visuals/ChannelPieChart.js";
+import WebsitesList from "../visuals/WebsitesList.js";
+import CompanyAdsList from "../visuals/CompanyAdsList.js";
+import OffFacebookWebsitesList from "../visuals/OffFacebookWebsitesList.js";
 
 //Apple Visuals
 import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
@@ -122,22 +125,6 @@ export default class Results extends Component {
     // decides whether or not to show the visuals for each section
     if ("facebook" in this.state.compiledRequest) {
       console.log("facebook data was loaded");
-      this.state.name = this.state.compiledRequest.facebook["name_category_header"]["0"];
-      this.state.category = this.state.compiledRequest.facebook["name_category_header"]["1"];
-      this.state.full_locations = this.state.compiledRequest.facebook["locations_piechart"];
-      this.state.your_posts = this.state.compiledRequest.facebook["posts_linegraph"]["0"];
-      this.state.other_posts = this.state.compiledRequest.facebook["posts_linegraph"]["1"];
-      this.state.comments = this.state.compiledRequest.facebook["posts_linegraph"];
-      this.state.reactions = this.state.compiledRequest.facebook["reactions_pictograph"];
-      this.state.sites = this.state.compiledRequest.facebook["websites_list"];
-      this.state.sites_num = this.state.compiledRequest.facebook["websites_count"];
-      this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
-      this.state.companies_num = this.state.companies.length;
-      this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
-      //this.state.vals = "hi"
-      this.forceUpdate();
-      this.populateSelect();
-      this.populateLocationDict();
     } else {
       console.log("facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
@@ -320,24 +307,34 @@ export default class Results extends Component {
           </div>
           <div id="mainvisuals">
             <div class="visualssection" id="facebookvisuals">
-              <h1>Name: {this.state.fb_name}</h1>
-              <h2>Category: {this.state.category}</h2>
-              <div class="chart">
-                <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
-              </div>
-              <div class="chart">
-                <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
-              </div>
-              <div class="chart">
-                <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
-              </div>
-              <p>List of Websites You Have Logged Into Using Facebook:</p>
-              <select id="select_sites" size="5"></select>
-              <p>Total Number: {this.state.sites_num}</p>
-              <p>Companies Who Have Directed Ads Towards You On Facebook:</p>
-              <select id="select_comp" size="5"></select>
-              <p>Total Number: {this.state.companies_num}</p>
-              <p>Number of Off-Facebook Websites and Apps that Facebook Tracks: {this.state.off_num}</p>
+              <h1>Name: {this.state.compiledRequest.facebook.name_category_header[0]}</h1>
+              <h2>Category: {this.state.compiledRequest.facebook.name_category_header[1]}</h2>
+
+              <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
+              <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
+              <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
+
+              <Grid container spacing={5}>
+                
+                <Grid item xs={12}>
+                  <Grid container justify="center" spacing={5}>
+
+                    <Grid spacing={3}>
+                      <WebsitesList data={this.state.compiledRequest.facebook.websites_list} count={this.state.compiledRequest.facebook.websites_count} />
+                    </Grid>
+
+                    <Grid >
+                      <OffFacebookWebsitesList data={this.state.compiledRequest.facebook.off_facebook_activity_list} count={this.state.compiledRequest.facebook.off_facebook_activity_count} />
+                    </Grid>
+
+                    <Grid >
+                      <CompanyAdsList data={this.state.compiledRequest.facebook.advertisers_list} count={this.state.compiledRequest.facebook.advertisers_count} />
+                    </Grid>
+
+                  </Grid>
+                </Grid>
+
+              </Grid>
             </div>
             <div class="visualssection" id="googlevisuals">
               <h1>Name: {this.state.google_name}</h1>
@@ -390,6 +387,7 @@ export default class Results extends Component {
                     </Grid>
                   </Grid>
                 </Grid>
+
               </Grid>
               
               <GenresPieChart />
