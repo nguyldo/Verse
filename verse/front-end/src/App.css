@@ -70,6 +70,10 @@ h1 {
   text-decoration: none;
 }
 
+.ubutton, .ubutton:hover {
+  border-radius: 5px;
+}
+
 .customupload:hover, button:hover, .link:hover {
   cursor: pointer;
   border-style: solid;
