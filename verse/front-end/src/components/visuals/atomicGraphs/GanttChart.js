@@ -45,13 +45,14 @@ class GanttChart extends React.Component {
         return (
             <div>
                 <Chart 
-                    width={'1024px'}
+                    width={'1000px'}
                     height={'700px'}
                     chartType="Gantt"
                     loader={<div>Loading Chart</div>}
                     data={ data }
                     options={{
-                        height: 2000,
+                        width: 1000,
+                        height: 22000,
                         gantt: {
                             trackHeight: 30,
                         },

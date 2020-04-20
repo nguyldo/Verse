@@ -5,13 +5,12 @@ import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from '@material-ui/core';
 
 import GanttChart from "./atomicGraphs/GanttChart"
-import musicLibraryData from "./data/musicLibraryData"
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
         maxWidth: 1024,
-        maxHeight: 1024,
+        maxHeight: 2048,
         margin: "24px auto",
         overflow: 'auto',
     },
@@ -51,7 +50,7 @@ class MusicLibraryGanttChart extends React.Component {
                     />
                     <CardContent>
                         <div>
-                            <GanttChart musicData={musicLibraryData} />
+                            <GanttChart musicData={this.props.data} />
                         </div>
                     </CardContent>
                 </Card>

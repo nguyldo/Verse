@@ -4,8 +4,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import listenTime from "./data/totalListenTimeData"
-
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
@@ -35,12 +33,11 @@ class ListenTimeBigNum extends React.Component {
 
         const { classes } = this.props;
 
-        let h = listenTime[0].hours.toFixed(0);
-        let m = listenTime[0].minutes.toFixed(0);
-        let s = listenTime[0].seconds.toFixed(0);
-        let y = listenTime[0].year;
-
-        let sh = "Since ".concat(y.toString());
+        console.log(this.props.data)
+        
+        let h = this.props.data.hours.toFixed(0);
+        let m = this.props.data.minutes.toFixed(0);
+        let s = this.props.data.seconds.toFixed(0);
 
         return (
             <React.Fragment>
@@ -51,7 +48,7 @@ class ListenTimeBigNum extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Total Listen Time"
-                        subheader={sh}
+                        subheader={"Since " + this.props.date_range[0][0]}
                     />
                     <CardContent>
                     <h1>{h} hours, </h1>
