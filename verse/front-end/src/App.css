@@ -106,7 +106,7 @@ input[type="file"] {
   background-color: #FFFFFF;
   border-style: solid;
   border-radius: 8px;
-  padding: 10px;
+  padding: 0px 10px 10px 10px;
   margin-bottom: 30px;
 }
 
@@ -132,6 +132,29 @@ input[type="file"] {
   padding: 7px;
   width: 90px;
   
+}
+
+.visualstitle {
+  width: 100%;
+  color: var(--main-background-color);
+  padding: 5px 0px 5px 0px;
+  border-radius: 15px;
+}
+
+#facebooktitle {
+  background-color: var(--facebook-color);
+}
+
+#googletitle {
+  background-color: var(--google-color);
+}
+
+#appletitle {
+  background-color: var(--apple-color);
+}
+
+#netflixtitle {
+  background-color: var(--netflix-color);
 }
 
 #showfacebookvisuals {

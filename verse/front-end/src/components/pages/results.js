@@ -35,6 +35,7 @@ import ShowsBarChart from "../visuals/ShowsBarChart.js";
 import ShowsList from "../visuals/showsList.js";
 import MoviesList from "../visuals/moviesList.js";
 import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
+import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
 
 export default class Results extends Component {
@@ -46,9 +47,6 @@ export default class Results extends Component {
 
     // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
 
-    this.setState = ({
-
-    });
   }
 
   componentWillMount() {
@@ -56,7 +54,7 @@ export default class Results extends Component {
     // Facebook API Response
     if ("facebook" in this.state.compiledRequest) {
       console.log("cwm: facebook data was loaded");
-      this.state.name = this.state.compiledRequest.facebook.name_category_header[0];
+      this.state.fb_name = this.state.compiledRequest.facebook.name_category_header[0];
       this.state.category = this.state.compiledRequest.facebook.name_category_header[1];
       this.state.locations_bar = this.state.compiledRequest.facebook.locations_barchart;
       this.state.posts_pie = this.state.compiledRequest.facebook.posts_piechart;
@@ -71,7 +69,7 @@ export default class Results extends Component {
 
     else {
       console.log("cwm: facebook data was NOT loaded");
-      this.state.name = "";
+      this.state.fb_name = "";
       this.state.category = "";
       this.state.locations_bar = [];
       this.state.posts_pie = [];
@@ -120,13 +118,23 @@ export default class Results extends Component {
       console.log("cwm: google data was NOT loaded");
     }
 
+    // Netflix API Response
     if ("netflix" in this.state.compiledRequest) {
       console.log("cwm: netflix data was loaded");
-      this.state.netflix = this.state.compiledRequest.netflix;
+      this.state.watch_count = this.state.compiledRequest.netflix.totalCount;
+      this.state.shows = this.state.compiledRequest.netflix.shows;
+      this.state.movies = this.state.compiledRequest.netflix.movies;
+      this.state.shows_generalchart = this.state.compiledRequest.netflix.shows_piechart;
+      this.state.shows_ganttchart = this.state.compiledRequest.netflix.shows_ganttchart;
     } else {
       console.log("cwm: netflix data was NOT loaded");
+      this.state.watch_count = 0;
+      this.state.shows = [];
+      this.state.movies = [];
+      this.state.shows_generalchart = [];
+      this.state.shows_ganttchart = [];
     }
-    
+
   }
 
 
@@ -234,7 +242,8 @@ export default class Results extends Component {
           <div id="mainvisuals">
             <h1>Results</h1>
             <div class="visualssection" id="facebookvisuals">
-              <h1>Name: {this.state.name}</h1>
+              <h1 class="visualstitle" id="facebooktitle">Facebook</h1>
+              <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.category}</h2>
 
               <IPAdressChart data={this.state.locations_bar} />
@@ -265,6 +274,7 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="applevisuals">
+              <h1 class="visualstitle" id="appletitle">Apple</h1>
               <Grid container spacing={5}>
 
                 <Grid item xs={12}>
@@ -326,23 +336,25 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="netflixvisuals">
-            <WatchedNetflixBigNum data={this.state.netflix.totalCount} />
-            <Grid item xs={12}>
-              <Grid container justify="center" spacing={3}>
-                <Grid key={0}>
-                  <ShowsList data={this.state.netflix.shows} />
-                </Grid>
-                <Grid key={1}>
-                  <MoviesList data={this.state.netflix.movies} />
+              <h1 class="visualstitle" id="netflixtitle">Netflix</h1>
+              <WatchedNetflixBigNum data={this.state.watch_count} />
+              <Grid item xs={12}>
+                <Grid container justify="center" spacing={3}>
+                  <Grid key={0}>
+                    <ShowsList data={this.state.shows} />
+                  </Grid>
+                  <Grid key={1}>
+                    <MoviesList data={this.state.movies} />
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
               <div class="chart">
-                <ShowsPieChart data={this.state.netflix.shows_piechart} />
+                <ShowsPieChart data={this.state.shows_generalchart} />
               </div>
               <div class="chart">
-                <ShowsBarChart data={this.state.netflix.shows_piechart} />
+                <ShowsBarChart data={this.state.shows_generalchart} />
               </div>
+              <ShowsGanttChart data={this.state.shows_ganttchart} />
             </div>
           </div>
         </div>
