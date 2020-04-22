@@ -35,6 +35,7 @@ import ShowsBarChart from "../visuals/ShowsBarChart.js";
 import ShowsList from "../visuals/showsList.js";
 import MoviesList from "../visuals/moviesList.js";
 import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
+import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
 
 export default class Results extends Component {
@@ -49,14 +50,6 @@ export default class Results extends Component {
     this.setState = ({
       //vals: "hi",
       fb_name: "",
-      
-      // ERROR HANDLING
-      facebook: {
-        locations_barchart: [{}],
-        posts_piechart: [{}],
-        reactions_barchart: [{}]
-      },
-
       category: "",
       full_locations: [],
       locations: {},
@@ -90,8 +83,8 @@ export default class Results extends Component {
 
       total_size_bignum: 0,
       personal_info_header: "",
-      devices_list:  "",
- 
+      devices_list: "",
+
       total_listen_time_bignum: 0,
       preferences_pictograph: [],
       play_activity_genres_piechart: [],
@@ -115,7 +108,7 @@ export default class Results extends Component {
   componentWillMount() {
     if ("facebook" in this.state.compiledRequest) {
       console.log("cwm: facebook data was loaded");
-      this.state.name = this.state.compiledRequest.facebook.name_category_header[0];
+      this.state.fb_name = this.state.compiledRequest.facebook.name_category_header[0];
       this.state.category = this.state.compiledRequest.facebook.name_category_header[1];
       this.state.locations_bar = this.state.compiledRequest.facebook.locations_barchart;
       this.state.posts_pie = this.state.compiledRequest.facebook.posts_piechart;
@@ -126,7 +119,7 @@ export default class Results extends Component {
       this.state.off_ct = this.state.compiledRequest.facebook.off_facebook_activity_count;
       this.state.advs = this.state.compiledRequest.facebook.advertisers_list;
       this.state.advs_ct = this.state.compiledRequest.facebook.advertisers_count;
-    } 
+    }
 
     else {
       console.log("cwm: facebook data was NOT loaded");
@@ -142,7 +135,7 @@ export default class Results extends Component {
       this.state.advs = [];
       this.state.advs_ct = 0;
     }
-    
+
     if ("applegeneral" in this.state.compiledRequest && "applemusic" in this.state.compiledRequest) {
       console.log("cwm: apple data was loaded");
       this.state.total_size = this.state.compiledRequest.applegeneral.total_size_bignum;
@@ -155,8 +148,8 @@ export default class Results extends Component {
       this.state.artists_bar = this.state.compiledRequest.applemusic.play_activity_artists_barchart;
       this.state.tracks_bar = this.state.compiledRequest.applemusic.play_activity_track_barchart;
       this.state.library_gantt = this.state.compiledRequest.applemusic.library_song_ganttchart;
-    } 
-    
+    }
+
     else {
       console.log("cwm: apple data was NOT loaded");
       this.state.total_size = 0;
@@ -179,12 +172,21 @@ export default class Results extends Component {
     }
 
     if ("netflix" in this.state.compiledRequest) {
-      console.log("netflix data was loaded");
-      this.state.netflix = this.state.compiledRequest.netflix;
+      console.log("cwm: netflix data was loaded");
+      this.state.watch_count = this.state.compiledRequest.netflix.totalCount;
+      this.state.shows = this.state.compiledRequest.netflix.shows;
+      this.state.movies = this.state.compiledRequest.netflix.movies;
+      this.state.shows_generalchart = this.state.compiledRequest.netflix.shows_piechart;
+      this.state.shows_ganttchart = this.state.compiledRequest.netflix.shows_ganttchart;
     } else {
-      console.log("netflix data was NOT loaded");
+      console.log("cwm: netflix data was NOT loaded");
+      this.state.watch_count = 0;
+      this.state.shows = [];
+      this.state.movies = [];
+      this.state.shows_generalchart = [];
+      this.state.shows_ganttchart = [];
     }
-    
+
   }
 
 
@@ -226,7 +228,7 @@ export default class Results extends Component {
   populateSelect() {
     var select = document.getElementById("select_sites");
     var options = this.state.sites;
-    for (var i = 0; i < this.state.sites_num; i ++) {
+    for (var i = 0; i < this.state.sites_num; i++) {
       var opt = options[i].name;
       var el = document.createElement("option");
       el.textContent = opt;
@@ -236,7 +238,7 @@ export default class Results extends Component {
 
     var select = document.getElementById("select_comp");
     var options = this.state.companies;
-    for (var i = 0; i < this.state.companies.length; i ++) {
+    for (var i = 0; i < this.state.companies.length; i++) {
       var opt = options[i];
       var el = document.createElement("option");
       el.textContent = opt;
@@ -250,11 +252,11 @@ export default class Results extends Component {
 
     var list = this.state.full_locations;
 
-    for (var i = 0; i < list.length; i ++) {
+    for (var i = 0; i < list.length; i++) {
       dict[list[i]["ip_address"]] = "0";
     }
 
-    for (var i = 0; i < list.length; i ++) {
+    for (var i = 0; i < list.length; i++) {
       var num = Number(dict[list[i]["ip_address"]]);
       num = num + 1;
       dict[list[i]["ip_address"]] = num.toString(10);
@@ -301,7 +303,7 @@ export default class Results extends Component {
     }
   }
 
-  render() {    
+  render() {
 
     const styles = theme => ({
       root: {
@@ -332,6 +334,7 @@ export default class Results extends Component {
           <div id="mainvisuals">
             <h1>Results</h1>
             <div class="visualssection" id="facebookvisuals">
+              <h1 class="visualstitle" id="facebooktitle">Facebook</h1>
               <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.category}</h2>
 
@@ -340,7 +343,7 @@ export default class Results extends Component {
               <ReactionBarChart data={this.state.reactions_bar} />
 
               <Grid container spacing={5}>
-                
+
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={5}>
 
@@ -363,17 +366,9 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="googlevisuals">
+              <h1 class="visualstitle" id="googletitle">Google</h1>
               <h1>Name: {this.state.google_name}</h1>
               <h2>Gmail: {this.state.email}</h2>
-              <div class="chart">
-                <IPAdressChart data={this.state.facebook.locations_barchart} />
-              </div>
-              <div class="chart">
-                <PostPieChart data={this.state.facebook.posts_piechart} />
-              </div>
-              <div class="chart">
-                <ReactionBarChart data={this.state.facebook.reactions_barchart} />
-              </div>
               <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
               <p>List of Websites You Have Logged Into Using Google:</p>
               <select id="select_google_sites" size="5"></select>
@@ -386,17 +381,18 @@ export default class Results extends Component {
               <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
               <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
-            
+
             <div class="visualssection" id="applevisuals">
+              <h1 class="visualstitle" id="appletitle">Apple</h1>
               <Grid container spacing={5}>
 
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={3}>
                     <Grid key={0}>
-                      <TotalSizeBigNum data={this.state.total_size}/>
+                      <TotalSizeBigNum data={this.state.total_size} />
                     </Grid>
                     <Grid key={1}>
-                      <ListenTimeBigNum data={this.state.listen_time} date_range={this.state.date_range}/>
+                      <ListenTimeBigNum data={this.state.listen_time} date_range={this.state.date_range} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -404,42 +400,45 @@ export default class Results extends Component {
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={5}>
                     <Grid spacing={3}>
-                      <TopTenGenresList key={3} data={this.state.genres_list} date_range={this.state.date_range}/>
+                      <TopTenGenresList key={3} data={this.state.genres_list} date_range={this.state.date_range} />
                     </Grid>
                     <Grid >
-                      <TopTenArtistsList key={4} data={this.state.artists_list} date_range={this.state.date_range}/>
+                      <TopTenArtistsList key={4} data={this.state.artists_list} date_range={this.state.date_range} />
                     </Grid>
                     <Grid >
-                      <TopTenTracksList key={5} data={this.state.tracks_list} date_range={this.state.date_range}/>
+                      <TopTenTracksList key={5} data={this.state.tracks_list} date_range={this.state.date_range} />
                     </Grid>
                   </Grid>
                 </Grid>
 
               </Grid>
-              
-              <GenresPieChart data={this.state.genres_pie}/>
-              <ArtistsBarChart data={this.state.artists_bar}/>
-              <TracksBarChart data={this.state.tracks_bar}/>
-              <MusicLibraryGanttChart data={this.state.library_gantt}/>
+
+              <GenresPieChart data={this.state.genres_pie} />
+              <ArtistsBarChart data={this.state.artists_bar} />
+              <TracksBarChart data={this.state.tracks_bar} />
+              <MusicLibraryGanttChart data={this.state.library_gantt} />
             </div>
+
             <div class="visualssection" id="netflixvisuals">
-            <WatchedNetflixBigNum data={this.state.netflix.totalCount} />
-            <Grid item xs={12}>
-              <Grid container justify="center" spacing={3}>
-                <Grid key={0}>
-                  <ShowsList data={this.state.netflix.shows} />
-                </Grid>
-                <Grid key={1}>
-                  <MoviesList data={this.state.netflix.movies} />
+              <h1 class="visualstitle" id="netflixtitle">Netflix</h1>
+              <WatchedNetflixBigNum data={this.state.watch_count} />
+              <Grid item xs={12}>
+                <Grid container justify="center" spacing={3}>
+                  <Grid key={0}>
+                    <ShowsList data={this.state.shows} />
+                  </Grid>
+                  <Grid key={1}>
+                    <MoviesList data={this.state.movies} />
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
               <div class="chart">
-                <ShowsPieChart data={this.state.netflix.shows_piechart} />
+                <ShowsPieChart data={this.state.shows_generalchart} />
               </div>
               <div class="chart">
-                <ShowsBarChart data={this.state.netflix.shows_piechart} />
+                <ShowsBarChart data={this.state.shows_generalchart} />
               </div>
+              <ShowsGanttChart data={this.state.shows_ganttchart} />
             </div>
           </div>
         </div>

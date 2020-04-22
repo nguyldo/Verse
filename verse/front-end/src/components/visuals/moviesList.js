@@ -57,8 +57,7 @@ class MoviesList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Shows Watched"
-                        subheader="from _ to _"
+                        title="Movies Watched"
                     />
                     <CardContent>
                         <Divider />
@@ -69,6 +68,7 @@ class MoviesList extends React.Component {
                                     <br />
                                     <ListItemText inset
                                         primary={movie.label}
+                                        secondary={movie.value}
                                     />
                                 </ListItem>
                             ))}

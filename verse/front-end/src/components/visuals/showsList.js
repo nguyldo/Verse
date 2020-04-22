@@ -58,7 +58,6 @@ class ShowsList extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Shows Watched"
-                        subheader="from _ to _"
                     />
                     <CardContent>
                         <Divider />
