@@ -29,6 +29,14 @@ import TracksBarChart from "../visuals/TracksBarChart";
 import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart";
 
 
+import ShowsPieChart from "../visuals/ShowsPieChart.js";
+import ShowsBarChart from "../visuals/ShowsBarChart.js";
+
+import ShowsList from "../visuals/showsList.js";
+import MoviesList from "../visuals/moviesList.js";
+import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
+
+
 export default class Results extends Component {
 
   constructor(props) {
@@ -105,15 +113,20 @@ export default class Results extends Component {
       this.state.library_gantt = [];
     }
 
-    // Google API Response
     if ("google" in this.state.compiledRequest) {
-      console.log("cdm: google data was loaded");
-
+      console.log("cwm: google data was loaded");
+      this.state.google = this.state.compiledRequest.google;
+    } else {
+      console.log("cwm: google data was NOT loaded");
     }
 
-    else {
-      console.log("cdm: google data was NOT loaded");
+    if ("netflix" in this.state.compiledRequest) {
+      console.log("cwm: netflix data was loaded");
+      this.state.netflix = this.state.compiledRequest.netflix;
+    } else {
+      console.log("cwm: netflix data was NOT loaded");
     }
+    
   }
 
 
@@ -143,6 +156,13 @@ export default class Results extends Component {
       document.getElementById("googlevisuals").style.display = "none";
     }
 
+    if ("netflix" in this.state.compiledRequest) {
+      console.log("cdm: netflix data was loaded");
+    } else {
+      console.log("cdm: netflix data was NOT loaded");
+      document.getElementById("netflixvisuals").style.display = "none";
+    }
+
   }
 
   exportToImage(e) {
@@ -168,11 +188,17 @@ export default class Results extends Component {
       } else {
         document.getElementById("googlevisuals").style.display = "none";
       }
-    } else {
+    } else if (id == "showapplevisuals") {
       if (document.getElementById("applevisuals").style.display == "none") {
         document.getElementById("applevisuals").style.display = "block";
       } else {
         document.getElementById("applevisuals").style.display = "none";
+      }
+    } else {
+      if (document.getElementById("netflixvisuals").style.display == "none") {
+        document.getElementById("netflixvisuals").style.display = "block";
+      } else {
+        document.getElementById("netflixvisuals").style.display = "none";
       }
     }
   }
@@ -198,15 +224,15 @@ export default class Results extends Component {
       <div id="resultspage">
         <Header />
         <div id="exportedvisuals">
-          <h1>Results</h1>
           <div id="sidebar">
             <p>Toggle</p>
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
             <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
             <button class="showvisualsbutton" id="showapplevisuals" onClick={(e) => this.toggleSection(e)}>Apple</button>
+            <button class="showvisualsbutton" id="shownetflixvisuals" onClick={(e) => this.toggleSection(e)}>Netflix</button>
           </div>
           <div id="mainvisuals">
-
+            <h1>Results</h1>
             <div class="visualssection" id="facebookvisuals">
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
@@ -236,31 +262,6 @@ export default class Results extends Component {
                 </Grid>
 
               </Grid>
-            </div>
-
-            <div class="visualssection" id="googlevisuals">
-              <h1>Name: {this.state.google_name}</h1>
-              <h2>Gmail: {this.state.email}</h2>
-              <div class="chart">
-                <LocationPieChart />
-              </div>
-              <div class="chart">
-                <DrivePieChart />
-              </div>
-              <div class="chart">
-                <ChannelPieChart />
-              </div>
-              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
-              <p>List of Websites You Have Logged Into Using Google:</p>
-              <select id="select_google_sites" size="5"></select>
-              <p>Total Number: {this.state.google_sites_num}</p>
-              <p>List of Websites that have advertised to you through Google:</p>
-              <select id="select_google_comp" size="5"></select>
-              <p>Your Google contacts:</p>
-              <select id="select_google_contacts" size="5"></select>
-              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
-              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
-              <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
 
             <div class="visualssection" id="applevisuals">
@@ -297,6 +298,51 @@ export default class Results extends Component {
               <ArtistsBarChart data={this.state.artists_bar} />
               <TracksBarChart data={this.state.tracks_bar} />
               <MusicLibraryGanttChart data={this.state.library_gantt} />
+            </div>
+
+            <div class="visualssection" id="googlevisuals">
+              <h1>Name: {this.state.google_name}</h1>
+              <h2>Gmail: {this.state.email}</h2>
+              <div class="chart">
+                <LocationPieChart />
+              </div>
+              <div class="chart">
+                <DrivePieChart />
+              </div>
+              <div class="chart">
+                <ChannelPieChart />
+              </div>
+              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
+              <p>List of Websites You Have Logged Into Using Google:</p>
+              <select id="select_google_sites" size="5"></select>
+              <p>Total Number: {this.state.google_sites_num}</p>
+              <p>List of Websites that have advertised to you through Google:</p>
+              <select id="select_google_comp" size="5"></select>
+              <p>Your Google contacts:</p>
+              <select id="select_google_contacts" size="5"></select>
+              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
+              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
+              <p>Number of YouTube playlists created: {this.state.playlists}</p>
+            </div>
+
+            <div class="visualssection" id="netflixvisuals">
+            <WatchedNetflixBigNum data={this.state.netflix.totalCount} />
+            <Grid item xs={12}>
+              <Grid container justify="center" spacing={3}>
+                <Grid key={0}>
+                  <ShowsList data={this.state.netflix.shows} />
+                </Grid>
+                <Grid key={1}>
+                  <MoviesList data={this.state.netflix.movies} />
+                </Grid>
+              </Grid>
+            </Grid>
+              <div class="chart">
+                <ShowsPieChart data={this.state.netflix.shows_piechart} />
+              </div>
+              <div class="chart">
+                <ShowsBarChart data={this.state.netflix.shows_piechart} />
+              </div>
             </div>
           </div>
         </div>
