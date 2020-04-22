@@ -11,34 +11,18 @@ def getJsonData(filePath):
 
 # Function: get analyzed data from file
 # Return: the json dictionary of the requested data
-def getAnalyzedFacebookData(userFileName):
-    
+def getFacebookData(userFileName):
     data = getJsonData("media/processedData/facebook/" + userFileName + "/analyzedFacebookData.json")
-    
     return data
 
-def getAnalyzedAppleData(userFileName, dataCategory):
-    data = {}
-    if dataCategory == "general":
-        data = getJsonData("media/processedData/apple/" + userFileName + "/analyzedGeneralAppleData.json")
-        
-    elif dataCategory == "music":
-        data = getJsonData("media/processedData/apple/" + userFileName + "/analyzedMusicAppleData.json")
-        
-    elif dataCategory == "appsGames":    
-        data = getJsonData("media/processedData/apple/" + userFileName + "/analyzedAppsGamesAppleData.json")
-    
-    else:
-        print("data category name invalid")
-
+def getAppleData(userFileName):
+    data = getJsonData("media/processedData/apple/" + userFileName + "/parsedAppleData.json")
     return data
 
-def getAnalyzedGoogleData(userFileName):
+def getGoogleData(userFileName):
     data = getJsonData("media/processedData/google/" + userFileName + "/analyzedGoogleData.json")
-
     return data
 
-def getAnalyzedNetflixData(userFileName):
+def getNetflixData(userFileName):
     data = getJsonData("media/processedData/netflix/" + userFileName)
-
     return data
