@@ -14,10 +14,9 @@ export default class Main extends Component {
       return(
         <div id="mainpage">
             <Header />
-            <h1>Welcome to Verse!</h1>
+            <h1 class="pagetitle">Welcome to Verse!</h1>
             <h3>Verse slogan here...</h3>
             <br></br>
-            
         </div>
       )
     }

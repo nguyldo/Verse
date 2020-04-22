@@ -148,6 +148,7 @@ export default class Results extends Component {
     } else {
       console.log("cdm: facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
+      document.getElementById("showfacebookvisuals").style.display = "none";
     }
 
     if ("applegeneral" in this.state.compiledRequest) {
@@ -155,6 +156,7 @@ export default class Results extends Component {
     } else {
       console.log("cdm: apple data was NOT loaded");
       document.getElementById("applevisuals").style.display = "none";
+      document.getElementById("showapplevisuals").style.display = "none";
     }
 
     if ("google" in this.state.compiledRequest) {
@@ -162,6 +164,7 @@ export default class Results extends Component {
     } else {
       console.log("cdm: google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
+      document.getElementById("showgooglevisuals").style.display = "none";
     }
 
     if ("netflix" in this.state.compiledRequest) {
