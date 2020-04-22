@@ -206,7 +206,7 @@ def parseFacebookData(facebookDataDumpName):
 
                 else: print("category not found")
             
-            else: print("path not found")
+            else: print("path not interesting")
 
     else: print("root path not found")
 

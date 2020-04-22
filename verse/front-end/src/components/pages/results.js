@@ -47,65 +47,11 @@ export default class Results extends Component {
 
     // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
 
-    this.setState = ({
-      //vals: "hi",
-      fb_name: "",
-      category: "",
-      full_locations: [],
-      locations: {},
-      your_posts: [],
-      other_posts: [],
-      comments: [],
-      companies: [],
-      companies_num: 0,
-      off_num: 0,
-      sites: [],
-      sites_num: 0,
-      facebookData: {},
-
-      google_name: "",
-      email: "",
-      assistant_num: 0,
-      google_sites_num: 0,
-      subscriptions: 0,
-      prof_pic_num: 0,
-      playlists: 0,
-      contacts: "",
-      google_ad: "",
-      google_sites: "",
-      googleData: {},
-
-      vals: "testing",
-
-      appleGeneralData: {},
-      appleMusicData: {},
-      appleAppsGamesData: {},
-
-      total_size_bignum: 0,
-      personal_info_header: "",
-      devices_list: "",
-
-      total_listen_time_bignum: 0,
-      preferences_pictograph: [],
-      play_activity_genres_piechart: [],
-      top_ten_genres_list: [],
-      play_activity_artists_barchart: [],
-      top_ten_artists_list: [],
-      play_activity_track_barchart: [],
-      top_ten_tracks_list: [],
-      play_activity_map: [],
-      library_song_timeline: [],
-      genre_timeline: [],
-
-      apps_timeline: [],
-      games_timeline: []
-
-    });
-    // this.getFacebookData = this.getFacebookData.bind(this);
-    // this.getAppleData = this.getAppleData.bind(this);
   }
 
   componentWillMount() {
+
+    // Facebook API Response
     if ("facebook" in this.state.compiledRequest) {
       console.log("cwm: facebook data was loaded");
       this.state.fb_name = this.state.compiledRequest.facebook.name_category_header[0];
@@ -123,7 +69,7 @@ export default class Results extends Component {
 
     else {
       console.log("cwm: facebook data was NOT loaded");
-      this.state.name = "";
+      this.state.fb_name = "";
       this.state.category = "";
       this.state.locations_bar = [];
       this.state.posts_pie = [];
@@ -136,6 +82,7 @@ export default class Results extends Component {
       this.state.advs_ct = 0;
     }
 
+    // Apple API Response
     if ("applegeneral" in this.state.compiledRequest && "applemusic" in this.state.compiledRequest) {
       console.log("cwm: apple data was loaded");
       this.state.total_size = this.state.compiledRequest.applegeneral.total_size_bignum;
@@ -153,8 +100,8 @@ export default class Results extends Component {
     else {
       console.log("cwm: apple data was NOT loaded");
       this.state.total_size = 0;
-      this.state.listen_time = 0;
-      this.state.date_range = []
+      this.state.listen_time = {"hours": 0, "minutes": 0, "seconds": 0};
+      this.state.date_range = ([0, 0, 0], [0, 0, 0])
       this.state.genres_list = [];
       this.state.artists_list = [];
       this.state.tracks_list = [];
@@ -165,12 +112,13 @@ export default class Results extends Component {
     }
 
     if ("google" in this.state.compiledRequest) {
-      console.log("google data was loaded");
+      console.log("cwm: google data was loaded");
       this.state.google = this.state.compiledRequest.google;
     } else {
-      console.log("google data was NOT loaded");
+      console.log("cwm: google data was NOT loaded");
     }
 
+    // Netflix API Response
     if ("netflix" in this.state.compiledRequest) {
       console.log("cwm: netflix data was loaded");
       this.state.watch_count = this.state.compiledRequest.netflix.totalCount;
@@ -223,46 +171,6 @@ export default class Results extends Component {
       document.getElementById("netflixvisuals").style.display = "none";
     }
 
-  }
-
-  populateSelect() {
-    var select = document.getElementById("select_sites");
-    var options = this.state.sites;
-    for (var i = 0; i < this.state.sites_num; i++) {
-      var opt = options[i].name;
-      var el = document.createElement("option");
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
-    }
-
-    var select = document.getElementById("select_comp");
-    var options = this.state.companies;
-    for (var i = 0; i < this.state.companies.length; i++) {
-      var opt = options[i];
-      var el = document.createElement("option");
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
-    }
-  }
-
-  populateLocationDict() {
-    var dict = {};
-
-    var list = this.state.full_locations;
-
-    for (var i = 0; i < list.length; i++) {
-      dict[list[i]["ip_address"]] = "0";
-    }
-
-    for (var i = 0; i < list.length; i++) {
-      var num = Number(dict[list[i]["ip_address"]]);
-      num = num + 1;
-      dict[list[i]["ip_address"]] = num.toString(10);
-    }
-    this.locations = dict;
-    console.log(this.locations);
   }
 
   exportToImage(e) {
@@ -365,23 +273,6 @@ export default class Results extends Component {
               </Grid>
             </div>
 
-            <div class="visualssection" id="googlevisuals">
-              <h1 class="visualstitle" id="googletitle">Google</h1>
-              <h1>Name: {this.state.google_name}</h1>
-              <h2>Gmail: {this.state.email}</h2>
-              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
-              <p>List of Websites You Have Logged Into Using Google:</p>
-              <select id="select_google_sites" size="5"></select>
-              <p>Total Number: {this.state.google_sites_num}</p>
-              <p>List of Websites that have advertised to you through Google:</p>
-              <select id="select_google_comp" size="5"></select>
-              <p>Your Google contacts:</p>
-              <select id="select_google_contacts" size="5"></select>
-              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
-              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
-              <p>Number of YouTube playlists created: {this.state.playlists}</p>
-            </div>
-
             <div class="visualssection" id="applevisuals">
               <h1 class="visualstitle" id="appletitle">Apple</h1>
               <Grid container spacing={5}>
@@ -417,6 +308,31 @@ export default class Results extends Component {
               <ArtistsBarChart data={this.state.artists_bar} />
               <TracksBarChart data={this.state.tracks_bar} />
               <MusicLibraryGanttChart data={this.state.library_gantt} />
+            </div>
+
+            <div class="visualssection" id="googlevisuals">
+              <h1>Name: {this.state.google_name}</h1>
+              <h2>Gmail: {this.state.email}</h2>
+              <div class="chart">
+                <LocationPieChart />
+              </div>
+              <div class="chart">
+                <DrivePieChart />
+              </div>
+              <div class="chart">
+                <ChannelPieChart />
+              </div>
+              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
+              <p>List of Websites You Have Logged Into Using Google:</p>
+              <select id="select_google_sites" size="5"></select>
+              <p>Total Number: {this.state.google_sites_num}</p>
+              <p>List of Websites that have advertised to you through Google:</p>
+              <select id="select_google_comp" size="5"></select>
+              <p>Your Google contacts:</p>
+              <select id="select_google_contacts" size="5"></select>
+              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
+              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
+              <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
 
             <div class="visualssection" id="netflixvisuals">
