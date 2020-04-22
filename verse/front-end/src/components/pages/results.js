@@ -37,9 +37,12 @@ import MoviesList from "../visuals/moviesList.js";
 import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
 import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
+// import jsPDF from "../visuals/jspdf.min.js";
+import jsPDF from 'jspdf';
+
 
 export default class Results extends Component {
-
+  
   constructor(props) {
     super(props);
     console.log(props.location.state);
@@ -211,6 +214,17 @@ export default class Results extends Component {
     }
   }
 
+  genPDF() {
+	
+    var docPdf = new jsPDF();
+    
+    docPdf.text(20,20,'Your Data Dump Summary');
+    docPdf.addPage();
+    docPdf.text(20,20,'TEST Page 2!');
+    docPdf.save('Test.pdf');
+    
+  }
+
   render() {
 
     const styles = theme => ({
@@ -358,7 +372,8 @@ export default class Results extends Component {
             </div>
           </div>
         </div>
-        <button onClick={(e) => this.exportToImage(e)}>Export your results to an image!</button>
+        <button onClick={(e) => this.genPDF(e)}>Export your results to an image!</button>
+        {/* <a href="genPDF()">lkfsdkfjsdflflkdkfsdlk</a> */}
       </div>
     )
   }
