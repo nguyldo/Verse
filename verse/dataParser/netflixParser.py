@@ -1,5 +1,6 @@
 import os
 import heapq
+import pprint
 
 from dataParser import genericParser  
 
@@ -24,6 +25,42 @@ def getShowTitle(title):
     
     return title[:count]
 
+def parseDate(date):
+    dates = date.split('/')
+    dates.reverse()
+    dates[0] = "20" + dates[0]
+    dates[1], dates[2] = dates[2], dates[1]
+    return dates
+
+def laterDate(date1, date2):
+    if int(date1[0]) > int(date2[0]):
+        return date1
+    if int(date1[0]) < int(date2[0]):
+        return date2
+    if int(date1[1]) > int(date2[1]):
+        return date1
+    if int(date1[1]) < int(date2[1]):
+        return date2
+    if int(date1[2]) > int(date2[2]):
+        return date1
+    if int(date1[2]) < int(date2[2]):
+        return date2
+    return date1
+
+def earlierDate(date1, date2):
+    if int(date1[0]) > int(date2[0]):
+        return date2
+    if int(date1[0]) < int(date2[0]):
+        return date1
+    if int(date1[1]) > int(date2[1]):
+        return date2
+    if int(date1[1]) < int(date2[1]):
+        return date1
+    if int(date1[2]) > int(date2[2]):
+        return date2
+    if int(date1[2]) < int(date2[2]):
+        return date1
+    return date1
 
 
 def parseNetflixData(netflixDataDumpName):
@@ -34,7 +71,8 @@ def parseNetflixData(netflixDataDumpName):
 
         netflixData = genericParser.csvToDict(rootPathName, ("Title", "Date"))
         print("Uploading netflix data")
-        # print(netflixData)
+        print(netflixData)
+        print("End of raw Netflix data")
 
         shows = {}
         movies = []
@@ -43,14 +81,21 @@ def parseNetflixData(netflixDataDumpName):
             if isShow(item["Title"]):
                 title = getShowTitle(item["Title"])
                 if title in shows:
-                    shows[title] = shows[title] + 1
+                    shows[title]["count"] = shows[title]["count"] + 1
+                    shows[title]["firstDate"] = earlierDate(parseDate(item["Date"]), shows[title]["firstDate"])
+                    shows[title]["lastDate"] = laterDate(parseDate(item["Date"]), shows[title]["lastDate"])
                 else:
-                    shows[title] = 1
+                    shows[title] = {"count": 1, "firstDate": parseDate(item["Date"]), "lastDate": parseDate(item["Date"])}
+                    
+                    
             else:
-                movies.append(item["Title"])
+                movies.append({"title": item["Title"], "date": item["Date"]})
 
-        # print("Shows")
-        # print(shows)
+        # for item in netflixData:
+
+        pp = pprint.PrettyPrinter(indent=4)
+        print("Shows")
+        pp.pprint(shows)
         # print("Movies")
         # print(movies)
 
@@ -60,25 +105,42 @@ def parseNetflixData(netflixDataDumpName):
 
         # print(totalWatchCount)
 
+        # format for gantt chart
+        showsGantt = []
+        count = 1
+        for show in shows:
+            formattedShow = []
+            formattedShow.append(str(count))
+            formattedShow.append(show)
+            formattedShow.append(str(shows[show]["count"]) + " episodes watched")
+            formattedShow.append(shows[show]["firstDate"])
+            formattedShow.append(shows[show]["lastDate"])
+            formattedShow.append("null")
+            formattedShow.append(0)
+            formattedShow.append("null")
+            showsGantt.append(formattedShow)
+            count += 1
+        pp.pprint(showsGantt)
+
         # all shows list
         allShows = []
         count = 0
         for show in shows:
-            allShows.append({"id": count, "label": show, "value": shows[show]})
+            allShows.append({"id": count, "label": show, "value": shows[show]["count"]})
             count += 1
 
         # all movies list
         allMovies = []
         count = 0
         for movie in movies:
-            allMovies.append({"id": count, "label": movie})
+            allMovies.append({"id": count, "label": movie["title"], "value": movie["date"]})
             count += 1
 
         # find top 10 shows
         topTenShows = []
 
         for show in shows:
-            heapq.heappush(topTenShows, (shows[show], show))
+            heapq.heappush(topTenShows, (shows[show]["count"], show))
         
         topTenShows = heapq.nlargest(10, topTenShows)
 
@@ -92,7 +154,7 @@ def parseNetflixData(netflixDataDumpName):
             count += 1
 
 
-
+        analyzedData["shows_ganttchart"] = showsGantt
         analyzedData["shows_piechart"] = pieChartTopTenShows
         analyzedData["totalCount"] = totalWatchCount
         analyzedData["movies"] = allMovies

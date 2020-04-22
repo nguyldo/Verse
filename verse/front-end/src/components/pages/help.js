@@ -15,7 +15,7 @@ export default class Help extends Component {
         return (
             <div id="helppage">
                 <Header />
-                <h1 id="hdr">How to Download Your Data Files</h1>
+                <h1 id="hdr" id="title">How to Download Your Data Files</h1>
 
                 {/* <a href="#hdr_facebook">Click here to see the content below.</a> */}
                 {/* <a href="#INSERT_YOUR_OBJECT_NAME_HERE">Click here to see the content below.</a> */}
@@ -25,7 +25,7 @@ export default class Help extends Component {
 
                 {/* Google */}
 
-                <h2 id="hdr-companies"><a id="google"><b>Downloading Your Personal Google Data Dump</b></a></h2>
+                <h2 id="hdr-companies" id="title"><a id="google"><b>Downloading Your Personal Google Data Dump</b></a></h2>
                 <p id="p"><b>1.</b> Open a new tab and click on your profile picture. Click on "Manage your Google Account"</p>
                 <img id="pic" src="https://i.ibb.co/613Cr29/Google-Help1.png" alt="Google-Help1" border="0"/>
 
@@ -76,7 +76,7 @@ export default class Help extends Component {
                 {/* End of Google */}
                 {/* Facebook */}
 
-                <h2 id="hdr-companies"><a id="facebook"><b>Downloading Your Personal Facebook Data Dump</b></a></h2>
+                <h2 id="hdr-companies" id="title"><a id="facebook"><b>Downloading Your Personal Facebook Data Dump</b></a></h2>
                 <p id="p"><b>1.</b> Go to facebook.com, click the dropdown arrow in the top right corner, and click on “Settings”</p>
                 <img id="pic" src="https://i.ibb.co/KNpxsKn/Facebook-Download0.png" alt="Facebook-Download0" border="0"/>
 
@@ -97,7 +97,7 @@ export default class Help extends Component {
                 {/* End of Facebook */}
                 {/* Apple */}
 
-                <h2 id="hdr-companies"><a id="apple"><b>Downloading Your Personal Apple Data Dump</b></a></h2>
+                <h2 id="hdr-companies" id="title"><a id="apple"><b>Downloading Your Personal Apple Data Dump</b></a></h2>
                 <p id="p"><b>1.</b> Go to privacy.apple.com, and click on "Request a copy of your data."</p>
                 <img id="pic" src="https://i.ibb.co/Y7vxrSd/Screen-Shot-2020-03-31-at-10-00-22-AM.png" alt="Apple-Download0" border="0"/>
 

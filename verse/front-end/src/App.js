@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+// import ModalComponent from './components/pages/upload';
 
 import Main from "./components/pages/main";
 import Upload from "./components/pages/upload";
@@ -19,7 +20,7 @@ class App extends React.Component {
         <Route path="/about" exact component={About} />
         <Route path="/help" exact component={Help} />
       </Router>
-    )
+    );
   }
 }
 

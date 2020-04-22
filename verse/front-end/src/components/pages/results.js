@@ -32,6 +32,7 @@ import ShowsBarChart from "../visuals/ShowsBarChart.js";
 import ShowsList from "../visuals/showsList.js";
 import MoviesList from "../visuals/moviesList.js";
 import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
+import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
 //Google Visuals
 import IPMap from "../visuals/IPMap.js";
@@ -71,6 +72,7 @@ export default class Results extends Component {
     // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
 
     this.setState = ({});
+
   }
 
   componentWillMount() {
@@ -189,18 +191,23 @@ export default class Results extends Component {
       this.state.gg_youtube_search_waffle = [];
     }
 
-    /*
+    // Netflix API Response
     if ("netflix" in this.state.compiledRequest) {
       console.log("cwm: netflix data was loaded");
-      this.state.netflix = this.state.compiledRequest.netflix;
+      this.state.nf_watch_count = this.state.compiledRequest.netflix.totalCount;
+      this.state.nf_shows = this.state.compiledRequest.netflix.shows;
+      this.state.nf_movies = this.state.compiledRequest.netflix.movies;
+      this.state.nf_shows_generalchart = this.state.compiledRequest.netflix.shows_piechart;
+      this.state.nf_shows_ganttchart = this.state.compiledRequest.netflix.shows_ganttchart;
     } else {
       console.log("cwm: netflix data was NOT loaded");
-      this.state.netflix = [];
+      this.state.nf_watch_count = 0;
+      this.state.nf_shows = [];
+      this.state.nf_movies = [];
+      this.state.nf_shows_generalchart = [];
+      this.state.nf_shows_ganttchart = [];
     }
-    */
-    
   }
-
 
   componentDidMount() {
     console.log(this.state);
@@ -226,15 +233,14 @@ export default class Results extends Component {
       console.log("cdm: google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
     }
-
-    /*
+    
     if ("netflix" in this.state.compiledRequest) {
       console.log("cdm: netflix data was loaded");
     } else {
       console.log("cdm: netflix data was NOT loaded");
       document.getElementById("netflixvisuals").style.display = "none";
     }
-    */
+    
   }
 
   exportToImage(e) {
@@ -314,6 +320,7 @@ export default class Results extends Component {
           <div id="mainvisuals">
             <h1>Results</h1>
             <div class="visualssection" id="facebookvisuals">
+              <h1 class="visualstitle" id="facebooktitle">Facebook</h1>
               <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.fb_category}</h2>
 
@@ -347,6 +354,7 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="applevisuals">
+              <h1 class="visualstitle" id="appletitle">Apple</h1>
               <Grid container spacing={5}>
 
                 <Grid item xs={12}>
@@ -389,6 +397,29 @@ export default class Results extends Component {
               <ArtistsBarChart data={this.state.ap_artists_barchart} />
               <TracksBarChart data={this.state.ap_tracks_barchart} />
               <MusicLibraryGanttChart data={this.state.ap_library_gantt} />
+            </div>
+
+            <div class="visualssection" id="netflixvisuals">
+              <h1 class="visualstitle" id="netflixtitle">Netflix</h1>
+              <WatchedNetflixBigNum data={this.state.nf_watch_count} />
+              <Grid item xs={12}>
+                <Grid container justify="center" spacing={3}>
+                  <Grid key={0}>
+                    <ShowsList data={this.state.nf_shows} />
+                  </Grid>
+                  <Grid key={1}>
+                    <MoviesList data={this.state.nf_movies} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <div class="chart">
+                <ShowsPieChart data={this.state.nf_shows_generalchart} />
+              </div>
+              <div class="chart">
+                <ShowsBarChart data={this.state.nf_shows_generalchart} />
+              </div>
+              <ShowsGanttChart data={this.state.nf_shows_ganttchart} />
+              
             </div>
 
             <div class="visualssection" id="googlevisuals">
