@@ -26,6 +26,10 @@ import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart";
 import ShowsPieChart from "../visuals/ShowsPieChart.js";
 import ShowsBarChart from "../visuals/ShowsBarChart.js";
 
+import ShowsList from "../visuals/showsList.js";
+import MoviesList from "../visuals/moviesList.js";
+import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
+
 
 export default class Results extends Component {
 
@@ -373,7 +377,7 @@ export default class Results extends Component {
       <div id="resultspage">
         <Header />
         <div id="exportedvisuals">
-          <h1>Results</h1>
+          
           <div id="sidebar">
             <p>Toggle</p>
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
@@ -382,6 +386,7 @@ export default class Results extends Component {
             <button class="showvisualsbutton" id="shownetflixvisuals" onClick={(e) => this.toggleSection(e)}>Netflix</button>
           </div>
           <div id="mainvisuals">
+            <h1>Results</h1>
             <div class="visualssection" id="facebookvisuals">
               <h1>Name: {this.state.name}</h1>
               <h2>Category: {this.state.category}</h2>
@@ -445,6 +450,17 @@ export default class Results extends Component {
               <MusicLibraryGanttChart />
             </div>
             <div class="visualssection" id="netflixvisuals">
+            <WatchedNetflixBigNum data={this.state.netflix.totalCount} />
+            <Grid item xs={12}>
+              <Grid container justify="center" spacing={3}>
+                <Grid key={0}>
+                  <ShowsList data={this.state.netflix.shows} />
+                </Grid>
+                <Grid key={1}>
+                  <MoviesList data={this.state.netflix.movies} />
+                </Grid>
+              </Grid>
+            </Grid>
               <div class="chart">
                 <ShowsPieChart data={this.state.netflix.shows_piechart} />
               </div>
