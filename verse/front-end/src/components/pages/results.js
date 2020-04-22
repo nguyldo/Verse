@@ -113,6 +113,7 @@ export default class Results extends Component {
       this.state.library_gantt = [];
     }
 
+    // Google API Response
     if ("google" in this.state.compiledRequest) {
       console.log("cwm: google data was loaded");
       this.state.google = this.state.compiledRequest.google;
@@ -120,12 +121,15 @@ export default class Results extends Component {
       console.log("cwm: google data was NOT loaded");
     }
 
+    /*
     if ("netflix" in this.state.compiledRequest) {
       console.log("cwm: netflix data was loaded");
       this.state.netflix = this.state.compiledRequest.netflix;
     } else {
       console.log("cwm: netflix data was NOT loaded");
+      this.state.netflix = [];
     }
+    */
     
   }
 
@@ -156,12 +160,14 @@ export default class Results extends Component {
       document.getElementById("googlevisuals").style.display = "none";
     }
 
+    /*
     if ("netflix" in this.state.compiledRequest) {
       console.log("cdm: netflix data was loaded");
     } else {
       console.log("cdm: netflix data was NOT loaded");
       document.getElementById("netflixvisuals").style.display = "none";
     }
+    */
 
   }
 
@@ -303,6 +309,19 @@ export default class Results extends Component {
             <div class="visualssection" id="googlevisuals">
               <h1>Name: {this.state.google_name}</h1>
               <h2>Gmail: {this.state.email}</h2>
+              
+              <Grid container spacing={5}>
+                <Grid item xs={12}>
+                  <Grid container justify="center" spacing={3}>
+
+                    <Grid key={0}>
+
+                    </Grid>
+
+                  </Grid>
+                </Grid>
+              </Grid>
+
               <div class="chart">
                 <LocationPieChart />
               </div>
@@ -324,27 +343,8 @@ export default class Results extends Component {
               <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
               <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
-
-            <div class="visualssection" id="netflixvisuals">
-            <WatchedNetflixBigNum data={this.state.netflix.totalCount} />
-            <Grid item xs={12}>
-              <Grid container justify="center" spacing={3}>
-                <Grid key={0}>
-                  <ShowsList data={this.state.netflix.shows} />
-                </Grid>
-                <Grid key={1}>
-                  <MoviesList data={this.state.netflix.movies} />
-                </Grid>
-              </Grid>
-            </Grid>
-              <div class="chart">
-                <ShowsPieChart data={this.state.netflix.shows_piechart} />
-              </div>
-              <div class="chart">
-                <ShowsBarChart data={this.state.netflix.shows_piechart} />
-              </div>
-            </div>
           </div>
+            
         </div>
         <button onClick={(e) => this.exportToImage(e)}>Export your results to an image!</button>
       </div>
