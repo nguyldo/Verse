@@ -28,14 +28,10 @@ const styles = theme => ({
     },
 });
 
-class ListenTimeBigNum extends React.Component {
+class LibraryTracksBigNum extends React.Component {
     render() {
 
         const { classes } = this.props;
-        
-        let h = this.props.data.hours.toFixed(0);
-        let m = this.props.data.minutes.toFixed(0);
-        let s = this.props.data.seconds.toFixed(0);
 
         return (
             <React.Fragment>
@@ -49,9 +45,7 @@ class ListenTimeBigNum extends React.Component {
                         subheader={"Since " + this.props.date_range[0][0]}
                     />
                     <CardContent>
-                    <h1>{h} hours, </h1>
-                    <h1>{m} minutes, </h1>
-                    <h1>{s} seconds</h1> 
+                        <h1>{this.props.data} songs </h1>
                     </CardContent>
                 </Card>
             </React.Fragment>
@@ -59,4 +53,4 @@ class ListenTimeBigNum extends React.Component {
     }
 }
 
-export default withStyles(styles)(ListenTimeBigNum);
+export default withStyles(styles)(LibraryTracksBigNum);
