@@ -352,7 +352,7 @@ export default class Upload extends Component {
             <form id="netflixoption">
               <label for="netflixupload" class="customupload">{this.state.netflixButton}</label>
               <input multiple id="netflixupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="netflixuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+              <button type="button" id="netflixuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create Visuals</button>

@@ -21,7 +21,7 @@
   padding: 10px;
 }
 
-#toResults {
+#createvisuals {
   size: 20px;
   color: white;
   margin-left: 88%;
@@ -30,7 +30,7 @@
   padding: 10px;
 }
 
-#toResults:hover {
+#createvisuals:hover {
   background-color: rgb(55, 116, 156);
 }
 

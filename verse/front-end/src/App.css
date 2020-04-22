@@ -175,3 +175,7 @@ input[type="file"] {
 #shownetflixvisuals {
   border-color: var(--netflix-color);
 }
+
+#exportedvisuals {
+  margin-top: 40px;
+}

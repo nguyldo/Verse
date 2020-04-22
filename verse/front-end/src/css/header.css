@@ -31,8 +31,9 @@
 
 #Nav {
     text-align: right;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 17px;
+    padding-bottom: 17px;
     background-color: rgb(165, 164, 164);
     box-shadow: 1px 5px 5px rgb(54, 54, 54);
+    margin-bottom: 30px;
 }
