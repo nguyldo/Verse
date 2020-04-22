@@ -13,6 +13,9 @@ import PostPieChart from "../visuals/PostPieChart.js";
 import LocationPieChart from "../visuals/LocationPieChart.js";
 import DrivePieChart from "../visuals/DrivePieChart.js";
 import ChannelPieChart from "../visuals/ChannelPieChart.js";
+import WebsitesList from "../visuals/WebsitesList.js";
+import CompanyAdsList from "../visuals/CompanyAdsList.js";
+import OffFacebookWebsitesList from "../visuals/OffFacebookWebsitesList.js";
 
 //Apple Visuals
 import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
@@ -26,6 +29,15 @@ import TracksBarChart from "../visuals/TracksBarChart";
 import MusicLibraryGanttChart from "../visuals/MusicLibraryGanttChart";
 
 
+import ShowsPieChart from "../visuals/ShowsPieChart.js";
+import ShowsBarChart from "../visuals/ShowsBarChart.js";
+
+import ShowsList from "../visuals/showsList.js";
+import MoviesList from "../visuals/moviesList.js";
+import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
+import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
+
+
 export default class Results extends Component {
 
   constructor(props) {
@@ -35,83 +47,94 @@ export default class Results extends Component {
 
     // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
 
-    this.setState = ({
-      //vals: "hi",
-      fb_name: "",
-      category: "",
-      full_locations: [],
-      locations: {},
-      your_posts: [],
-      other_posts: [],
-      comments: [],
-      companies: [],
-      companies_num: 0,
-      off_num: 0,
-      sites: [],
-      sites_num: 0,
-      facebookData: {},
-
-      google_name: "",
-      email: "",
-      assistant_num: 0,
-      google_sites_num: 0,
-      subscriptions: 0,
-      prof_pic_num: 0,
-      playlists: 0,
-      contacts: "",
-      google_ad: "",
-      google_sites: "",
-      googleData: {},
-
-      vals: "testing",
-
-      appleGeneralData: {},
-      appleMusicData: {},
-      appleAppsGamesData: {},
-
-      total_size_bignum: 0,
-      personal_info_header: "",
-      devices_list:  "",
- 
-      total_listen_time_bignum: 0,
-      preferences_pictograph: [],
-      play_activity_genres_piechart: [],
-      top_ten_genres_list: [],
-      play_activity_artists_barchart: [],
-      top_ten_artists_list: [],
-      play_activity_track_barchart: [],
-      top_ten_tracks_list: [],
-      play_activity_map: [],
-      library_song_timeline: [],
-      genre_timeline: [],
-
-      apps_timeline: [],
-      games_timeline: []
-
-    });
-    // this.getFacebookData = this.getFacebookData.bind(this);
-    // this.getAppleData = this.getAppleData.bind(this);
   }
 
-  componentMount() {
-    
-    /*
-    if (this.state.facebookRequest != "") {
-      this.getFacebookData();
-    } else {
-      document.getElementById("facebookvisuals").style.display = "none";
+  componentWillMount() {
+
+    // Facebook API Response
+    if ("facebook" in this.state.compiledRequest) {
+      console.log("cwm: facebook data was loaded");
+      this.state.fb_name = this.state.compiledRequest.facebook.name_category_header[0];
+      this.state.category = this.state.compiledRequest.facebook.name_category_header[1];
+      this.state.locations_bar = this.state.compiledRequest.facebook.locations_barchart;
+      this.state.posts_pie = this.state.compiledRequest.facebook.posts_piechart;
+      this.state.reactions_bar = this.state.compiledRequest.facebook.reactions_barchart;
+      this.state.sites = this.state.compiledRequest.facebook.websites_list;
+      this.state.sites_ct = this.state.compiledRequest.facebook.websites_count;
+      this.state.off = this.state.compiledRequest.facebook.off_facebook_activity_list;
+      this.state.off_ct = this.state.compiledRequest.facebook.off_facebook_activity_count;
+      this.state.advs = this.state.compiledRequest.facebook.advertisers_list;
+      this.state.advs_ct = this.state.compiledRequest.facebook.advertisers_count;
     }
-    if (this.state.googleRequest != "") {
-      // get google data
-    } else {
-      document.getElementById("googlevisuals").style.display = "none";
+
+    else {
+      console.log("cwm: facebook data was NOT loaded");
+      this.state.fb_name = "";
+      this.state.category = "";
+      this.state.locations_bar = [];
+      this.state.posts_pie = [];
+      this.state.reactions_bar = [];
+      this.state.sites = [];
+      this.state.sites_ct = 0;
+      this.state.off = [];
+      this.state.off_ct = 0;
+      this.state.advs = [];
+      this.state.advs_ct = 0;
     }
-    if (this.state.appleRequest != "") {
-      this.getAppleData();
-    } else {
-      document.getElementById("applevisuals").style.display = "none";
+
+    // Apple API Response
+    if ("applegeneral" in this.state.compiledRequest && "applemusic" in this.state.compiledRequest) {
+      console.log("cwm: apple data was loaded");
+      this.state.total_size = this.state.compiledRequest.applegeneral.total_size_bignum;
+      this.state.listen_time = this.state.compiledRequest.applemusic.total_listen_time_bignum;
+      this.state.date_range = this.state.compiledRequest.applemusic.activity_date_range;
+      this.state.genres_list = this.state.compiledRequest.applemusic.top_ten_genres_list;
+      this.state.artists_list = this.state.compiledRequest.applemusic.top_ten_artists_list;
+      this.state.tracks_list = this.state.compiledRequest.applemusic.top_ten_tracks_list;
+      this.state.genres_pie = this.state.compiledRequest.applemusic.play_activity_genres_piechart;
+      this.state.artists_bar = this.state.compiledRequest.applemusic.play_activity_artists_barchart;
+      this.state.tracks_bar = this.state.compiledRequest.applemusic.play_activity_track_barchart;
+      this.state.library_gantt = this.state.compiledRequest.applemusic.library_song_ganttchart;
     }
-    */
+
+    else {
+      console.log("cwm: apple data was NOT loaded");
+      this.state.total_size = 0;
+      this.state.listen_time = {"hours": 0, "minutes": 0, "seconds": 0};
+      this.state.date_range = ([0, 0, 0], [0, 0, 0])
+      this.state.genres_list = [];
+      this.state.artists_list = [];
+      this.state.tracks_list = [];
+      this.state.genres_pie = [];
+      this.state.artists_bar = [];
+      this.state.tracks_bar = [];
+      this.state.library_gantt = [];
+    }
+
+    if ("google" in this.state.compiledRequest) {
+      console.log("cwm: google data was loaded");
+      this.state.google = this.state.compiledRequest.google;
+    } else {
+      console.log("cwm: google data was NOT loaded");
+    }
+
+    // Netflix API Response
+    if ("netflix" in this.state.compiledRequest) {
+      console.log("cwm: netflix data was loaded");
+      this.state.watch_count = this.state.compiledRequest.netflix.totalCount;
+      this.state.shows = this.state.compiledRequest.netflix.shows;
+      this.state.movies = this.state.compiledRequest.netflix.movies;
+      this.state.shows_generalchart = this.state.compiledRequest.netflix.shows_piechart;
+      this.state.shows_ganttchart = this.state.compiledRequest.netflix.shows_ganttchart;
+    } else {
+      console.log("cwm: netflix data was NOT loaded");
+      this.state.watch_count = 0;
+      this.state.shows = [];
+      this.state.movies = [];
+      this.state.shows_generalchart = [];
+      this.state.shows_ganttchart = [];
+    }
+
   }
 
 
@@ -121,141 +144,33 @@ export default class Results extends Component {
 
     // decides whether or not to show the visuals for each section
     if ("facebook" in this.state.compiledRequest) {
-      console.log("facebook data was loaded");
-      this.state.name = this.state.compiledRequest.facebook["name_category_header"]["0"];
-      this.state.category = this.state.compiledRequest.facebook["name_category_header"]["1"];
-      this.state.full_locations = this.state.compiledRequest.facebook["locations_piechart"];
-      this.state.your_posts = this.state.compiledRequest.facebook["posts_linegraph"]["0"];
-      this.state.other_posts = this.state.compiledRequest.facebook["posts_linegraph"]["1"];
-      this.state.comments = this.state.compiledRequest.facebook["posts_linegraph"];
-      this.state.reactions = this.state.compiledRequest.facebook["reactions_pictograph"];
-      this.state.sites = this.state.compiledRequest.facebook["websites_list"];
-      this.state.sites_num = this.state.compiledRequest.facebook["websites_count"];
-      this.state.companies = this.state.compiledRequest.facebook["advertisers_list"];
-      this.state.companies_num = this.state.companies.length;
-      this.state.off_num = this.state.compiledRequest.facebook["off-facebook_activity_count"];
-      //this.state.vals = "hi"
-      this.forceUpdate();
-      this.populateSelect();
-      this.populateLocationDict();
+      console.log("cdm: facebook data was loaded");
     } else {
-      console.log("facebook data was NOT loaded");
+      console.log("cdm: facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
     }
 
     if ("applegeneral" in this.state.compiledRequest) {
-      console.log("apple data was loaded");
+      console.log("cdm: apple data was loaded");
     } else {
-      console.log("apple data was NOT loaded");
+      console.log("cdm: apple data was NOT loaded");
       document.getElementById("applevisuals").style.display = "none";
     }
 
     if ("google" in this.state.compiledRequest) {
-      console.log("google data was loaded");
+      console.log("cdm: google data was loaded");
     } else {
-      console.log("google data was NOT loaded");
+      console.log("cdm: google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
     }
 
-  }
-
-  async getFacebookData() {
-    
-    /*
-    axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest
-    ).then((response) => {
-      
-    });
-    */
-  }
-
-  populateSelect() {
-    var select = document.getElementById("select_sites");
-    var options = this.state.sites;
-    for (var i = 0; i < this.state.sites_num; i ++) {
-      var opt = options[i].name;
-      var el = document.createElement("option");
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
+    if ("netflix" in this.state.compiledRequest) {
+      console.log("cdm: netflix data was loaded");
+    } else {
+      console.log("cdm: netflix data was NOT loaded");
+      document.getElementById("netflixvisuals").style.display = "none";
     }
 
-    var select = document.getElementById("select_comp");
-    var options = this.state.companies;
-    for (var i = 0; i < this.state.companies.length; i ++) {
-      var opt = options[i];
-      var el = document.createElement("option");
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
-    }
-  }
-
-  populateLocationDict() {
-    var dict = {};
-
-    var list = this.state.full_locations;
-
-    for (var i = 0; i < list.length; i ++) {
-      dict[list[i]["ip_address"]] = "0";
-    }
-
-    for (var i = 0; i < list.length; i ++) {
-      var num = Number(dict[list[i]["ip_address"]]);
-      num = num + 1;
-      dict[list[i]["ip_address"]] = num.toString(10);
-    }
-    this.locations = dict;
-    console.log(this.locations);
-  }
-
-  async getAppleData() {
-    /*
-    axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest
-    ).then((response) => {
-      this.state.appleGeneralData = response.data.data;
-
-      this.state.total_size_bignum = this.state.appleGeneralData["total_size_bignum"];
-      this.state.personal_info_header = this.state.appleGeneralData["personal_info_header"];
-      this.state.devices_list = this.state.appleGeneralData["devices_list"];
-
-      this.forceUpdate();
-      console.log("Apple general return success");
-    });
-
-    axios.get("http://localhost:8000/appleMusicData/" + this.state.appleRequest
-    ).then((response) => {
-      this.state.appleMusicData = response.data.data;
-
-      this.state.total_listen_time_bignum = this.state.appleMusicData["total_listen_time_bignum"];
-      this.state.preferences_pictograph = this.state.appleMusicData["preferences_pictograph"];
-      this.state.play_activity_genres_piechart = this.state.appleMusicData["play_activity_genres_piechart"];
-      this.state.top_ten_genres_list = this.state.appleMusicData["top_ten_genres_list"];
-      this.state.play_activity_artists_barchart = this.state.appleMusicData["play_activity_artists_barchart"];
-      this.state.top_ten_artists_list = this.state.appleMusicData["top_ten_artists_list"];
-      this.state.play_activity_track_barchart = this.state.appleMusicData["play_activity_track_barchart"];
-      this.state.top_ten_tracks_list = this.state.appleMusicData["top_ten_tracks_list"];
-      this.state.play_activity_map = this.state.appleMusicData["play_activity_map"];
-      this.state.library_song_timeline = this.state.appleMusicData["library_song_timeline"];
-      this.state.genre_timeline = this.state.appleMusicData["genre_timeline"];
-
-      //console.log(this.state.appleMusicData.play_activity_genres_piechart)
-
-      this.forceUpdate();
-      console.log("Apple music return success");
-    });
-
-    axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest
-    ).then((response) => {
-      this.state.appleAppsGamesData = response.data.data;
-
-      this.state.apps_timeline = this.state.appleAppsGamesData["apps_timeline"];
-      this.state.games_timeline = this.state.appleAppsGamesData["games_timeline"];
-
-      this.forceUpdate();
-      console.log("Apple apps games return success");
-    });
-    */
   }
 
   exportToImage(e) {
@@ -281,16 +196,22 @@ export default class Results extends Component {
       } else {
         document.getElementById("googlevisuals").style.display = "none";
       }
-    } else {
+    } else if (id == "showapplevisuals") {
       if (document.getElementById("applevisuals").style.display == "none") {
         document.getElementById("applevisuals").style.display = "block";
       } else {
         document.getElementById("applevisuals").style.display = "none";
       }
+    } else {
+      if (document.getElementById("netflixvisuals").style.display == "none") {
+        document.getElementById("netflixvisuals").style.display = "block";
+      } else {
+        document.getElementById("netflixvisuals").style.display = "none";
+      }
     }
   }
 
-  render() {    
+  render() {
 
     const styles = theme => ({
       root: {
@@ -311,45 +232,95 @@ export default class Results extends Component {
       <div id="resultspage">
         <Header />
         <div id="exportedvisuals">
-          <h1>Results</h1>
           <div id="sidebar">
             <p>Toggle</p>
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
             <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
             <button class="showvisualsbutton" id="showapplevisuals" onClick={(e) => this.toggleSection(e)}>Apple</button>
+            <button class="showvisualsbutton" id="shownetflixvisuals" onClick={(e) => this.toggleSection(e)}>Netflix</button>
           </div>
           <div id="mainvisuals">
+            <h1>Results</h1>
             <div class="visualssection" id="facebookvisuals">
+              <h1 class="visualstitle" id="facebooktitle">Facebook</h1>
               <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.category}</h2>
-              <div class="chart">
-                <IPAdressChart data={this.state.compiledRequest.facebook.locations_barchart} />
-              </div>
-              <div class="chart">
-                <PostPieChart data={this.state.compiledRequest.facebook.posts_piechart} />
-              </div>
-              <div class="chart">
-                <ReactionBarChart data={this.state.compiledRequest.facebook.reactions_barchart} />
-              </div>
-              <p>List of Websites You Have Logged Into Using Facebook:</p>
-              <select id="select_sites" size="5"></select>
-              <p>Total Number: {this.state.sites_num}</p>
-              <p>Companies Who Have Directed Ads Towards You On Facebook:</p>
-              <select id="select_comp" size="5"></select>
-              <p>Total Number: {this.state.companies_num}</p>
-              <p>Number of Off-Facebook Websites and Apps that Facebook Tracks: {this.state.off_num}</p>
+
+              <IPAdressChart data={this.state.locations_bar} />
+              <PostPieChart data={this.state.posts_pie} />
+              <ReactionBarChart data={this.state.reactions_bar} />
+
+              <Grid container spacing={5}>
+
+                <Grid item xs={12}>
+                  <Grid container justify="center" spacing={5}>
+
+                    <Grid spacing={3}>
+                      <WebsitesList data={this.state.sites} count={this.state.sites_ct} />
+                    </Grid>
+
+                    <Grid >
+                      <OffFacebookWebsitesList data={this.state.off} count={this.state.off_ct} />
+                    </Grid>
+
+                    <Grid >
+                      <CompanyAdsList data={this.state.advs} count={this.state.advs_ct} />
+                    </Grid>
+
+                  </Grid>
+                </Grid>
+
+              </Grid>
             </div>
+
+            <div class="visualssection" id="applevisuals">
+              <h1 class="visualstitle" id="appletitle">Apple</h1>
+              <Grid container spacing={5}>
+
+                <Grid item xs={12}>
+                  <Grid container justify="center" spacing={3}>
+                    <Grid key={0}>
+                      <TotalSizeBigNum data={this.state.total_size} />
+                    </Grid>
+                    <Grid key={1}>
+                      <ListenTimeBigNum data={this.state.listen_time} date_range={this.state.date_range} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Grid container justify="center" spacing={5}>
+                    <Grid spacing={3}>
+                      <TopTenGenresList key={3} data={this.state.genres_list} date_range={this.state.date_range} />
+                    </Grid>
+                    <Grid >
+                      <TopTenArtistsList key={4} data={this.state.artists_list} date_range={this.state.date_range} />
+                    </Grid>
+                    <Grid >
+                      <TopTenTracksList key={5} data={this.state.tracks_list} date_range={this.state.date_range} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+              </Grid>
+
+              <GenresPieChart data={this.state.genres_pie} />
+              <ArtistsBarChart data={this.state.artists_bar} />
+              <TracksBarChart data={this.state.tracks_bar} />
+              <MusicLibraryGanttChart data={this.state.library_gantt} />
+            </div>
+
             <div class="visualssection" id="googlevisuals">
               <h1>Name: {this.state.google_name}</h1>
               <h2>Gmail: {this.state.email}</h2>
               <div class="chart">
-                <LocationPieChart/>
+                <LocationPieChart />
               </div>
               <div class="chart">
-                <DrivePieChart/>
+                <DrivePieChart />
               </div>
               <div class="chart">
-                <ChannelPieChart/>
+                <ChannelPieChart />
               </div>
               <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
               <p>List of Websites You Have Logged Into Using Google:</p>
@@ -363,39 +334,27 @@ export default class Results extends Component {
               <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
               <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>
-            <div class="visualssection" id="applevisuals">
-              <Grid container spacing={5}>
 
-                <Grid item xs={12}>
-                  <Grid container justify="center" spacing={3}>
-                    <Grid key={0}>
-                      <TotalSizeBigNum />
-                    </Grid>
-                    <Grid key={1}>
-                      <ListenTimeBigNum />
-                    </Grid>
+            <div class="visualssection" id="netflixvisuals">
+              <h1 class="visualstitle" id="netflixtitle">Netflix</h1>
+              <WatchedNetflixBigNum data={this.state.watch_count} />
+              <Grid item xs={12}>
+                <Grid container justify="center" spacing={3}>
+                  <Grid key={0}>
+                    <ShowsList data={this.state.shows} />
                   </Grid>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Grid container justify="center" spacing={5}>
-                    <Grid spacing={3}>
-                      <TopTenGenresList key={3}/>
-                    </Grid>
-                    <Grid >
-                      <TopTenArtistsList key={4}/>
-                    </Grid>
-                    <Grid >
-                      <TopTenTracksList key={5}/>
-                    </Grid>
+                  <Grid key={1}>
+                    <MoviesList data={this.state.movies} />
                   </Grid>
                 </Grid>
               </Grid>
-              
-              <GenresPieChart />
-              <ArtistsBarChart />
-              <TracksBarChart />
-              <MusicLibraryGanttChart />
+              <div class="chart">
+                <ShowsPieChart data={this.state.shows_generalchart} />
+              </div>
+              <div class="chart">
+                <ShowsBarChart data={this.state.shows_generalchart} />
+              </div>
+              <ShowsGanttChart data={this.state.shows_ganttchart} />
             </div>
           </div>
         </div>

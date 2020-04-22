@@ -2,17 +2,27 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core';
-
-import GanttChart from "./atomicGraphs/GanttChart"
+import ReactionData from './data/ReactionData';
 
 const styles = theme => ({
+    list: {
+        width: '100%',
+        maxWidth: 540,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 320,
+    },
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 1024,
-        maxHeight: 2048,
-        margin: "24px auto",
-        overflow: 'auto',
+        maxWidth: 540,
+        maxHeight: 540,
+        margin: "24px auto"
     },
     title: {
         color: "#232427",
@@ -31,12 +41,10 @@ const styles = theme => ({
     },
 });
 
-class MusicLibraryGanttChart extends React.Component {
+class WebsitesList extends React.Component {
 
     render() {
-
         const { classes } = this.props;
-
         return (
             <React.Fragment>
                 <Card className={classes.card} elevation={0}>
@@ -45,18 +53,23 @@ class MusicLibraryGanttChart extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Library Song Activity"
-                        subheader="Length of time between when you added a song to your library and when you last played it."
+                        title="Websites/Apps You've Logged Into Using Facebook"
+                        subheader={"Total: " + this.props.count}
                     />
                     <CardContent>
-                        <div>
-                            <GanttChart musicData={this.props.data} />
-                        </div>
+                        <Divider />
+                        <List component="nav" className={classes.list}>
+                            {this.props.data.map(site => (
+                                <ListItem dense>
+                                    <h3>{site.name}</h3>                                    
+                                </ListItem>
+                            ))}
+                        </List>
                     </CardContent>
                 </Card>
             </React.Fragment>
-        );
+        )
     }
 }
 
-export default withStyles(styles)(MusicLibraryGanttChart);
+export default withStyles(styles)(WebsitesList);

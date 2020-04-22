@@ -58,6 +58,12 @@ def googleDataAPI(request, userFileName):
     genericParser.deleteData("./media/unzippedFiles/google/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
+#----- NETFLIX APIs -----
+@api_view(["GET"])
+def netflixDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedNetflixData(userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
+
 #----- UPLOAD API -----
 
 @api_view(["POST"])

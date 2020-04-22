@@ -74,11 +74,17 @@ def analyzeFacebookData(facebookUserFileName):
 
     # ----- US 6.8 -----
     if "num_businesses_off_facebook" in data.keys():
-        Dict["off-facebook_activity_count"] = data["num_businesses_off_facebook"]
+        Dict["off_facebook_activity_count"] = data["num_businesses_off_facebook"]
+
+    if "businesses_off_facebook" in data.keys():
+        Dict["off_facebook_activity_list"] = data["businesses_off_facebook"]
 
     # ----- US 6.9 -----
     if "advertisers_who_uploaded_a_contact_list_with_your_information" in data.keys():
         Dict["advertisers_list"] = data["advertisers_who_uploaded_a_contact_list_with_your_information"]
+
+    if "num_advertisers" in data.keys():
+        Dict["advertisers_count"] = data["num_advertisers"]
 
     # ----- US 6.10 -----
     if "friends" in data.keys() and "num_friends" in data.keys() and "pokes" in data.keys() and"num_pokes" in data.keys() and "profile_update_history" in data.keys():
