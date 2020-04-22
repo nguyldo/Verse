@@ -44,6 +44,7 @@ class GoogleSearchWaffleChart extends React.Component {
               subheader: classes.subheader
             }}
             title="Google Search Waffle Chart"
+            subheader="Number of Google Searches Per Day"
           />
           <CardContent>
             <div style={{height: 500}}>

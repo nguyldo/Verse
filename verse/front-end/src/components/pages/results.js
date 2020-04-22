@@ -15,6 +15,7 @@ import PostPieChart from "../visuals/PostPieChart.js";
 //import SearchLineChart from "../visuals/SearchLineChart.js"
 import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
 import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
+import AdWaffleChart from "../visuals/AdWaffleChart.js";
 import ChannelPieChart from "../visuals/ChannelPieChart.js";
 
 
@@ -416,13 +417,21 @@ export default class Results extends Component {
               <h2>Gmail: {this.state.email}</h2>
               <div class="chart">
                 <GoogleSearchWaffleChart data={this.state.compiledRequest.google.google_search_waffle_data} 
-                                         from="2017-03-01" to="2020-04-01" maxValue={30}/>
+                                         from="2017-03-01" 
+                                         to="2020-04-01" 
+                                         maxValue={30}/>
               </div>
               <div class="chart">
                 <YoutubeSearchWaffleChart data={this.state.compiledRequest.google.youtube_search_waffle_data} 
                                           from="2013-03-01" 
                                           to="2016-04-01"
                                           maxValue={20}/>
+              </div>
+              <div>
+                <AdWaffleChart data={this.state.compiledRequest.google.ad_waffle_data}
+                               from="2018-03-01" 
+                               to="2020-04-01"
+                               maxValue={20}/>
               </div>
               <div class="chart">
                 <ChannelPieChart data={this.state.compiledRequest.google.youtube_pie_chart}/>

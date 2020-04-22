@@ -31,7 +31,7 @@ const styles = theme => ({
   },
 });
 
-class YoutubeSearchWaffleChart extends React.Component {
+class AdWaffleChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -43,8 +43,8 @@ class YoutubeSearchWaffleChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-            title="YouTube Search Waffle Chart"
-            subheader="Number of YouTube Searches Per Day"
+            title="Google Advertisement Waffle Chart"
+            subheader="Number of Advertisements You Have Seen Per Day"
           />
           <CardContent>
             <div style={{height: 500}}>
@@ -60,4 +60,4 @@ class YoutubeSearchWaffleChart extends React.Component {
   }
 }
 
-export default withStyles(styles)(YoutubeSearchWaffleChart);
+export default withStyles(styles)(AdWaffleChart);
