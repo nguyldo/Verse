@@ -122,7 +122,7 @@ def parseAppleData(appleDataDumpName):
             #-----  -----
             file_play_activity = "Apple_Media_Services/Apple Music Activity/Apple Music Play Activity.csv"
             fieldNames = ("Artist Name", "Content Name", "Client IP Address", "End Reason Type", 
-                        "Genre", "Milliseconds Since Play", "Play Duration Milliseconds")
+                        "Genre", "Milliseconds Since Play", "Play Duration Milliseconds", "Event Received Timestamp")
             data_play_activity = genericParser.csvToDict(musicDirPath + "/" + file_play_activity, fieldNames)
 
 

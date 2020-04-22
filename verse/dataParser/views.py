@@ -27,8 +27,7 @@ def index(request):
 @api_view(["GET"])
 def facebookDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedFacebookData(userFileName)
-    rootPathName = "./media/processedData/facebook/" + userFileName
-    genericParser.deleteData(rootPathName)
+    genericParser.deleteData("./media/unzippedFiles/facebook/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
     
 #----- APPLE APIs -----
@@ -36,16 +35,19 @@ def facebookDataAPI(request, userFileName):
 @api_view(["GET"])
 def appleGeneralDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedAppleData(userFileName, "general")
+    genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 @api_view(["GET"])
 def appleMusicDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedAppleData(userFileName, "music")
+    genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 @api_view(["GET"])
 def appleAppsGamesDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedAppleData(userFileName, "appsGames")
+    genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- GOOGLE APIs -----
@@ -53,6 +55,7 @@ def appleAppsGamesDataAPI(request, userFileName):
 @api_view(["GET"])
 def googleDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedGoogleData(userFileName)
+    genericParser.deleteData("./media/unzippedFiles/google/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- NETFLIX APIs -----

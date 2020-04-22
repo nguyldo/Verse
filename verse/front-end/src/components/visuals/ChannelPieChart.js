@@ -4,7 +4,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
+import PieChart from "./atomicGraphs/PieChart";
+import data from "./data/postData"; 
 
 const styles = theme => ({
   card: {
@@ -29,7 +30,7 @@ const styles = theme => ({
   },
 });
 
-class IPAddressChart extends React.Component {
+class ChannelPieChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -41,12 +42,11 @@ class IPAddressChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-            title="IP Addresses You Have Used to Sign In To Facebook"
-            subheader="Number of times you've used each address."
+            title="Number of Videos Watched per YouTube Channel"
           />
           <CardContent>
             <div style={{height: 200}}>
-              <ScrollableBarChart data={this.props.data}/>
+              <PieChart data={data}/>
             </div>
           </CardContent>
         </Card>
@@ -55,4 +55,4 @@ class IPAddressChart extends React.Component {
   }
 }
 
-export default withStyles(styles)(IPAddressChart);
+export default withStyles(styles)(ChannelPieChart);

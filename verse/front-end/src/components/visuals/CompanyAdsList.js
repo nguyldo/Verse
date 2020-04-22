@@ -2,13 +2,25 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import { withStyles } from "@material-ui/core/styles";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
+    list: {
+        width: '100%',
+        maxWidth: 540,
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 320,
+    },
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 300,
-        maxHeight: 300,
+        maxWidth: 540,
+        maxHeight: 540,
         margin: "24px auto"
     },
     title: {
@@ -28,16 +40,10 @@ const styles = theme => ({
     },
 });
 
-class ListenTimeBigNum extends React.Component {
+class CompanyAdsList extends React.Component {
+
     render() {
-
         const { classes } = this.props;
-
-        console.log(this.props.data)
-        
-        let h = this.props.data.hours.toFixed(0);
-        let m = this.props.data.minutes.toFixed(0);
-        let s = this.props.data.seconds.toFixed(0);
 
         return (
             <React.Fragment>
@@ -47,13 +53,18 @@ class ListenTimeBigNum extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Total Listen Time"
-                        subheader={"Since " + this.props.date_range[0][0]}
+                        title="Advertisers Who Have Uploaded Your Info"
+                        subheader={"Total: " + this.props.count}
                     />
                     <CardContent>
-                    <h1>{h} hours, </h1>
-                    <h1>{m} minutes, </h1>
-                    <h1>{s} seconds</h1> 
+                        <Divider />
+                        <List component="nav" className={classes.list}>
+                            {this.props.data.map(company => (
+                                <ListItem dense>
+                                    <h3>{company}</h3>
+                                </ListItem>
+                            ))}
+                        </List>
                     </CardContent>
                 </Card>
             </React.Fragment>
@@ -61,4 +72,4 @@ class ListenTimeBigNum extends React.Component {
     }
 }
 
-export default withStyles(styles)(ListenTimeBigNum);
+export default withStyles(styles)(CompanyAdsList);
