@@ -2,6 +2,7 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import Divider from '@material-ui/core/Divider';
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
@@ -28,7 +29,7 @@ const styles = theme => ({
     },
 });
 
-class WatchedNetflixBigNum extends React.Component {
+class LibraryTracksBigNum extends React.Component {
     render() {
 
         const { classes } = this.props;
@@ -41,12 +42,11 @@ class WatchedNetflixBigNum extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Watch Count"
-                        subheader="Total amount of movies and show episodes watched."
+                        title="Number of Songs"
+                        subheader="in your Apple Music Library"
                     />
                     <CardContent>
-                        <h1>{this.props.data}</h1>
-
+                        <h1>{this.props.data} songs </h1>
                     </CardContent>
                 </Card>
             </React.Fragment>
@@ -54,4 +54,4 @@ class WatchedNetflixBigNum extends React.Component {
     }
 }
 
-export default withStyles(styles)(WatchedNetflixBigNum);
+export default withStyles(styles)(LibraryTracksBigNum);

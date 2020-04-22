@@ -64,7 +64,6 @@ export default class Upload extends Component {
 
   handleFile(e) {
 
-    console.log(e.target.files);
     const specifiedCompany = e.target.id;
     if (specifiedCompany == "facebookupload") {
 
@@ -151,7 +150,6 @@ export default class Upload extends Component {
     formData.append("filename", file.name);
     formData.append("company", company);
 
-    console.log("Ultimate debug");
     console.log(file);
     console.log(company);
 
@@ -214,17 +212,13 @@ export default class Upload extends Component {
       );
     }
     if (this.state.googleRequest != "") {
-      
+      requests.push(
+        axios.get("http://localhost:8000/googleData/" + this.state.googleRequest)
+      )
     }
     if (this.state.appleRequest != "") {
       requests.push(
-        axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest)
-      );
-      requests.push(
-        axios.get("http://localhost:8000/appleMusicData/" + this.state.appleRequest)
-      );
-      requests.push(
-        axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest)
+        axios.get("http://localhost:8000/appleData/" + this.state.appleRequest)
       );
     }
     if (this.state.netflixRequest != "") {
@@ -234,7 +228,6 @@ export default class Upload extends Component {
     }
     axios.all(requests).then(axios.spread((...responses) => {
       console.log("Requests successful!")
-      console.log(responses)
       
       let count = 0;
       let retrievedData = {}
@@ -247,12 +240,7 @@ export default class Upload extends Component {
         count++;
       }
       if (this.state.appleRequest != "") {
-        retrievedData["applegeneral"] = responses[count].data.data;
-        count++;
-        retrievedData["applemusic"] = responses[count].data.data;
-        count++;
-        retrievedData["applegames"] = responses[count].data.data;
-        count++;
+        retrievedData["apple"] = responses[count].data.data;
       }
       if (this.state.netflixRequest != "") {
         retrievedData["netflix"] = responses[count].data.data;

@@ -4,7 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import PieChart from "./atomicGraphs/PieChart";
+import WaffleChart from "./atomicGraphs/WaffleChart.js";
 
 const styles = theme => ({
   card: {
@@ -29,7 +29,7 @@ const styles = theme => ({
   },
 });
 
-class ChannelPieChart extends React.Component {
+class AdWaffleChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -41,11 +41,15 @@ class ChannelPieChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-            title="Number of Videos Watched per YouTube Channel"
+            title="Google Advertisement Waffle Chart"
+            subheader="Number of Advertisements You Have Seen Per Day"
           />
           <CardContent>
-            <div style={{height: 200}}>
-              <PieChart data={this.props.data}/>
+            <div style={{height: 500}}>
+              <WaffleChart data={this.props.data} 
+                           from={this.props.from} 
+                           to={this.props.to} 
+                           maxValue={this.props.maxValue}/>
             </div>
           </CardContent>
         </Card>
@@ -54,4 +58,4 @@ class ChannelPieChart extends React.Component {
   }
 }
 
-export default withStyles(styles)(ChannelPieChart);
+export default withStyles(styles)(AdWaffleChart);
