@@ -6,9 +6,6 @@ import { withStyles } from "@material-ui/core/styles";
 
 import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
 
-//var data = [];
-import data from "./data/IPdata"
-
 const styles = theme => ({
   card: {
     border: "1px solid #e9ecee",
@@ -49,7 +46,7 @@ class IPAddressChart extends React.Component {
           />
           <CardContent>
             <div style={{height: 200}}>
-              <ScrollableBarChart data={data}/>
+              <ScrollableBarChart data={this.props.data}/>
             </div>
           </CardContent>
         </Card>

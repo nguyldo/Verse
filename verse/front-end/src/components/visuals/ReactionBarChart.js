@@ -4,10 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
-
-//var data = [];
-import data from "./data/ReactionData"
+import BarChart from "./atomicGraphs/BarChart"
 
 const styles = theme => ({
   card: {
@@ -48,8 +45,8 @@ class ReactionBarChart extends React.Component {
             subheader="Number of times you've used each reaction."
           />
           <CardContent>
-            <div style={{height: 200}}>
-              <ScrollableBarChart data={data}/>
+            <div style={{ height: 200 }}>
+              <BarChart data={this.props.data} />
             </div>
           </CardContent>
         </Card>

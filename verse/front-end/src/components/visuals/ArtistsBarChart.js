@@ -5,7 +5,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
 import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
-import artistsData from "./data/artistsData"
 
 const styles = theme => ({
     card: {
@@ -47,7 +46,7 @@ class ArtistsBarChart extends React.Component {
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>
-                            <ScrollableBarChart data={artistsData} />
+                            <ScrollableBarChart data={this.props.data} />
                         </div>
                     </CardContent>
                 </Card>

@@ -5,7 +5,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
 import PieChart from "./atomicGraphs/PieChart";
-import genresData from "./data/genresData"
 
 const styles = theme => ({
     card: {
@@ -49,7 +48,7 @@ class GenresPieChart extends React.Component {
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>
-                            <PieChart data={genresData}/>
+                            <PieChart data={this.props.data}/>
                         </div>
                     </CardContent>
                 </Card>

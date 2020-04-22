@@ -10,7 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
 import { lightBlue } from "@material-ui/core/colors";
@@ -20,10 +20,10 @@ export default class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      
       modal: true,
-      // name: '',
-      // team : '',
-      // country: '',
+
+      redirect: null,
       
       // facebook state
       facebookFiles: null,
@@ -35,6 +35,9 @@ export default class Upload extends Component {
       appleFiles: null,
       appleRequest: "",
       
+      netflixFiles: null,
+      netflixRequest: "",
+
       facebookData: {},
       facebookButton: "Choose a file...",
       facebookTitle: "Facebook",
@@ -44,68 +47,11 @@ export default class Upload extends Component {
       
       appleButton: "Choose a file...",
       appleTitle: "Apple",
-      
-      // google state
-      
-      
-      // apple state
-      
+
+      netflixButton: "Choose a file...",
+      netflixTitle: "Netflix",
+
     };
-
-    this.toggle = this.toggle.bind(this);
-    // this.handleChangeName = this.handleChangeName.bind(this);
-    // this.handleChangeTeam = this.handleChangeTeam.bind(this);
-    // this.handleChangeCountry = this.handleChangeCountry.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  
-  // const [isOpen, setIsOpen] = React.useState(false);
-  
-  // const showModal = () => {
-  //   setIsOpen(true);
-  // };
-  
-  // const hideModal = () => {
-  //   setIsOpen(false);
-  // };
-  
-  toggle() {
-    this.setState({
-      modal: !this.state.modal
-    });
-  }
-  // handleChangeName(event) {
-  //   this.setState({name: event.target.value});
-  // }
-  // handleChangeTeam(event) {
-  //   this.setState({team: event.target.value});
-  // }
-  // handleChangeCountry(event) {
-  //   this.setState({country: event.target.value});
-  // }
-
-  // handleSubmit(event) {
-  //   event.preventDefault();
-  //    }
-  
-  
-  // shuffles and array, taken from 
-  // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-  shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-    
-    while (0 !== currentIndex) {
-      
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-  }
 
   handleFile(e) {
 
@@ -114,16 +60,6 @@ export default class Upload extends Component {
     if (specifiedCompany == "facebookupload") {
 
       this.setState({ facebookFile: e.target.files[0] });
-      /*
-      let filesList = [];
-      for (let i = 0; i < e.target.files.length; i++) {
-        filesList.push(e.target.files[i]);
-      }
-
-      console.log("Debug");
-      console.log(filesList);
-
-      this.setState({ facebookFile: filesList });*/
 
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
@@ -147,6 +83,14 @@ export default class Upload extends Component {
       } else {
         this.setState({ appleButton: e.target.files[0].name });
       }
+    } else if (specifiedCompany == "netflixupload") {
+      this.setState({ netflixFile: e.target.files[0] });
+      if (e.target.files.length > 1) {
+        const label = e.target.files.length + " files selected";
+        this.setState({ netflixButton: label });
+      } else {
+        this.setState({ netflixButton: e.target.files[0].name });
+      }
     }
 
   }
@@ -165,6 +109,9 @@ export default class Upload extends Component {
     } else if (specifiedId == "appleuploadconfirm") {
       file = this.state.appleFile;
       company = "apple";
+    } else if (specifiedId == "netflixuploadconfirm") {
+      file = this.state.netflixFile;
+      company = "netflix";
     } else {
       console.log("Error in confirming upload");
     }
@@ -183,6 +130,9 @@ export default class Upload extends Component {
     } else if (company == "apple") {
       document.getElementById("appleoption").style.display = "none";
       this.setState({ appleTitle: "Apple: Loading..." });
+    } else if (company == "netflix") {
+      document.getElementById("netflixoption").style.display = "none";
+      this.setState({ netflixTitle: "Netflix: Loading..." });
     } else {
       console.log("internal error");
     }
@@ -218,6 +168,10 @@ export default class Upload extends Component {
           this.setState({ appleRequest: promise.data.fileName });
           document.getElementById("appleoption").style.display = "none";
           this.setState({ appleTitle: "Apple: Upload Success!" });
+        } else if (company == "netflix") {
+          this.setState({ netflixRequest: promise.data.fileName });
+          document.getElementById("netflixoption").style.display = "none";
+          this.setState({ netflixTitle: "Netflix: Upload Success!" });
         } else {
           console.log("internal error");
         }
@@ -225,138 +179,96 @@ export default class Upload extends Component {
     } catch {
       console.log(company)
       if (company == "facebook") {
-        document.getElementById("appleoption").style.display = "block";
+        document.getElementById("facebookoption").style.display = "block";
         this.setState({ facebookTitle: "Facebook: Upload Failed..." });
       } else if (company == "google") {
-        document.getElementById("appleoption").style.display = "block";
+        document.getElementById("googleoption").style.display = "block";
         this.setState({ googleTitle: "Google: Upload Failed..." });
       } else if (company == "apple") {
         document.getElementById("appleoption").style.display = "block";
         this.setState({ appleTitle: "Apple: Upload Failed..." });
+      } else if (company == "netflix") {
+        document.getElementById("netflixoption").style.display = "block";
+        this.setState({ netflixTitle: "Netflix: Upload Failed..." });
       } else {
         console.log("internal error");
       }
     }
-    
 
   }
 
-  /*
-  async uploadFacebook(e) {
-    let file = this.state.file
-
-    let formData = new FormData();
-    formData.append("file", file);
-    if (file == null) {
-      alert("nothing uploaded")
-      return
-    } else if (!file.name.includes("facebook")) {
-      alert("no facebook data entered")
-      return
+  prepareData(e) {
+    let requests = [];
+    if (this.state.facebookRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest)
+      );
     }
-    formData.append("filename", file.name)
+    if (this.state.googleRequest != "") {
+      
+    }
+    if (this.state.appleRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/appleGeneralData/" + this.state.appleRequest)
+      );
+      requests.push(
+        axios.get("http://localhost:8000/appleMusicData/" + this.state.appleRequest)
+      );
+      requests.push(
+        axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest)
+      );
+    }
+    if (this.state.netflixRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/netflixData/" + this.state.netflixRequest)
+      );
+    }
+    axios.all(requests).then(axios.spread((...responses) => {
+      console.log("Requests successful!")
+      console.log(responses)
+      
+      let count = 0;
+      let retrievedData = {}
+      if (this.state.facebookRequest != "") {
+        retrievedData["facebook"] = responses[count].data.data;
+        count++;
+      }
+      if (this.state.googleRequest != "") {
+        retrievedData["google"] = responses[count].data.data;
+        count++;
+      }
+      if (this.state.appleRequest != "") {
+        retrievedData["applegeneral"] = responses[count].data.data;
+        count++;
+        retrievedData["applemusic"] = responses[count].data.data;
+        count++;
+        retrievedData["applegames"] = responses[count].data.data;
+        count++;
+      }
+      if (this.state.netflixRequest != "") {
+        retrievedData["netflix"] = responses[count].data.data;
+        count++;
+      }
+      
+      console.log("retrieved data");
+      console.log(retrievedData);
 
-
-    const promise = await axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
+      this.setState({redirect: retrievedData});
+      
+    })).catch(errors => {
+      console.log("error...")
     })
-
-    const status = promise.status;
-    if (status === 200) {
-      const data = promise.data.num;
-      const websites = promise.data.sites;
-      this.setState({ num: data, sites: websites });
-
-      // add facebook json to state
-      this.setState({ facebookData: promise.data });
-
-      // update ui based on uploads
-      this.setState({ facebookButton: "Uploaded successfully!" });
-
-      document.getElementById("facebookoption").style.display = "none";
-      this.setState({ facebookTitle: "Facebook: Upload Success!" });
-    } else {
-      console.log("Upload failed");
-      this.setState({ facebookTitle: "Facebook: Upload Failed..." });
-    }
-
-
-    console.log(file);
-    for (let vals of formData.values()) {
-      console.log("Test: " + vals);
-    }
-
-    this.shuffle(this.state.sites);
-    /*
-    var sel = document.getElementById('listBox');
-    for (var i = 0; i < this.state.sites.length; i++) {
-      var opt = document.createElement('option');
-      opt.innerHTML = this.state.sites[i];
-      opt.value = this.state.sites[i];
-      sel.appendChild(opt);
-    }
   }
 
-  uploadGoogle(e) {
-    let file = this.state.file
-
-    let formData = new FormData();
-    formData.append("file", file);
-    if (file == null) {
-      alert("nothing uploaded")
-      return
-    } else if (!file.name.includes("takeout")) {
-      alert("no google data entered")
-      return
-    }
-    alert(file.name)
-    formData.append("filename", file.name)
-
-
-    axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
-    })
-
-    console.log(file);
-    for (let vals of formData.values()) {
-      console.log("Test: " + vals);
-    }
-  }
-
-  uploadApple(e) {
-    let file = this.state.file
-
-    let formData = new FormData();
-    formData.append("file", file);
-    if (file == null) {
-      alert("nothing uploaded")
-      return
-    } else if (!file.name.includes("takeout")) {
-      alert("no apple data entered")
-      return
-    }
-    formData.append("filename", file.name)
-
-    
-    axios({
-      url: "http://localhost:8000/upload/",
-      method: "POST",
-      data: formData
-    })
-    
-    console.log(file);
-    for (let vals of formData.values()) {
-      console.log("Test: " + vals);
-    }
-  }
-  */
- 
  render() {
-  
+   if (this.state.redirect) {
+      return <Redirect to={{
+        pathname: "/results",
+        state: {
+          compiledRequest: this.state.redirect
+        }
+       }} />
+    }
    return (
      <div id="uploadpage">
       <Header />
@@ -426,14 +338,15 @@ export default class Upload extends Component {
               <button type="button" id="appleuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
-          <Link to={{
-            pathname: "/results",
-            state: {
-              facebookRequest: this.state.facebookRequest,
-              googleRequest: this.state.googleRequest,
-              appleRequest: this.state.appleRequest
-            }
-          }} className="link" id="toResults">Create Visuals</Link>
+          <div class="uploadoption">
+            <p>{this.state.netflixTitle}</p>
+            <form id="netflixoption">
+              <label for="netflixupload" class="customupload">{this.state.netflixButton}</label>
+              <input multiple id="netflixupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <button type="button" id="netflixuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+            </form>
+          </div>
+          <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create Visuals</button>
         </body>
       </div>
     )

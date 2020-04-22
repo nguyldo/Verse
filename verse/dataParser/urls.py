@@ -11,4 +11,8 @@ urlpatterns = [
     path('appleGeneralData/<userFileName>/', views.appleGeneralDataAPI),
     path('appleMusicData/<userFileName>/', views.appleMusicDataAPI),
     path('appleAppsGamesData/<userFileName>/', views.appleAppsGamesDataAPI),
+
+    path('googleData/<userFileName>/', views.googleDataAPI),
+
+    path('netflixData/<userFileName>/', views.netflixDataAPI),
 ]

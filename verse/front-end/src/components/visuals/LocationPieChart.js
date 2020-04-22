@@ -30,7 +30,7 @@ const styles = theme => ({
   },
 });
 
-class PostPieChart extends React.Component {
+class LocationPieChart extends React.Component {
 
   render() {
     const { classes } = this.props;
@@ -42,12 +42,11 @@ class PostPieChart extends React.Component {
               title: classes.title,
               subheader: classes.subheader
             }}
-            title="Posts on Your Timeline"
-            subheader="Number of times you've posted vs. your friends."
+            title="Locations You've Logged Into Google"
           />
           <CardContent>
             <div style={{height: 200}}>
-              <PieChart data={this.props.data}/>
+              <PieChart data={data}/>
             </div>
           </CardContent>
         </Card>
@@ -56,4 +55,4 @@ class PostPieChart extends React.Component {
   }
 }
 
-export default withStyles(styles)(PostPieChart);
+export default withStyles(styles)(LocationPieChart);

@@ -34,4 +34,11 @@ def getAnalyzedAppleData(userFileName, dataCategory):
     return data
 
 def getAnalyzedGoogleData(userFileName):
-    data = getJsonData("./media/processedData/google/" + userFileName + "/analyzedGoogleData.json")
+    data = getJsonData("media/processedData/google/" + userFileName + "/analyzedGoogleData.json")
+
+    return data
+
+def getAnalyzedNetflixData(userFileName):
+    data = getJsonData("media/processedData/netflix/" + userFileName)
+
+    return data

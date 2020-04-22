@@ -17,11 +17,12 @@
     /* background-color: rgb(136, 136, 136); */
     color: #F0F0F0;
     text-align: end;
-    padding: 30px;
+    padding: 20px;
     letter-spacing: 2px;
     text-decoration: none;
     
 }
+
 
 #NavLink:hover {
     color: #29648A;
