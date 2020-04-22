@@ -1,37 +1,50 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
+// import React from "react";
+// import Modal from "react-bootstrap/Modal";
+import "bootstrap/dist/css/bootstrap.min.css";
+// import ModalBody from "react-bootstrap/ModalBody";
+// import ModalHeader from "react-bootstrap/ModalHeader";
+// import ModalFooter from "react-bootstrap/ModalFooter";
+// import ModalTitle from "react-bootstrap/ModalTitle";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import axios from "axios";
 import { Link, Redirect } from "react-router-dom";
 import html2canvas from "html2canvas";
 import Header from "./../sections/header.js";
+import { lightBlue } from "@material-ui/core/colors";
+import "./../../css/upload.css";
 
 export default class Upload extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      
+      modal: true,
 
       redirect: null,
-
+      
       // facebook state
       facebookFiles: null,
       facebookRequest: "",
-
+      
       googleFiles: null,
       googleRequest: "",
-
+      
       appleFiles: null,
       appleRequest: "",
-
+      
       netflixFiles: null,
       netflixRequest: "",
 
       facebookData: {},
       facebookButton: "Choose a file...",
       facebookTitle: "Facebook",
-
+      
       googleButton: "Choose a file...",
       googleTitle: "Google",
-
+      
       appleButton: "Choose a file...",
       appleTitle: "Apple",
 
@@ -39,6 +52,14 @@ export default class Upload extends Component {
       netflixTitle: "Netflix",
 
     };
+
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
   }
 
   handleFile(e) {
@@ -206,6 +227,11 @@ export default class Upload extends Component {
         axios.get("http://localhost:8000/appleAppsGamesData/" + this.state.appleRequest)
       );
     }
+    if (this.state.netflixRequest != "") {
+      requests.push(
+        axios.get("http://localhost:8000/netflixData/" + this.state.netflixRequest)
+      );
+    }
     axios.all(requests).then(axios.spread((...responses) => {
       console.log("Requests successful!")
       console.log(responses)
@@ -228,7 +254,11 @@ export default class Upload extends Component {
         retrievedData["applegames"] = responses[count].data.data;
         count++;
       }
-
+      if (this.state.netflixRequest != "") {
+        retrievedData["netflix"] = responses[count].data.data;
+        count++;
+      }
+      
       console.log("retrieved data");
       console.log(retrievedData);
 
@@ -239,8 +269,8 @@ export default class Upload extends Component {
     })
   }
 
-  render() {
-    if (this.state.redirect) {
+ render() {
+   if (this.state.redirect) {
       return <Redirect to={{
         pathname: "/results",
         state: {
@@ -248,17 +278,57 @@ export default class Upload extends Component {
         }
        }} />
     }
-    return (
-      <div id="uploadpage">
-        <Header />
-        <h1 class="pagetitle">Upload file</h1>
+   return (
+     <div id="uploadpage">
+      <Header />
+        <div>
+          <Modal id="modal" isOpen={this.state.modal} size="xl">
+            <ModalHeader>About Your Data Dump</ModalHeader>
+            <ModalBody id="modalBody">
+              <div>
+                  <h1>So what happens when we submit our data?</h1>
+
+                  <p id="paragraphU" >
+                      Once you submit your data, we will be looking through your data with our parser and put together 
+                      a big summary of what data companies have on you. It may take a while for our parser to get 
+                      through all of your data, but once it is done, it will show a success and you can proceed to 
+                      the visual results.
+                  </p>
+
+                  <h1>So will our data dump information will be shared?</h1>
+
+                  <p id="paragraphU" >
+                      Absolutely not. We want to show how much data other companies have accumulated, not contribute to it. 
+                      So, once we finish making the summary for your files, we will delete the contents as well as the data 
+                      gained from said files and the parsed data once you leave the results screen. Just take care not 
+                      to close the website before downloading your new consolidated data, as you won't be able to 
+                      access it afterwards without submitting the files again.
+                  </p>
+
+                  <h1>What happens when Verse parses our data?</h1>
+
+                  <p id="paragraphU" >
+                      Your raw data is uploaded onto the server, where our parser will look through each file line by line. 
+                      The data that we gain from it will go into our analyzer, which will count up and pick out some vital 
+                      information that can be gleaned from your data dump. After the analyzer is done going through your 
+                      data, the consolidated information will go straight to your results page, and 
+                      all of the data that you submitted will be deleted. <b>Your data will not be shared with any outside parties.</b>
+                  </p>
+              </div>
+            </ModalBody>
+            <ModalFooter>
+              <Button id="buttonU" onClick={this.toggle}>I Have Read This Message</Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+        <h1 id="title" >Upload Your Files Here</h1>
         <body>
           <div class="uploadoption">
             <p class="uploadtitle">{this.state.facebookTitle}</p>
             <form id="facebookoption">
               <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
               <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="facebookuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+              <button type="button" id="facebookuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <div class="uploadoption">
@@ -266,7 +336,7 @@ export default class Upload extends Component {
             <form id="googleoption">
               <label for="googleupload" class="customupload">{this.state.googleButton}</label>
               <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="googleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+              <button type="button" id="googleuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <div class="uploadoption">
@@ -274,7 +344,7 @@ export default class Upload extends Component {
             <form id="appleoption">
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
               <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="appleuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+              <button type="button" id="appleuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <div class="uploadoption">
@@ -282,7 +352,7 @@ export default class Upload extends Component {
             <form id="netflixoption">
               <label for="netflixupload" class="customupload">{this.state.netflixButton}</label>
               <input multiple id="netflixupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="netflixuploadconfirm" onClick={(e) => this.globalUpload(e)}>Upload</button>
+              <button type="button" id="netflixuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create Visuals</button>
@@ -291,4 +361,7 @@ export default class Upload extends Component {
     )
   }
 }
+// const rootElement = document.getElementById("root");
+// ReactDOM.render(<Upload />, rootElement);
+
 

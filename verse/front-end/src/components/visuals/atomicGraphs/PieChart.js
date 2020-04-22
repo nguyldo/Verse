@@ -11,7 +11,7 @@ class PieChart extends React.Component {
                 data={data}
                 margin={{ top: 10, right: 80, bottom: 10, left: 80 }}
                 sortByValue={true}
-                colors={{ scheme: 'pastel1' }}
+                colors={{ scheme: 'nivo' }}
                 borderWidth={1}
                 borderColor={{ from: 'color', modifiers: [['darker', '1']] }}
                 radialLabel="label"

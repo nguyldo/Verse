@@ -13,4 +13,6 @@ urlpatterns = [
     path('appleAppsGamesData/<userFileName>/', views.appleAppsGamesDataAPI),
 
     path('googleData/<userFileName>/', views.googleDataAPI),
+
+    path('netflixData/<userFileName>/', views.netflixDataAPI),
 ]

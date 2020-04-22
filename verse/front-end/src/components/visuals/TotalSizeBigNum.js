@@ -4,8 +4,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import totalSize from "./data/totalSizeData"
-
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
@@ -47,7 +45,7 @@ class TotalSizeBigNum extends React.Component {
                         subheader="Amount of data in your Apple data dump."
                     />
                     <CardContent>
-                        <h1>{totalSize} GB </h1>
+                        <h1>{this.props.data} GB </h1>
 
                     </CardContent>
                 </Card>

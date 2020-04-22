@@ -2,14 +2,17 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core';
+
+import GanttChart from "./atomicGraphs/GanttChart"
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 300,
-        maxHeight: 300,
-        margin: "24px auto"
+        maxWidth: 1024,
+        maxHeight: 2048,
+        margin: "24px auto",
+        overflow: 'auto',
     },
     title: {
         color: "#232427",
@@ -28,16 +31,11 @@ const styles = theme => ({
     },
 });
 
-class ListenTimeBigNum extends React.Component {
+class ShowsGanttChart extends React.Component {
+
     render() {
 
         const { classes } = this.props;
-
-        console.log(this.props.data)
-        
-        let h = this.props.data.hours.toFixed(0);
-        let m = this.props.data.minutes.toFixed(0);
-        let s = this.props.data.seconds.toFixed(0);
 
         return (
             <React.Fragment>
@@ -47,18 +45,18 @@ class ListenTimeBigNum extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Total Listen Time"
-                        subheader={"Since " + this.props.date_range[0][0]}
+                        title="Netflix Show Activity"
+                        subheader="Gantt chart displaying your first to last time watching each show."
                     />
                     <CardContent>
-                    <h1>{h} hours, </h1>
-                    <h1>{m} minutes, </h1>
-                    <h1>{s} seconds</h1> 
+                        <div>
+                            <GanttChart musicData={this.props.data} />
+                        </div>
                     </CardContent>
                 </Card>
             </React.Fragment>
-        )
+        );
     }
 }
 
-export default withStyles(styles)(ListenTimeBigNum);
+export default withStyles(styles)(ShowsGanttChart);
