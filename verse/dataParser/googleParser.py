@@ -4,6 +4,7 @@ import os
 import string
 import sqlite3 as lite 
 from sqlite3 import Error
+import operator
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -31,13 +32,11 @@ def parseGoogleData(googleDataDumpName):
             
             data_profile = genericParser.jsonToDict(file_profile, ())
 
-            key_profile = "profile_info_header"
             val_profile = {}
-
             val_profile["name"] = data_profile["displayName"]
             val_profile["email"] = data_profile["emails"][0]["value"]
 
-            Dict[key_profile] = val_profile
+            Dict["profile_info_header"] = val_profile
 
         else: print("/Profile/Profile.json not found")
         
@@ -46,13 +45,10 @@ def parseGoogleData(googleDataDumpName):
         file_bookmarks = bookmarksDirPath + "/Bookmarks.html"
         if os.path.exists(file_bookmarks):
 
-            key_bookmarks = "bookmarks_list"
-            val_bookmarks = []
-
             bookmarks = genericParser.htmlToSoup(file_bookmarks, "dl", "")
             val_bookmarks = list(filter(None, bookmarks[0].text.split("\n")))
 
-            Dict[key_bookmarks] = val_bookmarks
+            Dict["bookmarks_count"] = len(val_bookmarks)
 
         else: print("/Bookmarks/Bookmarks.html not found")
 
@@ -63,8 +59,6 @@ def parseGoogleData(googleDataDumpName):
 
             data_saved_places = genericParser.jsonToDict(file_saved_places, ())
             data_saved_places = data_saved_places["features"]
-
-            key_saved_places = "saved_places_map"
 
             val_saved_places = []
             for data_pt in data_saved_places:
@@ -88,40 +82,40 @@ def parseGoogleData(googleDataDumpName):
 
                 val_saved_places.append(place)
 
-            Dict[key_saved_places] = val_saved_places
+            Dict["saved_places_map"] = val_saved_places
 
         else: print("/Maps (your places)/Saved Places.json not found")
 
         # ---------- YouTube Data ----------
         youtubeDirPath = rootPathName + "/YouTube and YouTube Music"
 
-        # -----  -----
+        
         file_playlists = youtubeDirPath + "/playlists/all-playlists.json"
         if os.path.exists(file_playlists):
 
             data_playlists = genericParser.jsonToDict(file_playlists, ())
 
-            key_playlists = "youtube_playlists_num"
-            val_playlists = len(data_playlists)
+            # -----  -----
+            Dict["youtube_playlists"] = data_playlists
 
-            Dict[key_playlists] = val_playlists
-
+            # -----  -----
+            Dict["youtube_playlists_count"] = len(data_playlists)
+            
         else: print("/YouTube and YouTube Music/playlists not found")
 
-        # -----  -----
+        
         file_subscriptions = youtubeDirPath + "/subscriptions/subscriptions.json"
         if os.path.exists(file_subscriptions):
 
-            data_subscriptions = genericParser.jsonToDict(subscriptionsFilePath, ())
+            data_subscriptions = genericParser.jsonToDict(file_subscriptions, ())
 
-            key_subscriptions = "youtube_subscriptions_num"
-            val_subscriptions = len(data_subscriptions)
+            # -----  -----
+            Dict["youtube_subscriptions"] = data_subscriptions
 
-            Dict[key_subscriptions] = val_subscriptions
+            # -----  -----
+            Dict["youtube_subscriptions_count"] = len(data_subscriptions)
 
-        else: 
-            Dict["youtube_subscriptions_num"] = ""
-            print("/subscriptions/subscriptions.json not found")
+        else: print("/subscriptions/subscriptions.json not found")
 
         # ---------- Activity Data ----------
         activityDirPath = rootPathName + "/My Activity"
@@ -131,11 +125,9 @@ def parseGoogleData(googleDataDumpName):
         if os.path.exists(file_ads):   
 
             # list of (link, date) tuples
-            key_ads = "ads_activity"
-            val_ads = []
-
             ads = genericParser.htmlToSoup(file_ads, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
                 
+            val_ads = []
             for ad in ads:
                 if len(ad.contents) == 4:
                     link = ad.contents[1]['href']
@@ -143,7 +135,47 @@ def parseGoogleData(googleDataDumpName):
 
                     val_ads.append((link, date))
 
-            Dict[key_ads] = val_ads
+            # -----  -----
+            Dict["ads_count"] = len(val_ads)
+
+            # -----  -----
+            Dict["ads_list"] = val_ads
+
+            # -----  -----
+            ad_waffle_data = []
+            ad_values = {}
+
+            for i in val_ads:
+                pos = i[1].find(' ')
+                month = i[1][:pos]
+
+                comma = i[1].find(',')
+                pos += 1
+                day = i[1][pos:comma]
+
+                day_str = day
+
+                if int(day) < 10:
+                    day_str = "0" + str(day)
+
+                comma = comma + 2
+                new_str = i[1][comma:]
+
+                comma = new_str.find(',')
+
+                year = new_str[:comma]
+
+                full_date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
+
+                if full_date in ad_values:
+                    ad_values[full_date] += 1
+                else:
+                    ad_values[full_date] = 1
+
+            for i in ad_values:
+                ad_waffle_data.append({"day": i, "value": ad_values[i]})
+
+            Dict["ads_waffle"] = ad_waffle_data
         
         else: print("/My Activity/Ads/MyActivity.html not found")
 
@@ -152,7 +184,6 @@ def parseGoogleData(googleDataDumpName):
         if os.path.exists(file_maps):           
 
             # dict of lists of (link, date) tuples
-            key_maps = "maps_activity"
             val_maps = {}
 
             usages = []     #list of timestamps maps was used
@@ -235,7 +266,10 @@ def parseGoogleData(googleDataDumpName):
             val_maps["directions"] = directions 
             #val_maps["others"] = others   
 
-            Dict[key_maps] = val_maps
+            Dict["maps_activity"] = val_maps
+
+            # -----  -----
+            Dict["maps_routes_count"] = len(directions)
         
         else: print("/My Activity/Maps/MyActivity.html not found")
 
@@ -245,7 +279,6 @@ def parseGoogleData(googleDataDumpName):
         if os.path.exists(file_search):     
 
             # dict of lists of (link, date) tuples
-            key_searches = "search_activity"
             val_searches = {}
 
             views = []
@@ -312,21 +345,52 @@ def parseGoogleData(googleDataDumpName):
                         
                         else: searches.append((search, link, date))
 
-            val_searches["views"] = views
-            val_searches["visits"] = visits
-            val_searches["searches"] = searches
+            # -----  -----
+            Dict["search_count"] = len(searches)
+
+            # -----  -----
+            google_search_waffle_data = []
+            google_search_values = {}
+
+            for i in searches:
+                pos = i[2].find(' ')
+                month = i[2][:pos]
+
+                comma = i[2].find(',')
+                pos += 1
+                day = i[2][pos:comma]
+
+                day_str = day
+
+                if int(day) < 10:
+                    day_str = "0" + str(day)
+
+                comma = comma + 2
+                new_str = i[2][comma:]
+
+                comma = new_str.find(',')
+
+                year = new_str[:comma]
+
+                full_date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
+
+                if full_date in google_search_values:
+                    google_search_values[full_date] += 1
+                else:
+                    google_search_values[full_date] = 1
+
                 
-            Dict[key_searches] = val_searches       
-        
+            for i in google_search_values:
+                google_search_waffle_data.append({"day": i, "value": google_search_values[i]})
+
+            Dict["search_waffle"] = google_search_waffle_data
+                        
         else: print("/My Activity/Search/MyActivity.html not found")
             
         # -----  -----
         file_youtube = activityDirPath + "/YouTube/MyActivity.html"
         if os.path.exists(file_youtube):
             
-            key_youtube = "youtube_activity"
-            val_youtube = {}
-
             watches = []
             searches = []
 
@@ -349,11 +413,64 @@ def parseGoogleData(googleDataDumpName):
 
                     searches.append((query, link, date))
 
-            val_youtube["watches"] = watches
-            val_youtube["searches"] = searches
+            # -----  -----
+            channels = {}
+            for video in watches:
+                if video[2] in channels:
+                    channels[video[2]] += 1
+                else:
+                    channels[video[2]] = 1
 
-            Dict[key_youtube] = val_youtube
-        
+            sorted_chan = sorted(channels.items(), reverse=True, key=operator.itemgetter(1))
+
+            pie_format_chan = []
+
+            count = 0
+            for i in sorted_chan:
+                if count == 10:
+                    break
+                else:
+                    pie_format_chan.append({"id": count, "label": i[0], "value": i[1]})
+                    count += 1
+
+            Dict["youtube_piechart"] = pie_format_chan
+
+            # -----  -----
+            youtube_search_waffle_data = []
+            youtube_search_values = {}
+
+            for search in searches:
+                pos = search[2].find(' ')
+                month = search[2][:pos]
+
+                comma = search[2].find(',')
+                pos += 1
+                day = search[2][pos:comma]
+
+                day_str = day
+
+                if int(day) < 10:
+                    day_str = "0" + str(day)
+
+                comma = comma + 2
+                new_str = search[2][comma:]
+
+                comma = new_str.find(',')
+
+                year = new_str[:comma]
+
+                full_date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
+
+                if full_date in youtube_search_values:
+                    youtube_search_values[full_date] += 1
+                else:
+                    youtube_search_values[full_date] = 1
+
+            for i in youtube_search_values:
+                youtube_search_waffle_data.append({"day": i, "value": youtube_search_values[i]})
+
+            Dict["youtube_search_waffle"] = youtube_search_waffle_data
+
         else: print("/My Activity/Youtube/MyActivity.html not found")
 
         # ---------- Contacts Data ----------

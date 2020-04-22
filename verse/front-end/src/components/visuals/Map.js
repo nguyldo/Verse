@@ -54,10 +54,12 @@ const markers = [
     { name: "Lima", coordinates: [-77.0428, -12.0464] }
 ];
 
-class IPMap extends React.Component {
+class Map extends React.Component {
 
     render() {
         const { classes } = this.props;
+
+        const markers = this.props.data;
 
         return (
             <React.Fragment>
@@ -122,4 +124,4 @@ class IPMap extends React.Component {
     }
 }
 
-export default withStyles(styles)(IPMap);
+export default withStyles(styles)(Map);

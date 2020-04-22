@@ -6,6 +6,31 @@ import json
 import operator
 from bs4 import BeautifulSoup
 
+import ipinfo
+access_token = 'c0e2e39ea5d205'
+handler = ipinfo.getHandler(access_token)
+
+monthToNum = {
+    "Jan": "01",
+    "Feb": "02",
+    "Mar": "03",
+    "Apr": "04",
+    "May": "05",
+    "Jun": "06",
+    "Jul": "07",
+    "Aug": "08",
+    "Sep": "09",
+    "Oct": "10",
+    "Nov": "11",
+    "Dec": "12"
+}
+
+# Function: get geolocation from IP address
+# Return: geolocation
+def getCoordinates(ip_addr):
+    details = handler.getDetails(ip_addr)
+    return details.loc
+
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
 # Source: https://stackoverflow.com/a/234329

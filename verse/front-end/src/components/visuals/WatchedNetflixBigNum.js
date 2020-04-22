@@ -4,8 +4,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-//import totalSize from "./data/totalSizeData"
-
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",

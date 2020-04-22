@@ -2,12 +2,13 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import Divider from '@material-ui/core/Divider';
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 300,
+        maxWidth: 700,
         maxHeight: 300,
         margin: "24px auto"
     },
@@ -49,9 +50,7 @@ class ListenTimeBigNum extends React.Component {
                         subheader={"Since " + this.props.date_range[0][0]}
                     />
                     <CardContent>
-                    <h1>{h} hours, </h1>
-                    <h1>{m} minutes, </h1>
-                    <h1>{s} seconds</h1> 
+                        <h1>{h} hours, {m} minutes, {s} seconds</h1> 
                     </CardContent>
                 </Card>
             </React.Fragment>

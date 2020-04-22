@@ -1,7 +1,6 @@
 import React from "react";
 import { ResponsiveCalendar } from '@nivo/calendar'
 
-
 class WaffleChart extends React.Component {
 
     render () {

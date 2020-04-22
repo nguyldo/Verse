@@ -13,21 +13,11 @@ import IPAddressChart from "../visuals/IPAddressChart";
 import ReactionBarChart from "../visuals/ReactionBarChart";
 import PostPieChart from "../visuals/PostPieChart.js";
 
-//Google Visuals
-//import SearchLineChart from "../visuals/SearchLineChart.js"
-import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
-import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
-import AdWaffleChart from "../visuals/AdWaffleChart.js";
-import ChannelPieChart from "../visuals/ChannelPieChart.js";
-import WebsitesList from "../visuals/WebsitesList.js";
-import CompanyAdsList from "../visuals/CompanyAdsList.js";
-import OffFacebookWebsitesList from "../visuals/OffFacebookWebsitesList.js";
-
-
 //Apple Visuals
 import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
 import LibraryTracksBigNum from "../visuals/LibraryTracksBigNum";
 import ListenTimeBigNum from "../visuals/ListenTimeBigNum";
+import DevicesList from "../visuals/DevicesList";
 import TopTenGenresList from "../visuals/TopTenGenresList";
 import GenresPieChart from "../visuals/GenresPieChart";
 import TopTenArtistsList from "../visuals/TopTenArtistsList";
@@ -46,6 +36,21 @@ import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
 //Google Visuals
 import IPMap from "../visuals/IPMap.js";
 import Map from "../visuals/atomicGraphs/Map.js"
+import SearchesBigNum from "../visuals/SearchesBigNum.js";
+//import SearchLineChart from "../visuals/SearchLineChart.js"
+import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
+import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
+import AdWaffleChart from "../visuals/AdWaffleChart.js";
+import ChannelPieChart from "../visuals/ChannelPieChart.js";
+import WebsitesList from "../visuals/WebsitesList.js";
+import CompanyAdsList from "../visuals/CompanyAdsList.js";
+import OffFacebookWebsitesList from "../visuals/OffFacebookWebsitesList.js";
+import DirectionsBigNum from "../visuals/DirectionsBigNum.js";
+import BookmarksBigNum from "../visuals/BookmarksBigNum.js";
+import AdsBigNum from "../visuals/AdsBigNum.js";
+import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
+import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
+
 
 function MapWrapper(data) {
   const [content, setContent] = useState("");
@@ -65,8 +70,7 @@ export default class Results extends Component {
 
     // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
 
-    this.setState = ({
-    });
+    this.setState = ({});
   }
 
   componentWillMount() {
@@ -129,7 +133,7 @@ export default class Results extends Component {
       this.state.ap_total_size_GB = 0;
       this.state.ap_account_info_header = ["", "", ""];
       this.state.ap_devices_list = [];
-      this.state.ap_date_range = ([0, 0, 0], [0, 0, 0])
+      this.state.ap_date_range = [[0, 0, 0], [0, 0, 0]]
       this.state.ap_listen_time = { "hours": 0, "minutes": 0, "seconds": 0 };
       this.state.ap_genres_pie = {};
       this.state.ap_genres_list = {};
@@ -150,20 +154,21 @@ export default class Results extends Component {
       console.log("cwm: google data was loaded");
       this.state.gg_total_size_GB = this.state.compiledRequest.google.total_size_GB;
       this.state.gg_profile_info_header = this.state.compiledRequest.google.profile_info_header;
-      this.state.gg_bookmarks_list = this.state.compiledRequest.google.bookmarks_list;
-      this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_list.length;
+      this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_count;
       this.state.gg_saved_places_map = this.state.compiledRequest.google.saved_places_map;
       //this.state.gg_youtube_playlists = this.state.compiledRequest.google.youtube_playlists;
+      //this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
       //this.state.gg_youtube_subscriptions = this.state.compiledRequest.google.youtube_subscriptions;
-      this.state.gg_subscriptions = this.state.compiledRequest.google["youtube_subscriptions_num"];
-      this.state.gg_playlists = this.state.compiledRequest.google["youtube_playlists_num"];
-      this.state.gg_ads_activity = this.state.compiledRequest.google.ads_activity;
-      this.state.gg_ads_count = this.state.compiledRequest.google.ads_activity.length;
+      //this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
+      this.state.gg_ads_count = this.state.compiledRequest.google.ads_count;
+      this.state.gg_ads_list = this.state.compiledRequest.google.ads_list;
+      this.state.gg_ads_waffle = this.state.compiledRequest.google.ads_waffle;
       this.state.gg_maps_activity = this.state.compiledRequest.google.maps_activity;
-      this.state.gg_maps_routes_count = this.state.compiledRequest.google.maps_activity.directions.length;
-      this.state.gg_search_activity = this.state.compiledRequest.google.search_activity;
-      this.state.gg_search_count = this.state.compiledRequest.google.search_activity.searches.length;
-      this.state.gg_youtube_activity = this.state.compiledRequest.google.youtube_activity;
+      this.state.gg_maps_routes_count = this.state.compiledRequest.google.maps_routes_count;
+      this.state.gg_search_count = this.state.compiledRequest.google.search_count;
+      this.state.gg_search_waffle = this.state.compiledRequest.google.search_waffle;
+      this.state.gg_youtube_piechart = this.state.compiledRequest.google.youtube_piechart;
+      this.state.gg_youtube_search_waffle = this.state.compiledRequest.google.youtube_search_waffle;
     } else {
       console.log("cwm: google data was NOT loaded");
       this.state.gg_size = 0;
@@ -171,11 +176,17 @@ export default class Results extends Component {
       this.state.gg_bookmarks_list = [];
       this.state.gg_saved_places_map = [["", ["", ""]]];
       //this.state.gg_youtube_playlists = [];
+      //this.state.gg_youtube_playlists_count = 0;
       //this.state.gg_youtube_subscriptions = [];
-      this.state.gg_ads_activity = [["", ""]];
+      //this.state.gg_youtube_subscriptions_count = 0;
+      this.state.gg_ads_count = 0;
+      this.state.gg_ads_waffle = [];
       this.state.gg_maps_activity = { "usages": [""], "links": ["", ""], "views": ["", ""], "searches": ["", ""], "calls": ["", ""], "directions": ["", "", "", ""]};
-      this.state.gg_search_activity = { "views": ["", "", ""], "visits": ["", "", ""], "searches": ["", "", "", ""]};
-      this.state.gg_youtube_activity = { "watches": ["", "", "", ""], "searches": ["", "", ""]};
+      this.state.gg_maps_routes_count = 0;
+      this.state.gg_search_count = 0;
+      this.state.gg_search_waffle = [];
+      this.state.gg_youtube_piechart = [];
+      this.state.gg_youtube_search_waffle = [];
     }
 
     /*
@@ -215,38 +226,6 @@ export default class Results extends Component {
       console.log("cdm: google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
     }
-  }
-
-  populateGoogleSelect() {
-    var select = document.getElementById("select_google_ad");
-    var options = this.state.google_ads;
-    for (var i = 0; i < this.state.google_ads_num; i ++) {
-      var opt = options[i][0];
-      if (opt.length > 37) {
-        var count = 37;
-        for (count; count < opt.length; count++) {
-          if (opt.charAt(count) == '/') {
-            break;
-          }  
-        }
-        opt = opt.substring(37, count);
-      }
-      var el = document.createElement("option");
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
-    }
-
-    select = document.getElementById("google_select_bookmarks");
-    options = this.state.google_bookmarks;
-    for (var i = 0; i < this.state.google_bookmarks_num; i ++) {
-      var opt = options[i];
-      var el = document.createElement("option");
-      el.textContent = opt;
-      el.value = opt;
-      select.appendChild(el);
-    }
-  }
 
     /*
     if ("netflix" in this.state.compiledRequest) {
@@ -372,17 +351,19 @@ export default class Results extends Component {
 
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={3}>
-                    <Grid key={0}>
+                    <Grid>
                       <TotalSizeBigNum data={this.state.ap_total_size_GB} />
                     </Grid>
 
                     <Grid>
                       <LibraryTracksBigNum data={this.state.ap_library_track_count} />
                     </Grid>
+                  </Grid>
+                  <Grid>
+                    <ListenTimeBigNum data={this.state.ap_listen_time} date_range={this.state.ap_date_range} />
+                  
+                    <DevicesList data={this.state.ap_devices_list} />
 
-                    <Grid key={1}>
-                      <ListenTimeBigNum data={this.state.ap_listen_time} date_range={this.state.ap_date_range} />
-                    </Grid>
                   </Grid>
                 </Grid>
 
@@ -402,6 +383,8 @@ export default class Results extends Component {
 
               </Grid>
 
+              <IPMap />
+
               <GenresPieChart data={this.state.ap_genres_pie} />
               <ArtistsBarChart data={this.state.ap_artists_barchart} />
               <TracksBarChart data={this.state.ap_tracks_barchart} />
@@ -409,74 +392,66 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="googlevisuals">
-              <h1>Name: {this.state.google_name}</h1>
-              <h2>Gmail: {this.state.email}</h2>
-              <div class="chart">
-                <GoogleSearchWaffleChart data={this.state.compiledRequest.google.google_search_waffle_data} 
-                                         from="2017-03-01" 
-                                         to="2020-04-01" 
-                                         maxValue={30}/>
-              </div>
-              <div class="chart">
-                <YoutubeSearchWaffleChart data={this.state.compiledRequest.google.youtube_search_waffle_data} 
-                                          from="2013-03-01" 
-                                          to="2016-04-01"
-                                          maxValue={20}/>
-              </div>
-              <div>
-                <AdWaffleChart data={this.state.compiledRequest.google.ad_waffle_data}
-                               from="2018-03-01" 
-                               to="2020-04-01"
-                               maxValue={20}/>
-              </div>
-              <div class="chart">
-                <ChannelPieChart data={this.state.compiledRequest.google.youtube_pie_chart}/>
-              </div>
-              <p>Total Number of Searches: {this.state.google_searches_num}</p>
-              <p>Number of Routes Created Using Maps: {this.state.google_routes_num}</p>
-              <p>Your Chrome Bookmarks:</p>
-              <select id="google_select_bookmarks" size="5" width="300" style={{width: 300}}></select>
-              <p>Total Number: {this.state.google_bookmarks_num}</p>
-              <p>List of Websites that have advertised to you through Google:</p>
-              <select id="select_google_ad" size="5" width="300" style={{width: 300}}></select>
-              <p>Total Number: {this.state.google_ads_num}</p>
-              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
-              <p>Number of YouTube playlists created: {this.state.playlists}</p>
-
-            
               <h1>Name: {this.state.gg_profile_info_header.name}</h1>
               <h2>Gmail: {this.state.gg_profile_info_header.email}</h2>
-
-              <LocationPieChart />
-              <DrivePieChart />
-              <ChannelPieChart />
 
               <Grid container spacing={5}>
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={3}>
 
-                    <Grid key={0}>
+                    <Grid spacing={3}>
+                      <Grid key={1}> 
+                        <SearchesBigNum data={this.state.gg_search_count} />
+                      </Grid>
 
+                      <Grid key={2}>
+                        <DirectionsBigNum data={this.state.gg_maps_routes_count} />
+                      </Grid>
                     </Grid>
+                    
+                    <Grid spacing={3}>
+                      <Grid key={3}>
+                        <AdsBigNum data={this.state.gg_ads_count} />
+                      </Grid>
 
+                      <Grid key={5}>
+                        <YoutubePlaylistsBigNum />
+                      </Grid>
+                    </Grid>
+                    
+                    <Grid spacing={3}>
+                      <Grid key={4}>
+                        <BookmarksBigNum data={this.state.gg_bookmarks_count} />
+                      </Grid>
+
+                      <Grid key={6}>
+                        <YoutubeSubscriptionsBigNum />
+                      </Grid>
+                    </Grid>
                   </Grid>
+
+                  <IPMap />
                 </Grid>
               </Grid>
 
-              <p>Number of times Google Assistant has been used: {this.state.assistant_num}</p>
-              <p>List of Websites You Have Logged Into Using Google:</p>
-              <select id="select_google_sites" size="5"></select>
-              <p>Total Number: {this.state.google_sites_num}</p>
-              <p>List of Websites that have advertised to you through Google:</p>
-              <select id="select_google_comp" size="5"></select>
-              <p>Your Google contacts:</p>
-              <select id="select_google_contacts" size="5"></select>
-              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
-              <p>Number of profile pictures uploaded: {this.state.prof_pic_num}</p>
-              <p>Number of YouTube playlists created: {this.state.playlists}</p>
+              <GoogleSearchWaffleChart data={this.state.gg_search_waffle} 
+                                        from="2017-03-01" 
+                                        to="2020-04-01" 
+                                        maxValue={30}/>
+              
+              <YoutubeSearchWaffleChart data={this.state.gg_youtube_search_waffle} 
+                                        from="2013-03-01" 
+                                        to="2016-04-01"
+                                        maxValue={20}/>
+            
+              <AdWaffleChart data={this.state.gg_ads_waffle}
+                              from="2018-03-01" 
+                              to="2020-04-01"
+                              maxValue={20}/>
+            
+              <ChannelPieChart data={this.state.gg_youtube_piechart}/>
             </div>
           </div>
-            
         </div>
         <button onClick={(e) => this.exportToImage(e)}>Export your results to an image!</button>
       </div>

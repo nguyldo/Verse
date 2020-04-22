@@ -2,6 +2,7 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import Divider from '@material-ui/core/Divider';
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
@@ -42,11 +43,10 @@ class TotalSizeBigNum extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Total Size"
-                        subheader="Amount of data in your Apple data dump."
+                        subheader="of this data dump"
                     />
                     <CardContent>
                         <h1>{this.props.data} GB </h1>
-
                     </CardContent>
                 </Card>
             </React.Fragment>

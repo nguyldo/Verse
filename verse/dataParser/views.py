@@ -12,7 +12,7 @@ import os
 import zipfile 
 
 from dataParser import visualizationData, genericParser
-from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, googleAnalyzer, netflixParser
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, netflixParser
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -42,7 +42,7 @@ def appleDataAPI(request, userFileName):
 
 @api_view(["GET"])
 def googleDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedGoogleData(userFileName)
+    data = visualizationData.getGoogleData(userFileName)
     genericParser.deleteData("./media/unzippedFiles/google/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
@@ -120,7 +120,6 @@ def upload(request):
         elif serviceName == "google":
             fileName = uploadedFiles.name[:-4]
             googleParser.parseGoogleData(fileName)
-            googleAnalyzer.analyzeGoogleData(fileName)
 
         else: print("service name not recognized")
 

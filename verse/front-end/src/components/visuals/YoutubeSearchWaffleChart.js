@@ -4,8 +4,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
-import data from "./data/WaffleData.js"
-
 import WaffleChart from "./atomicGraphs/WaffleChart.js";
 
 const styles = theme => ({

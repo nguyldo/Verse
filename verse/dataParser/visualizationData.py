@@ -11,7 +11,7 @@ def getJsonData(filePath):
 
 # Function: get analyzed data from file
 # Return: the json dictionary of the requested data
-def getFacebookData(userFileName):
+def getAnalyzedFacebookData(userFileName):
     data = getJsonData("media/processedData/facebook/" + userFileName + "/analyzedFacebookData.json")
     return data
 
@@ -20,7 +20,7 @@ def getAppleData(userFileName):
     return data
 
 def getGoogleData(userFileName):
-    data = getJsonData("media/processedData/google/" + userFileName + "/analyzedGoogleData.json")
+    data = getJsonData("media/processedData/google/" + userFileName + "/parsedGoogleData.json")
     return data
 
 def getNetflixData(userFileName):
