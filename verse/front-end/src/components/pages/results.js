@@ -12,12 +12,17 @@ import ReactTooltip from "react-tooltip";
 import IPAddressChart from "../visuals/IPAddressChart";
 import ReactionBarChart from "../visuals/ReactionBarChart";
 import PostPieChart from "../visuals/PostPieChart.js";
-import LocationPieChart from "../visuals/LocationPieChart.js";
-import DrivePieChart from "../visuals/DrivePieChart.js";
+
+//Google Visuals
+//import SearchLineChart from "../visuals/SearchLineChart.js"
+import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
+import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
+import AdWaffleChart from "../visuals/AdWaffleChart.js";
 import ChannelPieChart from "../visuals/ChannelPieChart.js";
 import WebsitesList from "../visuals/WebsitesList.js";
 import CompanyAdsList from "../visuals/CompanyAdsList.js";
 import OffFacebookWebsitesList from "../visuals/OffFacebookWebsitesList.js";
+
 
 //Apple Visuals
 import TotalSizeBigNum from "../visuals/TotalSizeBigNum";
@@ -61,7 +66,6 @@ export default class Results extends Component {
     // DATA SENT FROM UPLOADS CAN BE FOUND AT 'this.state.compiledRequest'
 
     this.setState = ({
-
     });
   }
 
@@ -147,12 +151,18 @@ export default class Results extends Component {
       this.state.gg_total_size_GB = this.state.compiledRequest.google.total_size_GB;
       this.state.gg_profile_info_header = this.state.compiledRequest.google.profile_info_header;
       this.state.gg_bookmarks_list = this.state.compiledRequest.google.bookmarks_list;
+      this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_list.length;
       this.state.gg_saved_places_map = this.state.compiledRequest.google.saved_places_map;
       //this.state.gg_youtube_playlists = this.state.compiledRequest.google.youtube_playlists;
       //this.state.gg_youtube_subscriptions = this.state.compiledRequest.google.youtube_subscriptions;
+      this.state.gg_subscriptions = this.state.compiledRequest.google["youtube_subscriptions_num"];
+      this.state.gg_playlists = this.state.compiledRequest.google["youtube_playlists_num"];
       this.state.gg_ads_activity = this.state.compiledRequest.google.ads_activity;
+      this.state.gg_ads_count = this.state.compiledRequest.google.ads_activity.length;
       this.state.gg_maps_activity = this.state.compiledRequest.google.maps_activity;
+      this.state.gg_maps_routes_count = this.state.compiledRequest.google.maps_activity.directions.length;
       this.state.gg_search_activity = this.state.compiledRequest.google.search_activity;
+      this.state.gg_search_count = this.state.compiledRequest.google.search_activity.searches.length;
       this.state.gg_youtube_activity = this.state.compiledRequest.google.youtube_activity;
     } else {
       console.log("cwm: google data was NOT loaded");
@@ -205,6 +215,38 @@ export default class Results extends Component {
       console.log("cdm: google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
     }
+  }
+
+  populateGoogleSelect() {
+    var select = document.getElementById("select_google_ad");
+    var options = this.state.google_ads;
+    for (var i = 0; i < this.state.google_ads_num; i ++) {
+      var opt = options[i][0];
+      if (opt.length > 37) {
+        var count = 37;
+        for (count; count < opt.length; count++) {
+          if (opt.charAt(count) == '/') {
+            break;
+          }  
+        }
+        opt = opt.substring(37, count);
+      }
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+
+    select = document.getElementById("google_select_bookmarks");
+    options = this.state.google_bookmarks;
+    for (var i = 0; i < this.state.google_bookmarks_num; i ++) {
+      var opt = options[i];
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+  }
 
     /*
     if ("netflix" in this.state.compiledRequest) {
@@ -214,7 +256,6 @@ export default class Results extends Component {
       document.getElementById("netflixvisuals").style.display = "none";
     }
     */
-
   }
 
   exportToImage(e) {
@@ -271,6 +312,14 @@ export default class Results extends Component {
     })
 
     const { classes } = this.props;
+
+    /*<div class="chart">
+                <PostPieChart data={this.state.fb_post_pie} />
+              </div>*/
+
+              /*<div class="chart">
+              <SearchLineChart data={this.state.compiledRequest.google.line_year_searches}/>
+            </div>*/
 
     return (
       <div id="resultspage">
@@ -360,6 +409,41 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="googlevisuals">
+              <h1>Name: {this.state.google_name}</h1>
+              <h2>Gmail: {this.state.email}</h2>
+              <div class="chart">
+                <GoogleSearchWaffleChart data={this.state.compiledRequest.google.google_search_waffle_data} 
+                                         from="2017-03-01" 
+                                         to="2020-04-01" 
+                                         maxValue={30}/>
+              </div>
+              <div class="chart">
+                <YoutubeSearchWaffleChart data={this.state.compiledRequest.google.youtube_search_waffle_data} 
+                                          from="2013-03-01" 
+                                          to="2016-04-01"
+                                          maxValue={20}/>
+              </div>
+              <div>
+                <AdWaffleChart data={this.state.compiledRequest.google.ad_waffle_data}
+                               from="2018-03-01" 
+                               to="2020-04-01"
+                               maxValue={20}/>
+              </div>
+              <div class="chart">
+                <ChannelPieChart data={this.state.compiledRequest.google.youtube_pie_chart}/>
+              </div>
+              <p>Total Number of Searches: {this.state.google_searches_num}</p>
+              <p>Number of Routes Created Using Maps: {this.state.google_routes_num}</p>
+              <p>Your Chrome Bookmarks:</p>
+              <select id="google_select_bookmarks" size="5" width="300" style={{width: 300}}></select>
+              <p>Total Number: {this.state.google_bookmarks_num}</p>
+              <p>List of Websites that have advertised to you through Google:</p>
+              <select id="select_google_ad" size="5" width="300" style={{width: 300}}></select>
+              <p>Total Number: {this.state.google_ads_num}</p>
+              <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
+              <p>Number of YouTube playlists created: {this.state.playlists}</p>
+
+            
               <h1>Name: {this.state.gg_profile_info_header.name}</h1>
               <h2>Gmail: {this.state.gg_profile_info_header.email}</h2>
 

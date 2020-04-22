@@ -101,8 +101,10 @@ def parseGoogleData(googleDataDumpName):
 
             data_playlists = genericParser.jsonToDict(file_playlists, ())
 
-            key_playlists = "youtube_playlists"
-            val_playlists = []
+            key_playlists = "youtube_playlists_num"
+            val_playlists = len(data_playlists)
+
+            Dict[key_playlists] = val_playlists
 
         else: print("/YouTube and YouTube Music/playlists not found")
 
@@ -110,12 +112,16 @@ def parseGoogleData(googleDataDumpName):
         file_subscriptions = youtubeDirPath + "/subscriptions/subscriptions.json"
         if os.path.exists(file_subscriptions):
 
-            data_subscriptions = genericParser.jsonToDict(file_subscriptions, ())
+            data_subscriptions = genericParser.jsonToDict(subscriptionsFilePath, ())
 
-            key_subscriptions = "youtube_subscriptions"
-            val_subscriptions = []
+            key_subscriptions = "youtube_subscriptions_num"
+            val_subscriptions = len(data_subscriptions)
 
-        else: print("/subscriptions/subscriptions.json not found")
+            Dict[key_subscriptions] = val_subscriptions
+
+        else: 
+            Dict["youtube_subscriptions_num"] = ""
+            print("/subscriptions/subscriptions.json not found")
 
         # ---------- Activity Data ----------
         activityDirPath = rootPathName + "/My Activity"
