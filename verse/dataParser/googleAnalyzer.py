@@ -16,20 +16,21 @@ def analyzeGoogleData(googleUserFileName):
 
     Dict = {}
 
-    inOut = {}
-    inOut["totalSizeInGB"] = "total_size_bignum"
-    inOut["profile_info"] = "personal_info_header"
-    inOut["bookmarks"] = "bookmarks_list"
-    inOut["saved_places"] = "saved_places_map"
-    inOut["ads_activity"] = "ads_timeline"
-    inOut["maps_activity"] = "maps_timeline"
-    inOut["search_activity"] = "search_timeline"
-    inOut["youtube_activity"] = "youtube_timeline"
+    keys = ["total_size_GB", 
+            "profile_info_header",
+            "bookmarks_list",
+            "saved_places_map",
+            "youtube_playlists",
+            "youtube_subscriptions",
+            "ads_activity",
+            "maps_activity",
+            "search_activity",
+            "youtube_activity"]
 
-    for key in inOut:
-        if key in data.keys():
-            Dict[key] = inOut[key]
-        else: print(key + " does not exist in parsed data dictionary")
+    print("Google:\n\tparser keys:\n\t\t")
+    print(data.keys())
+    print("\n\t\tanalyzer keys:\n\t\t")
+    print(keys)
 
     #write analyzed data dictionary to json file
     genericParser.writeToJsonFile(Dict, "./media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")

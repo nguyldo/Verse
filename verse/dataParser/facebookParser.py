@@ -29,7 +29,7 @@ def parseFacebookData(facebookDataDumpName):
     if os.path.exists(rootPathName):
 
         # Get total size
-        Dict["totalSizeInGB"] = genericParser.getDirSizeInGB(rootPathName)
+        Dict["total_size_bignum"] = genericParser.getDirSizeInGB(rootPathName)
         
         # Extract json data
         for root, dirs, files in genericParser.walklevel(rootPathName, level=1):
