@@ -60,7 +60,7 @@ h1 {
 }
 
 .customupload, button, .link, .link:visited {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
   color: black;
   padding: 8px;
@@ -69,6 +69,10 @@ h1 {
   font-size: 15px;
   font-weight: normal;
   text-decoration: none;
+}
+
+.ubutton, .ubutton:hover {
+  border-radius: 5px;
 }
 
 .customupload:hover, button:hover, .link:hover {
