@@ -53,6 +53,15 @@ export default class Upload extends Component {
 
     };
 
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
   handleFile(e) {
 
     console.log(e.target.files);
