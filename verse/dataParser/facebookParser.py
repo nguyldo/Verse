@@ -28,31 +28,8 @@ def parseFacebookData(facebookDataDumpName):
 
     if os.path.exists(rootPathName):
 
-        """
-        # Initialize DB attributes
-        conn = None
-        try:
-            conn = lite.connect(r"pythonsqlite.db")
-        except Error as e:
-            print(e)
-
-        unique_id = str(randint(0, 100))
-        peer_group = 'no peer_group info'
-        apps_and_websites = 'no app and web info'
-        friends = 'no friend info'
-        posts_and_comments = 'no comment info'
-        pokes = 'no poke info'
-        security = 'no security info'
-        posts = 'no posts file' 
-        other_posts = 'no other posts file' 
-        profile_info = 'no profile file'
-        profile_history = 'no profile history file' 
-        advertisers = 'no advertiser data file' 
-        off_facebook = 'no off facebook data'
-        """
-
         # Get total size
-        Dict["totalSizeInGB"] = genericParser.getDirSizeInGB(rootPathName)
+        Dict["total_size_bignum"] = genericParser.getDirSizeInGB(rootPathName)
         
         # Extract json data
         for root, dirs, files in genericParser.walklevel(rootPathName, level=1):
@@ -73,8 +50,6 @@ def parseFacebookData(facebookDataDumpName):
                     val_peer_group = data_peer_group["friend_peer_group"]
                     Dict[key_peer_group] = val_peer_group
 
-                    peer_group = dirPath + "/" + file_peer_group
-
                 elif categoryDirName == "ads_and_businesses":
                     # ----- US 6.8 -----
                     file_off_facebook_activity = "your_off-facebook_activity.json"
@@ -84,8 +59,6 @@ def parseFacebookData(facebookDataDumpName):
                     key_list_off_facebook_activity = "off_facebook_activity"
                     val_list_off_facebook_activity = data_off_facebook_activity["off_facebook_activity"]
                     Dict[key_list_off_facebook_activity] = val_list_off_facebook_activity
-
-                    off_facebook = dirPath + "/" + file_off_facebook_activity
 
                     # count of off facebook business with data
                     key_ct_off_facebook_activity = "num_businesses_off_facebook"
@@ -109,7 +82,10 @@ def parseFacebookData(facebookDataDumpName):
                     val_advs = data_advs["custom_audiences"]
                     Dict[key_advs] = val_advs
 
-                    advertisers = dirPath + "/" + file_advs
+                    # count of advertisers with your contact info
+                    key_ct_advs = "num_advertisers"
+                    val_ct_advs = len(val_advs)
+                    Dict[key_ct_advs] = val_ct_advs
 
                 elif categoryDirName == "apps_and_websites":
                     # ----- US 6.5 & 6.6 -----
@@ -125,8 +101,6 @@ def parseFacebookData(facebookDataDumpName):
                     key_list_apps_websites = "apps_and_websites_logged_into_with_facebook"
                     val_list_apps_websites = data_apps_websites["installed_apps"]
                     Dict[key_list_apps_websites] = val_list_apps_websites
-
-                    apps_and_websites = dirPath + "/" + file_apps_websites
 
                 elif categoryDirName == "friends":
                     # ----- US 6.10 -----
@@ -144,8 +118,6 @@ def parseFacebookData(facebookDataDumpName):
                     key_friends = "friends"
                     val_friends = list_friends
                     Dict[key_friends] = val_friends
-
-                    friends = dirPath + "/" + file_friends
                     
                 elif categoryDirName == "likes_and_reactions":
                     # ----- US 6.4 -----
@@ -156,8 +128,6 @@ def parseFacebookData(facebookDataDumpName):
                     key_reactions = "reactions"
                     val_reactions = data_reactions["reactions"]
                     Dict[key_reactions] = val_reactions
-
-                    posts_and_comments = dirPath + "/" + file_reactions
 
                 elif categoryDirName == "other_activity":
                     # ----- US 6.10 -----
@@ -179,7 +149,7 @@ def parseFacebookData(facebookDataDumpName):
                         val_pokes = data_pokes["pokes"]["activity_log_data"]
                     else:
                         val_pokes = 'no pokes'
-                    Dict[key_pokes]=val_pokes
+                    Dict[key_pokes] = val_pokes
 
                 elif categoryDirName == "posts":
                     # ----- US 6.3 -----
@@ -191,8 +161,6 @@ def parseFacebookData(facebookDataDumpName):
                     val_others_posts = data_others_posts["wall_posts_sent_to_you"]["activity_log_data"]
                     Dict[key_others_posts] = val_others_posts
 
-                    other_posts = dirPath + "/" + file_others_posts
-
                     # ----- US 6.3 -----
                     file_your_posts = "your_posts_1.json"
                     data_your_posts = genericParser.jsonToDict(dirPath + "/" + file_your_posts, ())
@@ -201,8 +169,6 @@ def parseFacebookData(facebookDataDumpName):
                     key_your_posts = "your_posts"
                     val_your_posts = data_your_posts
                     Dict[key_your_posts] = val_your_posts
-
-                    posts = dirPath + "/" + file_your_posts
 
                 elif categoryDirName == "profile_information":
                     # ----- US 6.1 -----
@@ -213,8 +179,6 @@ def parseFacebookData(facebookDataDumpName):
                     key_profile_info = "profile_information"
                     val_profile_info = data_profile_info["profile"]
                     Dict[key_profile_info] = val_profile_info
-
-                    profile_info = dirPath + "/" + file_profile_info
 
                     # your name
                     key_name = "name"
@@ -230,8 +194,6 @@ def parseFacebookData(facebookDataDumpName):
                     val_profile_update_history = data_profile_update_history["profile_updates"]
                     Dict[key_profile_update_history] = val_profile_update_history
 
-                    profile_history = dirPath + "/" + file_profile_update_history
-
                 elif categoryDirName == "security_and_login_information":
                     # ----- US 6.2 -----
                     file_logins_logouts = "logins_and_logouts.json"
@@ -242,64 +204,11 @@ def parseFacebookData(facebookDataDumpName):
                     val_logins_logouts = data_logins_logouts["account_accesses"]
                     Dict[key_logins_logouts] = val_logins_logouts
 
-                    security = dirPath + "/" + file_logins_logouts
-
                 else: print("category not found")
-        
-        """
-        # Insert into DB
-        if conn is not None:
-            sql_insert = """
-        """
-                            INSERT INTO facebook ( 
-                                id, 
-                                peer_group,
-                                apps_and_websites,
-                                friends,
-                                posts_and_comments,
-                                pokes,
-                                security,
-                                posts, 
-                                other_posts, 
-                                profile_info, 
-                                profile_history, 
-                                advertisers, 
-                                off_facebook 
-                            ) 
-                            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-        """
-        """
-
-            try:
-                c = conn.cursor()
-                with conn:
-                    # insert data in
-                    data_tuple = (
-                        unique_id, 
-                        peer_group,
-                        apps_and_websites,
-                        friends,
-                        posts_and_comments,
-                        pokes,
-                        security,
-                        posts, 
-                        other_posts, 
-                        profile_info, 
-                        profile_history, 
-                        advertisers, 
-                        off_facebook 
-                    )
-                    c.execute(sql_insert, data_tuple)
-                    # print data
-                    c.execute("SELECT * FROM facebook")
-                    #print(c.fetchall())
-                    # delete data
-                    c.execute("DELETE FROM facebook")
-            except Error as e:
-                print(e)    
-        """
             
-    else: print("path does not exist")
+            else: print("path not interesting")
+
+    else: print("root path not found")
 
     #write parsed data dictionary to json file
     genericParser.writeToJsonFile(Dict, 'media/processedData/facebook/' + facebookDataDumpName + '/parsedFacebookData.json')

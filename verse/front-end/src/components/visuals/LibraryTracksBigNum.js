@@ -2,17 +2,14 @@ import React from 'react';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import { withStyles } from '@material-ui/core';
-
-import GanttChart from "./atomicGraphs/GanttChart"
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 1024,
-        maxHeight: 2048,
-        margin: "24px auto",
-        overflow: 'auto',
+        maxWidth: 300,
+        maxHeight: 300,
+        margin: "24px auto"
     },
     title: {
         color: "#232427",
@@ -31,8 +28,7 @@ const styles = theme => ({
     },
 });
 
-class MusicLibraryGanttChart extends React.Component {
-
+class LibraryTracksBigNum extends React.Component {
     render() {
 
         const { classes } = this.props;
@@ -45,18 +41,16 @@ class MusicLibraryGanttChart extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Apple Music Library Song Activity"
-                        subheader="Length of time between when you added a song to your library and when you last played it."
+                        title="Total Listen Time"
+                        subheader={"Since " + this.props.date_range[0][0]}
                     />
                     <CardContent>
-                        <div>
-                            <GanttChart musicData={this.props.data} />
-                        </div>
+                        <h1>{this.props.data} songs </h1>
                     </CardContent>
                 </Card>
             </React.Fragment>
-        );
+        )
     }
 }
 
-export default withStyles(styles)(MusicLibraryGanttChart);
+export default withStyles(styles)(LibraryTracksBigNum);

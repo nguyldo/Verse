@@ -12,7 +12,7 @@ import os
 import zipfile 
 
 from dataParser import visualizationData, genericParser
-from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer, netflixParser
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, googleAnalyzer, netflixParser
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -27,25 +27,15 @@ def index(request):
 @api_view(["GET"])
 def facebookDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedFacebookData(userFileName)
-    rootPathName = "./media/processedData/facebook/" + userFileName
-    genericParser.deleteData(rootPathName)
+    genericParser.deleteData("./media/unzippedFiles/facebook/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
     
 #----- APPLE APIs -----
 
 @api_view(["GET"])
-def appleGeneralDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedAppleData(userFileName, "general")
-    return Response(status=status.HTTP_200_OK, data={"data": data})
-
-@api_view(["GET"])
-def appleMusicDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedAppleData(userFileName, "music")
-    return Response(status=status.HTTP_200_OK, data={"data": data})
-
-@api_view(["GET"])
-def appleAppsGamesDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedAppleData(userFileName, "appsGames")
+def appleDataAPI(request, userFileName):
+    data = visualizationData.getAppleData(userFileName)
+    genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- GOOGLE APIs -----
@@ -53,6 +43,13 @@ def appleAppsGamesDataAPI(request, userFileName):
 @api_view(["GET"])
 def googleDataAPI(request, userFileName):
     data = visualizationData.getAnalyzedGoogleData(userFileName)
+    genericParser.deleteData("./media/unzippedFiles/google/" + userFileName)
+    return Response(status=status.HTTP_200_OK, data={"data": data})
+
+#----- NETFLIX APIs -----
+@api_view(["GET"])
+def netflixDataAPI(request, userFileName):
+    data = visualizationData.getAnalyzedNetflixData(userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- UPLOAD API -----
@@ -115,9 +112,6 @@ def upload(request):
 
             fileName = uploadedFiles.name[:-4]
             appleParser.parseAppleData(fileName)
-            appleAnalyzer.analyzeGeneralAppleData(fileName)
-            appleAnalyzer.analyzeMusicAppleData(fileName)
-            appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
         elif serviceName == "netflix":
             fileName = uploadedFiles.name

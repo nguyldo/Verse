@@ -5,41 +5,28 @@ import pandas as pd
 import numpy as np
 import operator
 
-#TODO: uncomment first if running through django and second if through python
 from dataParser import genericParser
-#import genericParser
 
 def analyzeGoogleData(googleUserFileName):
-    #TODO: uncomment first if running through django and second if through python
     data = genericParser.getParsedJson("./media/processedData/google/" + googleUserFileName + "/parsedGoogleData.json")
-    #data = genericParser.getParsedJson("../media/processedData/google/" + googleUserFileName + "/parsedGoogleData.json")
 
     Dict = {}
 
-    inOut = {}
-    inOut["totalSizeInGB"] = "total_size_bignum"
-    inOut["profile_info"] = "personal_info_header"
-    inOut["bookmarks"] = "bookmarks_list"
-    inOut["saved_places"] = "saved_places_map"
-    inOut["ads_activity"] = "ads_timeline"
-    inOut["maps_activity"] = "maps_timeline"
-    inOut["search_activity"] = "search_timeline"
-    inOut["youtube_activity"] = "youtube_timeline"
-    inOut["youtube_playlists_num"] = "youtube_playlists_num"
-    inOut["youtube_subscriptions_num"] = "youtube_subscriptions_num"
+    keys = ["total_size_GB", 
+            "profile_info_header",
+            "bookmarks_list",
+            "saved_places_map",
+            "youtube_playlists",
+            "youtube_subscriptions",
+            "ads_activity",
+            "maps_activity",
+            "search_activity",
+            "youtube_activity"]
 
-    for key in inOut:
+    for key in keys:
         if key in data.keys():
-            Dict[key] = inOut[key]
-        else: print(key + " does not exist in parsed data dictionary")
+            Dict[key] = data[key]
 
-    Dict["total_size_bignum"] = data["totalSizeInGB"]
-
-    Dict["personal_info_header"] = data["profile_info"]
-
-    Dict["youtube_subscriptions_num"] = data["youtube_subscriptions_num"]
-
-    Dict["youtube_playlists_num"] = data["youtube_playlists_num"]
 
     bookmarks = []
     bookmarks = data["bookmarks"]
@@ -47,10 +34,6 @@ def analyzeGoogleData(googleUserFileName):
     bookmarks.remove("Bookmark Bar")
     bookmarks.remove("Other Bookmarks")
     bookmarks.remove("Synced Bookmarks")
-
-    Dict["bookmarks_list"] = bookmarks
-
-    Dict["saved_places_map"] = data["saved_places"]
 
     ad_waffle_data = []
     ad_values = {}
@@ -275,7 +258,6 @@ def analyzeGoogleData(googleUserFileName):
 
     #write analyzed data dictionary to json file
     genericParser.writeToJsonFile(Dict, "./media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
-    #genericParser.writeToJsonFile(Dict, "../media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
 
 """
 def main():
