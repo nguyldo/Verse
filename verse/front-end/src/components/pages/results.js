@@ -12,8 +12,9 @@ import ReactionBarChart from "../visuals/ReactionBarChart";
 import PostPieChart from "../visuals/PostPieChart.js";
 
 //Google Visuals
-import SearchLineChart from "../visuals/SearchLineChart.js"
-import DrivePieChart from "../visuals/DrivePieChart.js";
+//import SearchLineChart from "../visuals/SearchLineChart.js"
+import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
+import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
 import ChannelPieChart from "../visuals/ChannelPieChart.js";
 
 
@@ -376,6 +377,10 @@ export default class Results extends Component {
                 <PostPieChart data={this.state.fb_post_pie} />
               </div>*/
 
+              /*<div class="chart">
+              <SearchLineChart data={this.state.compiledRequest.google.line_year_searches}/>
+            </div>*/
+
     return (
       <div id="resultspage">
         <Header />
@@ -410,10 +415,14 @@ export default class Results extends Component {
               <h1>Name: {this.state.google_name}</h1>
               <h2>Gmail: {this.state.email}</h2>
               <div class="chart">
-                <SearchLineChart data={this.state.compiledRequest.google.line_year_searches}/>
+                <GoogleSearchWaffleChart data={this.state.compiledRequest.google.google_search_waffle_data} 
+                                         from="2017-03-01" to="2020-04-01" maxValue={30}/>
               </div>
               <div class="chart">
-                <DrivePieChart data={this.state.google_drive_pie}/>
+                <YoutubeSearchWaffleChart data={this.state.compiledRequest.google.youtube_search_waffle_data} 
+                                          from="2013-03-01" 
+                                          to="2016-04-01"
+                                          maxValue={20}/>
               </div>
               <div class="chart">
                 <ChannelPieChart data={this.state.compiledRequest.google.youtube_pie_chart}/>
@@ -426,8 +435,6 @@ export default class Results extends Component {
               <p>List of Websites that have advertised to you through Google:</p>
               <select id="select_google_ad" size="5" width="300" style={{width: 300}}></select>
               <p>Total Number: {this.state.google_ads_num}</p>
-              <p>Your Google contacts:</p>
-              <select id="select_google_contacts" size="5"></select>
               <p>Number of YouTube subscriptions: {this.state.subscriptions}</p>
               <p>Number of YouTube playlists created: {this.state.playlists}</p>
             </div>

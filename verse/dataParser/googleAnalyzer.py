@@ -56,34 +56,69 @@ def analyzeGoogleData(googleUserFileName):
     Dict["maps_timeline"] = data["maps_activity"]
     Dict["search_timeline"] = data["search_activity"]
 
-    year = {}
+    google_search_waffle_data = []
+    google_search_values = {}
 
     for i in data["search_activity"]["searches"]:
         pos = i[2].find(' ')
         month = i[2][:pos]
 
-        if month in year:
-            year[month] += 1
+        month_num = ""
+
+        if month == "Jan":
+            month_num = "01"
+        elif month == "Feb":
+            month_num = "02"
+        elif month == "Mar":
+            month_num = "03"
+        elif month == "Apr":
+            month_num = "04"
+        elif month == "May":
+            month_num = "05"
+        elif month == "Jun":
+            month_num = "06"
+        elif month == "Jul":
+            month_num = "07"
+        elif month == "Aug":
+            month_num = "08"
+        elif month == "Sep":
+            month_num = "09"
+        elif month == "Oct":
+            month_num = "10"
+        elif month == "Nov":
+            month_num = "11"
         else:
-            year[month] = 1
-    
-    line_data = [{"x": "Jan", "y": year["Jan"]},
-                 {"x": "Feb", "y": year["Feb"]},
-                 {"x": "Mar", "y": year["Mar"]},
-                 {"x": "Apr", "y": year["Apr"]},
-                 {"x": "May", "y": year["May"]},
-                 {"x": "Jun", "y": year["Jun"]},
-                 {"x": "Jul", "y": year["Jul"]},
-                 {"x": "Aug", "y": year["Aug"]},
-                 {"x": "Sep", "y": year["Sep"]},
-                 {"x": "Oct", "y": year["Oct"]},
-                 {"x": "Nov", "y": year["Nov"]},
-                 {"x": "Dec", "y": year["Dec"]}]
+            month_num = "12"
 
-    line_format_year = [{"id": "year", "color": "hsl(327, 70%, 50%)", "data": line_data}]
-    
+        comma = i[2].find(',')
+        pos += 1
+        day = i[2][pos:comma]
 
-    Dict["line_year_searches"] = line_format_year
+        day_str = day
+
+        if int(day) < 10:
+            day_str = "0" + str(day)
+
+        comma = comma + 2
+        new_str = i[2][comma:]
+
+        comma = new_str.find(',')
+
+        year = new_str[:comma]
+
+        full_date = year + "-" + month_num + "-" + day_str
+
+        if full_date in google_search_values:
+            google_search_values[full_date] += 1
+        else:
+            google_search_values[full_date] = 1
+
+        
+    for i in google_search_values:
+        google_search_waffle_data.append({"day": i, "value": google_search_values[i]})
+
+    
+    Dict["google_search_waffle_data"] = google_search_waffle_data
 
     Dict["youtube_timeline"] = data["youtube_activity"]
 
@@ -102,10 +137,77 @@ def analyzeGoogleData(googleUserFileName):
 
     count = 0
     for i in sorted_chan:
-        pie_format_chan.append({"id": count, "label": i[0], "value": i[1]})
-        count += 1
+        if count == 10:
+            break
+        else:
+            pie_format_chan.append({"id": count, "label": i[0], "value": i[1]})
+            count += 1
 
     Dict["youtube_pie_chart"] = pie_format_chan
+
+    youtube_search_waffle_data = []
+    youtube_search_values = {}
+
+    for i in data["youtube_activity"]["searches"]:
+        pos = i[2].find(' ')
+        month = i[2][:pos]
+
+        month_num = ""
+
+        if month == "Jan":
+            month_num = "01"
+        elif month == "Feb":
+            month_num = "02"
+        elif month == "Mar":
+            month_num = "03"
+        elif month == "Apr":
+            month_num = "04"
+        elif month == "May":
+            month_num = "05"
+        elif month == "Jun":
+            month_num = "06"
+        elif month == "Jul":
+            month_num = "07"
+        elif month == "Aug":
+            month_num = "08"
+        elif month == "Sep":
+            month_num = "09"
+        elif month == "Oct":
+            month_num = "10"
+        elif month == "Nov":
+            month_num = "11"
+        else:
+            month_num = "12"
+
+        comma = i[2].find(',')
+        pos += 1
+        day = i[2][pos:comma]
+
+        day_str = day
+
+        if int(day) < 10:
+            day_str = "0" + str(day)
+
+        comma = comma + 2
+        new_str = i[2][comma:]
+
+        comma = new_str.find(',')
+
+        year = new_str[:comma]
+
+        full_date = year + "-" + month_num + "-" + day_str
+
+        if full_date in youtube_search_values:
+            youtube_search_values[full_date] += 1
+        else:
+            youtube_search_values[full_date] = 1
+
+        
+    for i in youtube_search_values:
+        youtube_search_waffle_data.append({"day": i, "value": youtube_search_values[i]})
+
+    
+    Dict["youtube_search_waffle_data"] = youtube_search_waffle_data
 
     #write analyzed data dictionary to json file
     genericParser.writeToJsonFile(Dict, "./media/processedData/google/" + googleUserFileName + "/analyzedGoogleData.json")
