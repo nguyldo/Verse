@@ -4,6 +4,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
+//import totalSize from "./data/totalSizeData"
+
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
@@ -28,16 +30,10 @@ const styles = theme => ({
     },
 });
 
-class ListenTimeBigNum extends React.Component {
+class WatchedNetflixBigNum extends React.Component {
     render() {
 
         const { classes } = this.props;
-
-        console.log(this.props.data)
-        
-        let h = this.props.data.hours.toFixed(0);
-        let m = this.props.data.minutes.toFixed(0);
-        let s = this.props.data.seconds.toFixed(0);
 
         return (
             <React.Fragment>
@@ -47,13 +43,12 @@ class ListenTimeBigNum extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Total Listen Time"
-                        subheader={"Since " + this.props.date_range[0][0]}
+                        title="Watch Count"
+                        subheader="Total amount of movies and show episodes watched."
                     />
                     <CardContent>
-                    <h1>{h} hours, </h1>
-                    <h1>{m} minutes, </h1>
-                    <h1>{s} seconds</h1> 
+                        <h1>{this.props.data}</h1>
+
                     </CardContent>
                 </Card>
             </React.Fragment>
@@ -61,4 +56,4 @@ class ListenTimeBigNum extends React.Component {
     }
 }
 
-export default withStyles(styles)(ListenTimeBigNum);
+export default withStyles(styles)(WatchedNetflixBigNum);

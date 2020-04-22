@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core';
 
+// import artistsData from "./data/topTenArtistsData"
+
 const styles = theme => ({
     list: {
         width: '100%',
@@ -40,7 +42,7 @@ const styles = theme => ({
     },
 });
 
-class TopTenTracksList extends React.Component {
+class ShowsList extends React.Component {
 
     render() {
 
@@ -55,19 +57,19 @@ class TopTenTracksList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Your Top Ten Tracks"
-                        subheader={"from " + this.props.date_range[0][0] + "-" + this.props.date_range[1][0]}
+                        title="Shows Watched"
+                        subheader="from _ to _"
                     />
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(track => (
+                            {this.props.data.map(show => (
                                 <ListItem dense>
-                                    <h3>{track.id}</h3>
+                                    <h3>{show.id + 1}</h3>
                                     <br />
                                     <ListItemText inset
-                                        primary={track.label}
-                                        secondary={track.value}
+                                        primary={show.label}
+                                        secondary={show.value}
                                     />
                                 </ListItem>
                             ))}
@@ -79,4 +81,4 @@ class TopTenTracksList extends React.Component {
     }
 }
 
-export default withStyles(styles)(TopTenTracksList);
+export default withStyles(styles)(ShowsList);
