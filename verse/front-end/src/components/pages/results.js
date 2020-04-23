@@ -214,13 +214,224 @@ export default class Results extends Component {
     }
   }
 
+  //npm install jspdf --save
   genPDF() {
 	
     var docPdf = new jsPDF();
     
-    docPdf.text(20,20,'Your Data Dump Summary');
+    
+    // Netflix:
+
+    // Not used in pdf:
+    // this.state.shows_generalchart
+    // this.state.shows_ganttchart
+
+    // Used in pdf:
+    /*
+      watch count
+      shows
+      movies
+    */
+
+    docPdf.text('Your Data Dump Summary', 70, 20);
+    docPdf.text('Netflix Summary', 85, 30);
+    docPdf.setFontSize(12);
+
+
+    var watchCount;
+    if (this.state.watch_count == 0) {
+      watchCount = "0";
+    } else {
+      watchCount = toString(this.state.watch_count);
+    }
+    var netflixString = "Watch Count: " + watchCount + '\n\n' + 
+                        "Shows: " + this.state.shows + '\n\n' +
+                        "Movies: " + this.state.movies + 
+                        '\n\n';
+                    
+    var netflixAddString = docPdf.splitTextToSize(netflixString, 150);
+    docPdf.text(netflixAddString, 30, 40);
+
     docPdf.addPage();
-    docPdf.text(20,20,'TEST Page 2!');
+    
+
+    // Apple:
+
+    // Not used in pdf:
+    // this.state.genres_pie = [];
+    // this.state.artists_bar = [];
+    // this.state.tracks_bar = [];
+    // this.state.library_gantt = [];
+
+    // Used in pdf:
+    /*
+      total size
+      listen time
+      date range
+      genres list
+      artists list
+      tracks list
+    */
+    
+    docPdf.setFontSize(16);
+    docPdf.text('Your Data Dump Summary', 70, 20);
+    docPdf.text('Apple Summary', 85, 30);
+    docPdf.setFontSize(12);
+
+
+    var totalSize;
+    if (this.state.total_size == 0) {
+      totalSize = "0";
+    } else {
+      totalSize = toString(this.state.total_size);
+    }
+    var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
+                      "Total Listen Time: " + this.state.listen_time + '\n\n' +
+                      "Date Range of All Activity: " + this.state.date_range + '\n\n' + 
+                      "Genres List: " + this.state.genres_list + '\n\n' + 
+                      "Artists List: " + this.state.artists_list + '\n\n' +
+                      "Tracks List: " + this.state.tracks_list + 
+                      '\n\n';
+
+    var appleAddString = docPdf.splitTextToSize(appleString, 150);
+    docPdf.text(appleAddString, 30, 40);
+
+    docPdf.addPage();
+
+    // Facebook:
+
+    // Not used in pdf:
+    // this.state.locations_bar
+    // this.state.posts_pie
+    // this.state.reactions_bar
+
+    // Used in pdf:
+    /*
+      facebook name
+      category
+      sites
+      sites count
+      off facebook app activities
+      off facebook app activities count
+      facebook advertisers
+      facebook advertisers count
+    */
+
+    docPdf.setFontSize(16);
+    docPdf.text('Your Data Dump Summary', 70, 20);
+    docPdf.text('Facebook Summary', 80, 30);
+    docPdf.setFontSize(12);
+
+
+    var sitesCount;
+    if (this.state.sites_ct == 0) {
+      sitesCount = "0";
+    } else {
+      sitesCount = toString(this.state.sites_ct);
+    }
+    var activitiesCount;
+    if (this.state.off_ct == 0) {
+      activitiesCount = "0";
+    } else {
+      activitiesCount = toString(this.state.off_ct);
+    }
+    var advertisersCount;
+    if (this.state.advs_ct == 0) {
+      advertisersCount = "0";
+    } else {
+      advertisersCount = toString(this.state.advs_ct);
+    }
+
+    var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
+                         "Category: " + this.state.category + '\n\n' +
+                         "Number of websites logged into with Facebook: " + sitesCount + '\n\n' + 
+                         "List of websites logged into with Facebook: " + this.state.sites + '\n\n' + 
+                         "Number of off facebook app activities: " + activitiesCount + '\n\n' + 
+                         "List of off facebook app activities: " + this.state.off + '\n\n' +
+                         "Number of advertisers who have accessed your data: " + advertisersCount + '\n\n' + 
+                         "List of advertisers who have accessed your data: " + this.state.advs + 
+                         '\n\n';
+
+    var facebookAddString = docPdf.splitTextToSize(facebookString, 150);
+    docPdf.text(facebookAddString, 30, 40);
+
+    docPdf.addPage();
+
+    //Google
+
+    // Not used in pdf:
+    // this.state.gg_ads_waffle
+    // this.state.gg_maps_activity
+    // this.state.gg_search_waffle
+    // this.state.gg_youtube_piechart
+    // this.state.gg_youtube_search_waffle
+
+    /*
+      total size
+      profile info
+      bookmarks count
+      saved places on your map
+      ads count
+      ads
+      map routes count
+      search count
+    */
+
+    docPdf.setFontSize(16);
+    docPdf.text('Your Data Dump Summary', 70, 20);
+    docPdf.text('Google Summary', 84, 30);
+    docPdf.setFontSize(12);
+
+
+    var totalSizeGG;
+    if (this.state.gg_total_size_GB == 0) {
+      totalSizeGG = "0";
+    } else {
+      totalSizeGG = toString(this.state.gg_total_size_GB);
+    }
+    var bookmarksCount;
+    if (this.state.gg_bookmarks_count == 0) {
+      bookmarksCount = "0";
+    } else {
+      bookmarksCount = toString(this.state.gg_bookmarks_count);
+    }
+    var advertisersCountGG;
+    if (this.state.gg_ads_count == 0) {
+      advertisersCountGG = "0";
+    } else {
+      advertisersCountGG = toString(this.state.gg_ads_count);
+    }
+    var routeCount;
+    if (this.state.gg_maps_routes_count == 0) {
+      routeCount = "0";
+    } else {
+      routeCount = toString(this.state.gg_maps_routes_count);
+    }
+    var searchCount;
+    if (this.state.gg_search_count == 0) {
+      searchCount = "0";
+    } else {
+      searchCount = toString(this.state.gg_search_count);
+    }
+
+    // var googleString = "Total Size of Data Dump (GB): " + totalsizeGG + '\n\n' + 
+    //                    "Profile: " + this.state.gg_profile_info_header + '\n\n' +
+    //                    "Number of bookmarks: " + bookmarksCount + '\n\n' + 
+    //                    "Saved places on your map: " + this.state.gg_saved_places_map + '\n\n' + 
+    //                    "Number of advertisers who have your data: " + advertisersCountGG + '\n\n' + 
+    //                    "List of advertisers who have your data: " + this.state.gg_ads_list + '\n\n' +
+    //                    "Number of routes input into Google Maps: " + routeCount + '\n\n' + 
+    //                    "Number of searches you've made on Google: " + searchCount + 
+    //                    '\n\n';
+
+    // var googleAddString = docPdf.splitTextToSize(googleString, 150);
+    // docPdf.text(googleAddString, 30, 40);
+
+
+
+    // docPdf.text('genre list: ' + this.state.genres_list, 30, 300);
+    // docPdf.addPage();
+    // docPdf.text(20,20,'TEST Page 2!');
     docPdf.save('Test.pdf');
     
   }
