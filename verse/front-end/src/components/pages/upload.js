@@ -309,10 +309,10 @@ export default class Upload extends Component {
             </ModalFooter>
           </Modal>
         </div>
-        <h1 id="title" >Upload Your Files Here</h1>
+        <h1 id="title" class="pagetitle">Upload Your Files Here</h1>
         <body>
           <div class="uploadoption">
-            <p>{this.state.facebookTitle}</p>
+            <p class="uploadtitle">{this.state.facebookTitle}</p>
             <form id="facebookoption">
               <label for="facebookupload" class="customupload">{this.state.facebookButton}</label>
               <input multiple id="facebookupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
@@ -320,7 +320,7 @@ export default class Upload extends Component {
             </form>
           </div>
           <div class="uploadoption">
-            <p>{this.state.googleTitle}</p>
+            <p class="uploadtitle">{this.state.googleTitle}</p>
             <form id="googleoption">
               <label for="googleupload" class="customupload">{this.state.googleButton}</label>
               <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
@@ -328,7 +328,7 @@ export default class Upload extends Component {
             </form>
           </div>
           <div class="uploadoption">
-            <p>{this.state.appleTitle}</p>
+            <p class="uploadtitle">{this.state.appleTitle}</p>
             <form id="appleoption">
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
               <input multiple id="appleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
@@ -336,7 +336,7 @@ export default class Upload extends Component {
             </form>
           </div>
           <div class="uploadoption">
-            <p>{this.state.netflixTitle}</p>
+            <p class="uploadtitle">{this.state.netflixTitle}</p>
             <form id="netflixoption">
               <label for="netflixupload" class="customupload">{this.state.netflixButton}</label>
               <input multiple id="netflixupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
