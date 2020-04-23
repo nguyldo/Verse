@@ -343,7 +343,7 @@ def parseGoogleData(googleDataDumpName):
             google_search_values = {}
 
             for search in searches:
-                date = search[1].split(' ')
+                date = search[2].split(' ')
 
                 month = date[0]
                 day = date[1][:-1]
@@ -421,7 +421,7 @@ def parseGoogleData(googleDataDumpName):
             youtube_search_values = {}
 
             for search in searches:
-                date = search[0].split(' ')
+                date = search[2].split(' ')
 
                 month = date[0]
                 day = date[1][:-1]
