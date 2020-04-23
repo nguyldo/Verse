@@ -43,9 +43,9 @@ class ChannelPieChart extends React.Component {
             }}
             title="Number of Videos Watched per YouTube Channel"
           />
-          <CardContent>
+          <CardContent >
             <div style={{height: 200}}>
-              <PieChart data={this.props.data}/>
+              <PieChart data={this.props.data} radialLabelsLinkOffset={-12}/>
             </div>
           </CardContent>
         </Card>

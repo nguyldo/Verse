@@ -133,9 +133,9 @@ def csvToDict(filePath, fieldNames):
 def htmlToSoup(filePath, findElement, findClass):
 
     with open(filePath, "rb") as infile:
-        print("before soup")
+        #print("before soup")
         soup = BeautifulSoup(infile, from_encoding="UTF-8", features="lxml")
-        print("after soup")
+        #print("after soup")
 
         if findClass != "":
             entries = soup.find_all(findElement, {"class": findClass})

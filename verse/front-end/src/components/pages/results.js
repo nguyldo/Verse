@@ -405,8 +405,6 @@ export default class Results extends Component {
 
               </Grid>
 
-              <IPMap />
-
               <GenresPieChart data={this.state.ap_genres_pie} />
               <ArtistsBarChart data={this.state.ap_artists_barchart} />
               <TracksBarChart data={this.state.ap_tracks_barchart} />
