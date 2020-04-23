@@ -12,7 +12,7 @@ import os
 import zipfile 
 
 from dataParser import visualizationData, genericParser
-from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, appleAnalyzer, googleAnalyzer, netflixParser
+from dataParser import facebookParser, appleParser, googleParser, facebookAnalyzer, netflixParser
 
 def index(request):
     if request.session.test_cookie_worked():
@@ -33,20 +33,8 @@ def facebookDataAPI(request, userFileName):
 #----- APPLE APIs -----
 
 @api_view(["GET"])
-def appleGeneralDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedAppleData(userFileName, "general")
-    genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
-    return Response(status=status.HTTP_200_OK, data={"data": data})
-
-@api_view(["GET"])
-def appleMusicDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedAppleData(userFileName, "music")
-    genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
-    return Response(status=status.HTTP_200_OK, data={"data": data})
-
-@api_view(["GET"])
-def appleAppsGamesDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedAppleData(userFileName, "appsGames")
+def appleDataAPI(request, userFileName):
+    data = visualizationData.getAppleData(userFileName)
     genericParser.deleteData("./media/unzippedFiles/apple/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
@@ -54,7 +42,7 @@ def appleAppsGamesDataAPI(request, userFileName):
 
 @api_view(["GET"])
 def googleDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedGoogleData(userFileName)
+    data = visualizationData.getGoogleData(userFileName)
     genericParser.deleteData("./media/unzippedFiles/google/" + userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
@@ -124,9 +112,6 @@ def upload(request):
 
             fileName = uploadedFiles.name[:-4]
             appleParser.parseAppleData(fileName)
-            appleAnalyzer.analyzeGeneralAppleData(fileName)
-            appleAnalyzer.analyzeMusicAppleData(fileName)
-            appleAnalyzer.analyzeAppsGamesAppleData(fileName)
 
         elif serviceName == "netflix":
             fileName = uploadedFiles.name
@@ -135,7 +120,6 @@ def upload(request):
         elif serviceName == "google":
             fileName = uploadedFiles.name[:-4]
             googleParser.parseGoogleData(fileName)
-            googleAnalyzer.analyzeGoogleData(fileName)
 
         else: print("service name not recognized")
 

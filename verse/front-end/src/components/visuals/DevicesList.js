@@ -40,7 +40,7 @@ const styles = theme => ({
     },
 });
 
-class ShowsList extends React.Component {
+class DevicesList extends React.Component {
 
     render() {
 
@@ -55,18 +55,18 @@ class ShowsList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Shows Watched"
+                        title="Apple Devices"
+                        subheader="and the date they were added to your account"
                     />
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(show => (
+                            {this.props.data.map(device => (
                                 <ListItem dense>
-                                    <h3>{show.id + 1}</h3>
                                     <br />
-                                    <ListItemText inset
-                                        primary={show.label}
-                                        secondary={show.value}
+                                    <ListItemText 
+                                        primary={device["Device Name"]}
+                                        secondary={device["Device Added Date"]}
                                     />
                                 </ListItem>
                             ))}
@@ -78,4 +78,4 @@ class ShowsList extends React.Component {
     }
 }
 
-export default withStyles(styles)(ShowsList);
+export default withStyles(styles)(DevicesList);

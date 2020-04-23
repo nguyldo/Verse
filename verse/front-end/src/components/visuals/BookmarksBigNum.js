@@ -28,7 +28,7 @@ const styles = theme => ({
     },
 });
 
-class WatchedNetflixBigNum extends React.Component {
+class BookmarksBigNum extends React.Component {
     render() {
 
         const { classes } = this.props;
@@ -41,12 +41,11 @@ class WatchedNetflixBigNum extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Watch Count"
-                        subheader="Total amount of movies and show episodes watched."
+                        title="Number of Bookmarks"
+                        subheader="on Google Chrome"
                     />
                     <CardContent>
                         <h1>{this.props.data}</h1>
-
                     </CardContent>
                 </Card>
             </React.Fragment>
@@ -54,4 +53,4 @@ class WatchedNetflixBigNum extends React.Component {
     }
 }
 
-export default withStyles(styles)(WatchedNetflixBigNum);
+export default withStyles(styles)(BookmarksBigNum);

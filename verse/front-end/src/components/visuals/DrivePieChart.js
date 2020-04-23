@@ -5,7 +5,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
 import PieChart from "./atomicGraphs/PieChart";
-import data from "./data/postData"; 
 
 const styles = theme => ({
   card: {
