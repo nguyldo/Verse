@@ -321,7 +321,7 @@ export default class Upload extends Component {
             </ModalFooter>
           </Modal>
         </div>
-        <h1 id="title" >Upload Your Files Here</h1>
+        <h1 id="title" class="pagetitle">Upload Your Files Here</h1>
         <body>
           <div class="uploadoption">
             <p class="uploadtitle">{this.state.facebookTitle}</p>

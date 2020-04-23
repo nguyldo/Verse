@@ -8,6 +8,8 @@
   --google-color: #F4B400;
   --apple-color: #F0A3A3;
   --netflix-color: #E50A15;
+  --sidebar-chosen-color: #D3D3D3;
+  --sidebar-notchosen-color: #F0F0F0;
 }
 
 li {
@@ -53,9 +55,8 @@ h1 {
 
 .uploadoption {
   background-color: var(--secondary-color);
-  margin: 60px 100px 60px 100px;
+  margin: 0px 100px 50px 100px;
   text-align: center;
-  border-radius: 15px;
   border-width: 5px;
 }
 
@@ -65,8 +66,6 @@ h1 {
   padding: 5px 0px 5px 0px;
   background-color: var(--primary-color);
   color: var(--main-background-color);
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
 }
 
 .customupload, button, .link, .link:visited {
@@ -98,16 +97,16 @@ input[type="file"] {
 }
 
 #sidebar {
-  width: 110px;
+  width: 150px;
   position: fixed;
   z-index: 1;
-  background-color: #D3D3D3;
+  background-color: #333333;
+  color: var(--main-background-color);
   overflow-x: hidden;
   padding: 10px 0px 0px 0px;
-  margin-left: 40px;
+  margin-left: 0px;
   border-style: solid;
-  border-radius: 8px;
-  border-width: 2px;
+  border-width: 1px 1px 1px 0px;
 }
 
 #mainvisuals {
@@ -144,7 +143,6 @@ input[type="file"] {
   padding: 7px;
   width: 100%;
   border-width: 0px;
-  color: var(--main-background-color);
 }
 
 .visualstitle {
@@ -169,19 +167,6 @@ input[type="file"] {
 }
 
 #netflixtitle {
-  background-color: var(--netflix-color);
-}
-
-#showfacebookvisuals {
-  background-color: var(--facebook-color);
-}
-#showgooglevisuals {
-  background-color: var(--google-color);
-}
-#showapplevisuals {
-  background-color: var(--apple-color);
-}
-#shownetflixvisuals {
   background-color: var(--netflix-color);
 }
 

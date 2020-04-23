@@ -42,11 +42,11 @@ class ArtistsBarChart extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Apple Music Play Activity - Artists"
-                        subheader="Number of times you listened to a song by each artist."
+                        subheader="Number of times you listened to a song by each artist. (Max 100)"
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>
-                            <ScrollableBarChart data={this.props.data} />
+                            <ScrollableBarChart data={this.props.data.slice(0, 100)} />
                         </div>
                     </CardContent>
                 </Card>
