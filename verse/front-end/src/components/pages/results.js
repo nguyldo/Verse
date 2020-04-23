@@ -208,6 +208,9 @@ export default class Results extends Component {
       this.state.nf_shows_generalchart = [];
       this.state.nf_shows_ganttchart = [];
     }
+
+    console.log("CWM debug")
+    console.log(this.state)
   }
 
   componentDidMount() {
@@ -216,30 +219,38 @@ export default class Results extends Component {
     // decides whether or not to show the visuals for each section
     if ("facebook" in this.state.compiledRequest) {
       console.log("cdm: facebook data was loaded");
+      document.getElementById("showfacebookvisuals").style.backgroundColor = "#69A4BA";
     } else {
       console.log("cdm: facebook data was NOT loaded");
       document.getElementById("facebookvisuals").style.display = "none";
+      document.getElementById("showfacebookvisuals").style.display = "none";
     }
 
     if ("apple" in this.state.compiledRequest) {
       console.log("cdm: apple data was loaded");
+      document.getElementById("showapplevisuals").style.backgroundColor = "#FFB2B2";
     } else {
       console.log("cdm: apple data was NOT loaded");
       document.getElementById("applevisuals").style.display = "none";
+      document.getElementById("showapplevisuals").style.display = "none";
     }
 
     if ("google" in this.state.compiledRequest) {
       console.log("cdm: google data was loaded");
+      document.getElementById("showgooglevisuals").style.backgroundColor = "#FFFF77";
     } else {
       console.log("cdm: google data was NOT loaded");
       document.getElementById("googlevisuals").style.display = "none";
+      document.getElementById("showgooglevisuals").style.display = "none";
     }
     
     if ("netflix" in this.state.compiledRequest) {
       console.log("cdm: netflix data was loaded");
+      document.getElementById("shownetflixvisuals").style.backgroundColor = "#FF4A55";
     } else {
       console.log("cdm: netflix data was NOT loaded");
       document.getElementById("netflixvisuals").style.display = "none";
+      document.getElementById("shownetflixvisuals").style.display = "none";
     }
     
   }
@@ -258,26 +269,35 @@ export default class Results extends Component {
     if (id == "showfacebookvisuals") {
       if (document.getElementById("facebookvisuals").style.display == "none") {
         document.getElementById("facebookvisuals").style.display = "block";
+        document.getElementById("showfacebookvisuals").style.backgroundColor = "#69A4BA";
       } else {
         document.getElementById("facebookvisuals").style.display = "none";
+        document.getElementById("showfacebookvisuals").style.backgroundColor = "#F0F0F0";
+        
       }
     } else if (id == "showgooglevisuals") {
       if (document.getElementById("googlevisuals").style.display == "none") {
         document.getElementById("googlevisuals").style.display = "block";
+        document.getElementById("showgooglevisuals").style.backgroundColor = "#FFFF77";
       } else {
         document.getElementById("googlevisuals").style.display = "none";
+        document.getElementById("showgooglevisuals").style.backgroundColor = "#F0F0F0";
       }
     } else if (id == "showapplevisuals") {
       if (document.getElementById("applevisuals").style.display == "none") {
         document.getElementById("applevisuals").style.display = "block";
+        document.getElementById("showapplevisuals").style.backgroundColor = "#FFB2B2";
       } else {
         document.getElementById("applevisuals").style.display = "none";
+        document.getElementById("showapplevisuals").style.backgroundColor = "#F0F0F0";
       }
     } else {
       if (document.getElementById("netflixvisuals").style.display == "none") {
         document.getElementById("netflixvisuals").style.display = "block";
+        document.getElementById("shownetflixvisuals").style.backgroundColor = "#FF4A55";
       } else {
         document.getElementById("netflixvisuals").style.display = "none";
+        document.getElementById("shownetflixvisuals").style.backgroundColor = "#F0F0F0";
       }
     }
   }
@@ -299,33 +319,25 @@ export default class Results extends Component {
 
     const { classes } = this.props;
 
-    /*<div class="chart">
-                <PostPieChart data={this.state.fb_post_pie} />
-              </div>*/
-
-              /*<div class="chart">
-              <SearchLineChart data={this.state.compiledRequest.google.line_year_searches}/>
-            </div>*/
+    /*<IPMap data={this.state.fb_locations_bar} />*/
 
     return (
       <div id="resultspage">
         <Header />
         <div id="exportedvisuals">
           <div id="sidebar">
-            <p>Toggle</p>
+            <p>Display</p>
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
             <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
             <button class="showvisualsbutton" id="showapplevisuals" onClick={(e) => this.toggleSection(e)}>Apple</button>
             <button class="showvisualsbutton" id="shownetflixvisuals" onClick={(e) => this.toggleSection(e)}>Netflix</button>
           </div>
           <div id="mainvisuals">
-            <h1>Results</h1>
+            <h1 class="pagetitle">Results</h1>
             <div class="visualssection" id="facebookvisuals">
               <h1 class="visualstitle" id="facebooktitle">Facebook</h1>
               <h1>Name: {this.state.fb_name}</h1>
               <h2>Category: {this.state.fb_category}</h2>
-
-              <IPMap data={this.state.fb_locations_bar} />
 
               <IPAddressChart data={this.state.fb_locations_bar} />
               <PostPieChart data={this.state.fb_posts_pie} />
