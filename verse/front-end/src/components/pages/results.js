@@ -137,18 +137,18 @@ export default class Results extends Component {
       this.state.ap_devices_list = [];
       this.state.ap_date_range = [[0, 0, 0], [0, 0, 0]]
       this.state.ap_listen_time = { "hours": 0, "minutes": 0, "seconds": 0 };
-      this.state.ap_genres_pie = {};
-      this.state.ap_genres_list = {};
-      this.state.ap_artists_barchart = {};
-      this.state.ap_artists_list = {};
-      this.state.ap_tracks_barchart = {};
-      this.state.ap_tracks_list = {};
-      this.state.ap_activity_map = {};
+      this.state.ap_genres_pie = [];
+      this.state.ap_genres_list = [];
+      this.state.ap_artists_barchart = [];
+      this.state.ap_artists_list = [];
+      this.state.ap_tracks_barchart = [];
+      this.state.ap_tracks_list = [];
+      this.state.ap_activity_map = [];
       this.state.ap_library_track_count = 0;
-      this.state.ap_library_gantt = {};
-      this.state.ap_genre_timeline = {};
-      this.state.ap_apps_timeline = {};
-      this.state.ap_apps_map = {};
+      this.state.ap_library_gantt = [];
+      this.state.ap_genre_timeline = [];
+      this.state.ap_apps_timeline = [];
+      this.state.ap_apps_map = [];
     }
 
     // Google API Response
@@ -207,6 +207,9 @@ export default class Results extends Component {
       this.state.nf_shows_generalchart = [];
       this.state.nf_shows_ganttchart = [];
     }
+
+    console.log("CWM debug")
+    console.log(this.state)
   }
 
   componentDidMount() {

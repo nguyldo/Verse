@@ -241,6 +241,7 @@ export default class Upload extends Component {
       }
       if (this.state.appleRequest != "") {
         retrievedData["apple"] = responses[count].data.data;
+        count++;
       }
       if (this.state.netflixRequest != "") {
         retrievedData["netflix"] = responses[count].data.data;
