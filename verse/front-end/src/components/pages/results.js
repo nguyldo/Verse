@@ -246,13 +246,17 @@ export default class Results extends Component {
       } else {
         watchCount = JSON.stringify(this.state.watch_count);
       }
-      var show_list;
+      var showList;
       for (var g in this.state.shows) {
-        show_list = show_list + JSON.stringify(g) + ", "
+        showList = showList + this.state.shows[g] + ", "
+      }
+      var movieList;
+      for (var g in this.state.movies) {
+        movieList = movieList + this.state.movies[g] + ", "
       }
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
-                          "Shows: " + show_list + '\n\n' +
-                          "Movies: " + this.state.movies + 
+                          "Shows: " + showList + '\n\n' +
+                          "Movies: " + movieList + 
                           '\n\n';
                       
       var netflixAddString;
@@ -350,7 +354,6 @@ export default class Results extends Component {
                this.state.listen_time['minutes'] + " minutes, " + 
                this.state.listen_time['seconds'] + " seconds ";
 
-      this.state.date_range = ([0, 1, 2], [3, 4, 5]);
       var rang = " ";
       var sdl = 1;
       for (var jlk in this.state.date_range) {
@@ -536,32 +539,36 @@ export default class Results extends Component {
       } else {
         advertisersCount = toString(this.state.advs_ct);
       }
-      var site_list;
-      for (var g in this.state.sites) {
-        site_list = site_list + JSON.stringify(g) + ", "
+      var siteList = " ";
+      for (var g in this.state.site_list) {
+        siteList = siteList + this.state.site_list[g] + ", ";
       }
-      var off_list;
+      var off_list = " ";
       for (var g in this.state.off) {
         off_list = off_list + g + ", "
+      }
+      var advList = " ";
+      for (var g in this.state.advs) {
+        advList = advList + this.state.advs[g] + ", ";
       }
 
       var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
                           "Category: " + this.state.category + '\n\n' +
                           "Number of websites logged into with Facebook: " + sitesCount + '\n\n' + 
-                          "List of websites logged into with Facebook: " + site_list + '\n\n' + 
+                          "List of websites logged into with Facebook:" + siteList + '\n\n' + 
                           "Number of off facebook app activities: " + activitiesCount + '\n\n' + 
-                          "List of off facebook app activities: " + off_list + '\n\n' +
+                          "List of off facebook app activities:" + off_list + '\n\n' +
                           "Number of advertisers who have accessed your data: " + advertisersCount + '\n\n' + 
-                          "List of advertisers who have accessed your data: " + this.state.advs + 
+                          "List of advertisers who have accessed your data:" + advList + 
                           '\n\n';
 
       var facebookAddString;
-      if (facebookString.length > 2000) {
+      if (facebookString.length > 2250) {
         var l = 0;
         var r = facebookString.length;
         var m = r/2 - l;
-        if (m > 2000) {
-          m = 2000;
+        if (m > 2250) {
+          m = 2250;
         }
         do {
           var index = m;
@@ -593,8 +600,8 @@ export default class Results extends Component {
           }
           l += m;
           m = l;
-          if (r - m > 2750) {
-            m = m + 2750;
+          if (r - m > 2400) {
+            m = m + 2400;
           } else if (r - m > 0) {
             m = r;
           } else {
