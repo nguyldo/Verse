@@ -255,8 +255,59 @@ export default class Results extends Component {
                           "Movies: " + this.state.movies + 
                           '\n\n';
                       
-      var netflixAddString = docPdf.splitTextToSize(netflixString, 150);
-      docPdf.text(netflixAddString, 30, 40);
+      var netflixAddString;
+      if (netflixString.length > 2000) {
+        var l = 0;
+        var r = netflixString.length;
+        var m = r/2 - l;
+        if (m > 2000) {
+          m = 2000;
+        }
+        do {
+          var index = m;
+          var nfString = netflixString.substr(l, m - l);
+          while (index > l) {
+            if (nfString[index] == "," || nfString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          // var pastM = m;
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          nfString = netflixString.substr(l, m);
+          netflixAddString = docPdf.splitTextToSize(nfString, 150);
+          docPdf.text(netflixAddString, 30, 40);
+          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Netflix Summary', 85, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 2750) {
+            m = m + 2750;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+        
+      } else {
+        netflixAddString = docPdf.splitTextToSize(netflixString, 150);
+        docPdf.text(netflixAddString, 30, 40);
+      }
+
+
     // }
 
     // if ("applegeneral" in this.state.compiledRequest) {
@@ -382,8 +433,59 @@ export default class Results extends Component {
                         "Tracks List: " + this.state.tracks_list + 
                         '\n\n';
 
-      var appleAddString = docPdf.splitTextToSize(appleString, 150);
-      docPdf.text(appleAddString, 30, 40);
+
+      var appleAddString;
+      if (appleString.length > 2000) {
+        var l = 0;
+        var r = appleString.length;
+        var m = r/2 - l;
+        if (m > 2000) {
+          m = 2000;
+        }
+        do {
+          var index = m;
+          var apString = appleString.substr(l, m - l);
+          while (index > l) {
+            if (apString[index] == "," || apString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          // var pastM = m;
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          apString = appleString.substr(l, m);
+          appleAddString = docPdf.splitTextToSize(apString, 150);
+          docPdf.text(appleAddString, 30, 40);
+          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Apple Summary', 85, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 2750) {
+            m = m + 2750;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+        
+      } else {
+        appleAddString = docPdf.splitTextToSize(appleString, 150);
+        docPdf.text(appleAddString, 30, 40);
+      }
+
 
     // }
 
@@ -454,24 +556,51 @@ export default class Results extends Component {
                           '\n\n';
 
       var facebookAddString;
-      if (facebookString.length > 2750) {
+      if (facebookString.length > 2000) {
         var l = 0;
         var r = facebookString.length;
         var m = r/2 - l;
-        while (l < r) {
-          var fbString = facebookString.substr(l, m);
+        if (m > 2000) {
+          m = 2000;
+        }
+        do {
+          var index = m;
+          var fbString = facebookString.substr(l, m - l);
+          while (index > l) {
+            if (fbString[index] == "," || fbString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          // var pastM = m;
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          fbString = facebookString.substr(l, m);
           facebookAddString = docPdf.splitTextToSize(fbString, 150);
-          // docPdf.text(facebookAddString, 30, 40);
-          // docPdf.addPage();
-          docPdf.text("l: " + l + "r: " + r + "m: " + m + fbString, 30, 40);
-          l = m;
+          docPdf.text(facebookAddString, 30, 40);
+          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Facebook Summary', 80, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
           if (r - m > 2750) {
             m = m + 2750;
+          } else if (r - m > 0) {
+            m = r;
           } else {
-            m = r - m;
+            m = r + 1;
           }
-        }
-
+        } while (m <= r);
         
       } else {
         facebookAddString = docPdf.splitTextToSize(facebookString, 150);
@@ -553,9 +682,57 @@ export default class Results extends Component {
     //   "Number of searches you've made on Google: " + searchCount + 
     //   '\n\n';
       
-    //   var googleAddString = docPdf.splitTextToSize(googleString, 150);
-    //   docPdf.text(googleAddString, 30, 40);
+    // var googleAddString;
+    // if (googleString.length > 2000) {
+    //   var l = 0;
+    //   var r = googleString.length;
+    //   var m = r/2 - l;
+    //   if (m > 2000) {
+    //     m = 2000;
+    //   }
+    //   do {
+    //     var index = m;
+    //     var ggString = googleString.substr(l, m - l);
+    //     while (index > l) {
+    //       if (ggString[index] == "," || ggString[index] == "\n") {
+    //         index++;
+    //         break;
+    //       } else {
+    //         index--;
+    //       }
+    //     }
+    //     // var pastM = m;
+    //     if (index > l) {
+    //       m = index;
+    //     } else {
+    //       m = m - l;
+    //     }
+    //     ggString = googleString.substr(l, m);
+    //     googleAddString = docPdf.splitTextToSize(ggString, 150);
+    //     docPdf.text(googleAddString, 30, 40);
+    //     // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+    //     if (l + m < r) {
+    //       docPdf.addPage();
+    //       docPdf.setFontSize(16);
+    //       docPdf.text('Your Data Dump Summary', 70, 20);
+    //       docPdf.text('Google Summary', 84, 30);
+    //       docPdf.setFontSize(12);
+    //     }
+    //     l += m;
+    //     m = l;
+    //     if (r - m > 2750) {
+    //       m = m + 2750;
+    //     } else if (r - m > 0) {
+    //       m = r;
+    //     } else {
+    //       m = r + 1;
+    //     }
+    //   } while (m <= r);
       
+    // } else {
+    //   googleAddString = docPdf.splitTextToSize(googleString, 150);
+    //   docPdf.text(googleAddString, 30, 40);
+    // }
       
       
     // }
