@@ -14,11 +14,6 @@ def analyzeFacebookData(facebookUserFileName):
 
     Dict = {}
 
-    inOut = {}
-    inOut["total_size_GB"] = data["total_size_bignum"]
- 
-
-
     # ----- US 6.1 -----
     if "name" in data.keys() and "friend_peer_group" in data.keys():
         Dict["name_category_header"] = [data["name"], data["friend_peer_group"]]

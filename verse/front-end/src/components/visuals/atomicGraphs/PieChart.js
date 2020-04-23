@@ -9,7 +9,7 @@ class PieChart extends React.Component {
         return (
             <ResponsivePie
                 data={data}
-                margin={{ top: 10, right: 80, bottom: 10, left: 80 }}
+                margin={{ top: 5, right: 80, bottom: 10, left: 80 }}
                 sortByValue={true}
                 colors={{ scheme: 'nivo' }}
                 borderWidth={1}

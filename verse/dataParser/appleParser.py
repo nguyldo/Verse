@@ -107,7 +107,7 @@ def parseAppleData(appleDataDumpName):
             artists = genericParser.filterByField(data_play_activity, ("Artist Name",) )
             dictArtistFreq = genericParser.countFrequencies(artists, "Artist Name")
             dictTopArtists = genericParser.countTopTen(dictArtistFreq)
-
+            
             dictArtistFreq = genericParser.formatDictionary(dictArtistFreq)
             dictTopArtists = genericParser.formatDictionary(dictTopArtists)
 

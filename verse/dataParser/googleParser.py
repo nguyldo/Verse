@@ -145,35 +145,25 @@ def parseGoogleData(googleDataDumpName):
             ad_waffle_data = []
             ad_values = {}
 
-            for i in val_ads:
-                pos = i[1].find(' ')
-                month = i[1][:pos]
+            for ad in val_ads:
+                date = ad[1].split(' ')
 
-                comma = i[1].find(',')
-                pos += 1
-                day = i[1][pos:comma]
-
+                month = date[0]
+                day = date[1][:-1]
+                year = date[2][:-1]
+                
                 day_str = day
-
                 if int(day) < 10:
                     day_str = "0" + str(day)
 
-                comma = comma + 2
-                new_str = i[1][comma:]
-
-                comma = new_str.find(',')
-
-                year = new_str[:comma]
-
-                full_date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
-
-                if full_date in ad_values:
-                    ad_values[full_date] += 1
+                date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
+                if date in ad_values:
+                    ad_values[date] += 1
                 else:
-                    ad_values[full_date] = 1
+                    ad_values[date] = 1
 
-            for i in ad_values:
-                ad_waffle_data.append({"day": i, "value": ad_values[i]})
+            for item in ad_values:
+                ad_waffle_data.append({"day": item, "value": ad_values[item]})
 
             Dict["ads_waffle"] = ad_waffle_data
         
@@ -352,36 +342,27 @@ def parseGoogleData(googleDataDumpName):
             google_search_waffle_data = []
             google_search_values = {}
 
-            for i in searches:
-                pos = i[2].find(' ')
-                month = i[2][:pos]
+            for search in searches:
+                date = search[2].split(' ')
 
-                comma = i[2].find(',')
-                pos += 1
-                day = i[2][pos:comma]
-
+                month = date[0]
+                day = date[1][:-1]
+                year = date[2][:-1]
+                
                 day_str = day
-
                 if int(day) < 10:
                     day_str = "0" + str(day)
 
-                comma = comma + 2
-                new_str = i[2][comma:]
-
-                comma = new_str.find(',')
-
-                year = new_str[:comma]
-
-                full_date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
-
-                if full_date in google_search_values:
-                    google_search_values[full_date] += 1
+                date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
+                #print("gg_search_date: " + date)
+                if date in google_search_values:
+                    google_search_values[date] += 1
                 else:
-                    google_search_values[full_date] = 1
+                    google_search_values[date] = 1
 
                 
-            for i in google_search_values:
-                google_search_waffle_data.append({"day": i, "value": google_search_values[i]})
+            for item in google_search_values:
+                google_search_waffle_data.append({"day": item, "value": google_search_values[item]})
 
             Dict["search_waffle"] = google_search_waffle_data
                         
@@ -426,11 +407,11 @@ def parseGoogleData(googleDataDumpName):
             pie_format_chan = []
 
             count = 0
-            for i in sorted_chan:
+            for item in sorted_chan:
                 if count == 10:
                     break
                 else:
-                    pie_format_chan.append({"id": count, "label": i[0], "value": i[1]})
+                    pie_format_chan.append({"id": count, "label": item[0], "value": item[1]})
                     count += 1
 
             Dict["youtube_piechart"] = pie_format_chan
@@ -440,34 +421,25 @@ def parseGoogleData(googleDataDumpName):
             youtube_search_values = {}
 
             for search in searches:
-                pos = search[2].find(' ')
-                month = search[2][:pos]
+                date = search[2].split(' ')
 
-                comma = search[2].find(',')
-                pos += 1
-                day = search[2][pos:comma]
-
+                month = date[0]
+                day = date[1][:-1]
+                year = date[2][:-1]
+                
                 day_str = day
-
                 if int(day) < 10:
                     day_str = "0" + str(day)
 
-                comma = comma + 2
-                new_str = search[2][comma:]
-
-                comma = new_str.find(',')
-
-                year = new_str[:comma]
-
-                full_date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
-
-                if full_date in youtube_search_values:
-                    youtube_search_values[full_date] += 1
+                date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
+                #print("yt_search_date: " + date)
+                if date in youtube_search_values:
+                    youtube_search_values[date] += 1
                 else:
-                    youtube_search_values[full_date] = 1
+                    youtube_search_values[date] = 1
 
-            for i in youtube_search_values:
-                youtube_search_waffle_data.append({"day": i, "value": youtube_search_values[i]})
+            for item in youtube_search_values:
+                youtube_search_waffle_data.append({"day": item, "value": youtube_search_values[item]})
 
             Dict["youtube_search_waffle"] = youtube_search_waffle_data
 
