@@ -462,8 +462,6 @@ export default class Results extends Component {
                       </Grid>
                     </Grid>
                   </Grid>
-
-                  <IPMap />
                 </Grid>
               </Grid>
 
