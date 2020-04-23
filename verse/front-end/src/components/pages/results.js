@@ -236,7 +236,7 @@ export default class Results extends Component {
         <Header />
         <div id="exportedvisuals">
           <div id="sidebar">
-            <p>Toggle</p>
+            <p>Display</p>
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
             <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
             <button class="showvisualsbutton" id="showapplevisuals" onClick={(e) => this.toggleSection(e)}>Apple</button>

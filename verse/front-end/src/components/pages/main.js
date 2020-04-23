@@ -15,7 +15,7 @@ export default class Main extends Component {
         <div id="mainpage">
             <Header />
             <h1 class="pagetitle">Welcome to Verse!</h1>
-            <h3>Verse slogan here...</h3>
+            <h3>Visualize your Facebook, Apple, Netflix, and Google privacy data with charts and lists!</h3>
             <br></br>
         </div>
       )
