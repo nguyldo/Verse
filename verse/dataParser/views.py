@@ -49,7 +49,7 @@ def googleDataAPI(request, userFileName):
 #----- NETFLIX APIs -----
 @api_view(["GET"])
 def netflixDataAPI(request, userFileName):
-    data = visualizationData.getAnalyzedNetflixData(userFileName)
+    data = visualizationData.getNetflixData(userFileName)
     return Response(status=status.HTTP_200_OK, data={"data": data})
 
 #----- UPLOAD API -----

@@ -101,11 +101,11 @@ export default class Results extends Component {
       this.state.fb_posts_pie = [];
       this.state.fb_reactions_bar = [];
       this.state.fb_sites = [];
-      this.state.fb_sites_ct = 0;
+      this.state.fb_sites_ct = -1;
       this.state.fb_off = [];
-      this.state.fb_off_ct = 0;
+      this.state.fb_off_ct = -1;
       this.state.fb_advs = [];
-      this.state.fb_advs_ct = 0;
+      this.state.fb_advs_ct = -1;
     }
 
     // Apple API Response
@@ -132,20 +132,20 @@ export default class Results extends Component {
 
     else {
       console.log("cwm: apple data was NOT loaded");
-      this.state.ap_total_size_GB = 0;
+      this.state.ap_total_size_GB = -1;
       this.state.ap_account_info_header = ["", "", ""];
       this.state.ap_devices_list = [];
-      this.state.ap_date_range = [[0, 0, 0], [0, 0, 0]]
-      this.state.ap_listen_time = { "hours": 0, "minutes": 0, "seconds": 0 };
-      this.state.ap_genres_pie = {};
-      this.state.ap_genres_list = {};
-      this.state.ap_artists_barchart = {};
-      this.state.ap_artists_list = {};
-      this.state.ap_tracks_barchart = {};
-      this.state.ap_tracks_list = {};
+      this.state.ap_date_range = [[-1, -1, -1], [-1, -1, -1]]
+      this.state.ap_listen_time = { "hours": -1, "minutes": -1, "seconds": -1 };
+      this.state.ap_genres_pie = [];
+      this.state.ap_genres_list = [];
+      this.state.ap_artists_barchart = [];
+      this.state.ap_artists_list = [];
+      this.state.ap_tracks_barchart = [];
+      this.state.ap_tracks_list = [];
       this.state.ap_activity_map = {};
-      this.state.ap_library_track_count = 0;
-      this.state.ap_library_gantt = {};
+      this.state.ap_library_track_count = -1;
+      this.state.ap_library_gantt = [];
       this.state.ap_genre_timeline = {};
       this.state.ap_apps_timeline = {};
       this.state.ap_apps_map = {};
@@ -173,19 +173,20 @@ export default class Results extends Component {
       this.state.gg_youtube_search_waffle = this.state.compiledRequest.google.youtube_search_waffle;
     } else {
       console.log("cwm: google data was NOT loaded");
-      this.state.gg_size = 0;
+      this.state.gg_size = -1;
       this.state.gg_profile_info_header = {"name": "", "email": ""};
-      this.state.gg_bookmarks_list = [];
+      this.state.gg_bookmarks_count = [];
       this.state.gg_saved_places_map = [["", ["", ""]]];
       //this.state.gg_youtube_playlists = [];
-      //this.state.gg_youtube_playlists_count = 0;
+      //this.state.gg_youtube_playlists_count = -1;
       //this.state.gg_youtube_subscriptions = [];
-      //this.state.gg_youtube_subscriptions_count = 0;
-      this.state.gg_ads_count = 0;
+      //this.state.gg_youtube_subscriptions_count = -1;
+      this.state.gg_ads_count = -1;
+      this.state.gg_ads_list = [];
       this.state.gg_ads_waffle = [];
       this.state.gg_maps_activity = { "usages": [""], "links": ["", ""], "views": ["", ""], "searches": ["", ""], "calls": ["", ""], "directions": ["", "", "", ""]};
-      this.state.gg_maps_routes_count = 0;
-      this.state.gg_search_count = 0;
+      this.state.gg_maps_routes_count = -1;
+      this.state.gg_search_count = -1;
       this.state.gg_search_waffle = [];
       this.state.gg_youtube_piechart = [];
       this.state.gg_youtube_search_waffle = [];
@@ -201,7 +202,7 @@ export default class Results extends Component {
       this.state.nf_shows_ganttchart = this.state.compiledRequest.netflix.shows_ganttchart;
     } else {
       console.log("cwm: netflix data was NOT loaded");
-      this.state.nf_watch_count = 0;
+      this.state.nf_watch_count = -1;
       this.state.nf_shows = [];
       this.state.nf_movies = [];
       this.state.nf_shows_generalchart = [];
