@@ -328,9 +328,9 @@ export default class Results extends Component {
           <div id="sidebar">
             <p>Display</p>
             <button class="showvisualsbutton" id="showfacebookvisuals" onClick={(e) => this.toggleSection(e)}>Facebook</button>
-            <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
             <button class="showvisualsbutton" id="showapplevisuals" onClick={(e) => this.toggleSection(e)}>Apple</button>
             <button class="showvisualsbutton" id="shownetflixvisuals" onClick={(e) => this.toggleSection(e)}>Netflix</button>
+            <button class="showvisualsbutton" id="showgooglevisuals" onClick={(e) => this.toggleSection(e)}>Google</button>
           </div>
           <div id="mainvisuals">
             <h1 class="pagetitle">Results</h1>
@@ -435,6 +435,7 @@ export default class Results extends Component {
             </div>
 
             <div class="visualssection" id="googlevisuals">
+              <h1 class="visualstitle" id="googletitle">Google</h1>
               <h1>Name: {this.state.gg_profile_info_header.name}</h1>
               <h2>Gmail: {this.state.gg_profile_info_header.email}</h2>
 
