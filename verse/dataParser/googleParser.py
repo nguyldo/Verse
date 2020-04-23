@@ -157,7 +157,6 @@ def parseGoogleData(googleDataDumpName):
                     day_str = "0" + str(day)
 
                 date = year + "-" + genericParser.monthToNum[month] + "-" + day_str
-                #print("ad_search_date: " + date)
                 if date in ad_values:
                     ad_values[date] += 1
                 else:

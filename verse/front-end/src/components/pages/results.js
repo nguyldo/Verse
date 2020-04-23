@@ -336,15 +336,15 @@ export default class Results extends Component {
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={5}>
 
-                    <Grid spacing={3}>
+                    <Grid key={1}>
                       <WebsitesList data={this.state.fb_sites} count={this.state.fb_sites_ct} />
                     </Grid>
 
-                    <Grid >
+                    <Grid key={2}>
                       <OffFacebookWebsitesList data={this.state.fb_off} count={this.state.fb_off_ct} />
                     </Grid>
 
-                    <Grid >
+                    <Grid key={3}>
                       <CompanyAdsList data={this.state.fb_advs} count={this.state.fb_advs_ct} />
                     </Grid>
 
@@ -360,15 +360,16 @@ export default class Results extends Component {
 
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={3}>
-                    <Grid>
+                    <Grid key={4}>
                       <TotalSizeBigNum data={this.state.ap_total_size_GB} />
                     </Grid>
 
-                    <Grid>
+                    <Grid key={5}>
                       <LibraryTracksBigNum data={this.state.ap_library_track_count} />
                     </Grid>
                   </Grid>
-                  <Grid>
+
+                  <Grid key={6}>
                     <ListenTimeBigNum data={this.state.ap_listen_time} date_range={this.state.ap_date_range} />
                   
                     <DevicesList data={this.state.ap_devices_list} />
@@ -378,14 +379,14 @@ export default class Results extends Component {
 
                 <Grid item xs={12}>
                   <Grid container justify="center" spacing={5}>
-                    <Grid spacing={3}>
-                      <TopTenGenresList key={3} data={this.state.ap_genres_list} date_range={this.state.ap_date_range} />
+                    <Grid key={7}>
+                      <TopTenGenresList data={this.state.ap_genres_list} date_range={this.state.ap_date_range} />
                     </Grid>
-                    <Grid >
-                      <TopTenArtistsList key={4} data={this.state.ap_artists_list} date_range={this.state.ap_date_range} />
+                    <Grid key={8}>
+                      <TopTenArtistsList data={this.state.ap_artists_list} date_range={this.state.ap_date_range} />
                     </Grid>
-                    <Grid >
-                      <TopTenTracksList key={5} data={this.state.ap_tracks_list} date_range={this.state.ap_date_range} />
+                    <Grid key={9}>
+                      <TopTenTracksList data={this.state.ap_tracks_list} date_range={this.state.ap_date_range} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -405,10 +406,10 @@ export default class Results extends Component {
               <WatchedNetflixBigNum data={this.state.nf_watch_count} />
               <Grid item xs={12}>
                 <Grid container justify="center" spacing={3}>
-                  <Grid key={0}>
+                  <Grid key={10}>
                     <ShowsList data={this.state.nf_shows} />
                   </Grid>
-                  <Grid key={1}>
+                  <Grid key={11}>
                     <MoviesList data={this.state.nf_movies} />
                   </Grid>
                 </Grid>
@@ -432,31 +433,31 @@ export default class Results extends Component {
                   <Grid container justify="center" spacing={3}>
 
                     <Grid spacing={3}>
-                      <Grid key={1}> 
+                      <Grid key={12}> 
                         <SearchesBigNum data={this.state.gg_search_count} />
                       </Grid>
 
-                      <Grid key={2}>
+                      <Grid key={13}>
                         <DirectionsBigNum data={this.state.gg_maps_routes_count} />
                       </Grid>
                     </Grid>
                     
                     <Grid spacing={3}>
-                      <Grid key={3}>
+                      <Grid key={14}>
                         <AdsBigNum data={this.state.gg_ads_count} />
                       </Grid>
 
-                      <Grid key={5}>
+                      <Grid key={15}>
                         <YoutubePlaylistsBigNum />
                       </Grid>
                     </Grid>
                     
                     <Grid spacing={3}>
-                      <Grid key={4}>
+                      <Grid key={16}>
                         <BookmarksBigNum data={this.state.gg_bookmarks_count} />
                       </Grid>
 
-                      <Grid key={6}>
+                      <Grid key={17}>
                         <YoutubeSubscriptionsBigNum />
                       </Grid>
                     </Grid>

@@ -10,6 +10,7 @@ const styles = theme => ({
   card: {
     border: "1px solid #e9ecee",
     maxWidth: 748,
+    maxHeight: 600,
     margin: "24px auto"
   },
   title: {
