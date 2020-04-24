@@ -1,12 +1,10 @@
-import React, { Component, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from "react";
 
 //import axios from "axios";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
 import Grid from '@material-ui/core/Grid';
-import ReactTooltip from "react-tooltip";
 
 // import jsPDF from "../visuals/jspdf.min.js";
 import jsPDF from 'jspdf';
@@ -40,8 +38,7 @@ import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
 
 //Google Visuals
-import IPMap from "../visuals/IPMap.js";
-import Map from "../visuals/atomicGraphs/Map.js"
+import Map from "../visuals/Map.js"
 import SearchesBigNum from "../visuals/SearchesBigNum.js";
 //import SearchLineChart from "../visuals/SearchLineChart.js"
 import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
@@ -260,8 +257,8 @@ export default class Results extends Component {
 
   toggleSection(e) {
     const id = e.target.id;
-    if (id == "showfacebookvisuals") {
-      if (document.getElementById("facebookvisuals").style.display == "none") {
+    if (id === "showfacebookvisuals") {
+      if (document.getElementById("facebookvisuals").style.display === "none") {
         document.getElementById("facebookvisuals").style.display = "block";
         document.getElementById("showfacebookvisuals").style.backgroundColor = "#69A4BA";
       } else {
@@ -269,16 +266,16 @@ export default class Results extends Component {
         document.getElementById("showfacebookvisuals").style.backgroundColor = "#F0F0F0";
         
       }
-    } else if (id == "showgooglevisuals") {
-      if (document.getElementById("googlevisuals").style.display == "none") {
+    } else if (id === "showgooglevisuals") {
+      if (document.getElementById("googlevisuals").style.display === "none") {
         document.getElementById("googlevisuals").style.display = "block";
         document.getElementById("showgooglevisuals").style.backgroundColor = "#FFFF77";
       } else {
         document.getElementById("googlevisuals").style.display = "none";
         document.getElementById("showgooglevisuals").style.backgroundColor = "#F0F0F0";
       }
-    } else if (id == "showapplevisuals") {
-      if (document.getElementById("applevisuals").style.display == "none") {
+    } else if (id === "showapplevisuals") {
+      if (document.getElementById("applevisuals").style.display === "none") {
         document.getElementById("applevisuals").style.display = "block";
         document.getElementById("showapplevisuals").style.backgroundColor = "#FFB2B2";
       } else {
@@ -286,7 +283,7 @@ export default class Results extends Component {
         document.getElementById("showapplevisuals").style.backgroundColor = "#F0F0F0";
       }
     } else {
-      if (document.getElementById("netflixvisuals").style.display == "none") {
+      if (document.getElementById("netflixvisuals").style.display === "none") {
         document.getElementById("netflixvisuals").style.display = "block";
         document.getElementById("shownetflixvisuals").style.backgroundColor = "#FF4A55";
       } else {
@@ -322,7 +319,7 @@ export default class Results extends Component {
 
 
       var watchCount;
-      if (this.state.watch_count == 0) {
+      if (this.state.watch_count === 0) {
         watchCount = "0";
       } else {
         watchCount = JSON.stringify(this.state.watch_count);
@@ -352,7 +349,7 @@ export default class Results extends Component {
           var index = m;
           var nfString = netflixString.substr(l, m - l);
           while (index > l) {
-            if (nfString[index] == "," || nfString[index] == "\n") {
+            if (nfString[index] === "," || nfString[index] === "\n") {
               index++;
               break;
             } else {
@@ -425,7 +422,7 @@ export default class Results extends Component {
 
 
       var totalSize;
-      if (this.state.total_size == 0) {
+      if (this.state.total_size === 0) {
         totalSize = "0";
       } else {
         totalSize = JSON.stringify(this.state.total_size);
@@ -438,32 +435,32 @@ export default class Results extends Component {
       var rang = " ";
       var sdl = 1;
       for (var jlk in this.state.date_range) {
-        if (sdl == 1) {
+        if (sdl === 1) {
           rang = rang + jlk + ", ";
-        } else if (sdl == 2) {
-          if (jlk == 1) {
+        } else if (sdl === 2) {
+          if (jlk === 1) {
             rang = rang + "January ";
-          } else if (jlk == 2) {
+          } else if (jlk === 2) {
             rang = rang + "February ";
-          } else if (jlk == 3) {
+          } else if (jlk === 3) {
             rang = rang + "March ";
-          } else if (jlk == 4) {
+          } else if (jlk === 4) {
             rang = rang + "April ";
-          } else if (jlk == 5) {
+          } else if (jlk === 5) {
             rang = rang + "May ";
-          } else if (jlk == 6) {
+          } else if (jlk === 6) {
             rang = rang + "June ";
-          } else if (jlk == 7) {
+          } else if (jlk === 7) {
             rang = rang + "July ";
-          } else if (jlk == 8) {
+          } else if (jlk === 8) {
             rang = rang + "August ";
-          } else if (jlk == 9) {
+          } else if (jlk === 9) {
             rang = rang + "September ";
-          } else if (jlk == 10) {
+          } else if (jlk === 10) {
             rang = rang + "October ";
-          } else if (jlk == 11) {
+          } else if (jlk === 11) {
             rang = rang + "November ";
-          } else if (jlk == 12) {
+          } else if (jlk === 12) {
             rang = rang + "December ";
           } else {
             rang = rang + "Unknown month "
@@ -474,29 +471,29 @@ export default class Results extends Component {
         sdl++;
       }
       var mon;
-      if (this.state.date_range[1] == 1) {
+      if (this.state.date_range[1] === 1) {
         mon = "January ";
-      } else if (this.state.date_range[1] == 2) {
+      } else if (this.state.date_range[1] === 2) {
         mon = "February ";
-      } else if (this.state.date_range[1] == 3) {
+      } else if (this.state.date_range[1] === 3) {
         mon = "March ";
-      } else if (this.state.date_range[1] == 4) {
+      } else if (this.state.date_range[1] === 4) {
         mon = "April ";
-      } else if (this.state.date_range[1] == 5) {
+      } else if (this.state.date_range[1] === 5) {
         mon = "May ";
-      } else if (this.state.date_range[1] == 6) {
+      } else if (this.state.date_range[1] === 6) {
         mon = "June ";
-      } else if (this.state.date_range[1] == 7) {
+      } else if (this.state.date_range[1] === 7) {
         mon = "July ";
-      } else if (this.state.date_range[1] == 8) {
+      } else if (this.state.date_range[1] === 8) {
         mon = "August ";
-      } else if (this.state.date_range[1] == 9) {
+      } else if (this.state.date_range[1] === 9) {
         mon = "September ";
-      } else if (this.state.date_range[1] == 10) {
+      } else if (this.state.date_range[1] === 10) {
         mon = "October ";
-      } else if (this.state.date_range[1] == 11) {
+      } else if (this.state.date_range[1] === 11) {
         mon = "November ";
-      } else if (this.state.date_range[1] == 12) {
+      } else if (this.state.date_range[1] === 12) {
         mon = "December ";
       } else {
         mon = "Unknown month "
@@ -530,7 +527,7 @@ export default class Results extends Component {
           var index = m;
           var apString = appleString.substr(l, m - l);
           while (index > l) {
-            if (apString[index] == "," || apString[index] == "\n") {
+            if (apString[index] === "," || apString[index] === "\n") {
               index++;
               break;
             } else {
@@ -603,19 +600,19 @@ export default class Results extends Component {
 
 
       var sitesCount;
-      if (this.state.sites_ct == 0) {
+      if (this.state.sites_ct === 0) {
         sitesCount = "0";
       } else {
         sitesCount = JSON.stringify(this.state.sites_ct);
       }
       var activitiesCount;
-      if (this.state.off_ct == 0) {
+      if (this.state.off_ct === 0) {
         activitiesCount = "0";
       } else {
         activitiesCount = JSON.stringify(this.state.off_ct);
       }
       var advertisersCount;
-      if (this.state.advs_ct == 0) {
+      if (this.state.advs_ct === 0) {
         advertisersCount = "0";
       } else {
         advertisersCount = toString(this.state.advs_ct);
@@ -655,7 +652,7 @@ export default class Results extends Component {
           var index = m;
           var fbString = facebookString.substr(l, m - l);
           while (index > l) {
-            if (fbString[index] == "," || fbString[index] == "\n") {
+            if (fbString[index] === "," || fbString[index] === "\n") {
               index++;
               break;
             } else {
@@ -730,31 +727,31 @@ export default class Results extends Component {
     
     
     // var totalSizeGG;
-    // if (this.state.gg_total_size_GB == 0) {
+    // if (this.state.gg_total_size_GB === 0) {
     //   totalSizeGG = "0";
     //   } else {
     //     totalSizeGG = toString(this.state.gg_total_size_GB);
     //   }
     //   var bookmarksCount;
-    //   if (this.state.gg_bookmarks_count == 0) {
+    //   if (this.state.gg_bookmarks_count === 0) {
     //     bookmarksCount = "0";
     //   } else {
     //     bookmarksCount = toString(this.state.gg_bookmarks_count);
     //   }
     //   var advertisersCountGG;
-    //   if (this.state.gg_ads_count == 0) {
+    //   if (this.state.gg_ads_count === 0) {
     //     advertisersCountGG = "0";
     //   } else {
     //     advertisersCountGG = toString(this.state.gg_ads_count);
     //   }
     //   var routeCount;
-    //   if (this.state.gg_maps_routes_count == 0) {
+    //   if (this.state.gg_maps_routes_count === 0) {
     //     routeCount = "0";
     //   } else {
     //     routeCount = toString(this.state.gg_maps_routes_count);
     //   }
     //   var searchCount;
-    //   if (this.state.gg_search_count == 0) {
+    //   if (this.state.gg_search_count === 0) {
     //     searchCount = "0";
     //   } else {
     //     searchCount = toString(this.state.gg_search_count);
@@ -782,7 +779,7 @@ export default class Results extends Component {
     //     var index = m;
     //     var ggString = googleString.substr(l, m - l);
     //     while (index > l) {
-    //       if (ggString[index] == "," || ggString[index] == "\n") {
+    //       if (ggString[index] === "," || ggString[index] === "\n") {
     //         index++;
     //         break;
     //       } else {
@@ -831,22 +828,7 @@ export default class Results extends Component {
 
   render() {
 
-    const styles = theme => ({
-      root: {
-        flexGrow: 1,
-      },
-      paper: {
-        height: 140,
-        width: 100,
-      },
-      control: {
-        padding: theme.spacing(5),
-      },
-    })
-
     const { classes } = this.props;
-
-    /*<IPMap data={this.state.fb_locations_bar} />*/
 
     return (
       <div id="resultspage">
@@ -968,6 +950,11 @@ export default class Results extends Component {
 
               <Grid container spacing={5}>
                 <Grid item xs={12}>
+
+                  <Grid>
+                    <TotalSizeBigNum data={this.state.gg_total_size_GB} />
+                  </Grid>
+
                   <Grid container justify="center" spacing={3}>
 
                     <Grid spacing={3}>
@@ -1002,6 +989,8 @@ export default class Results extends Component {
                   </Grid>
                 </Grid>
               </Grid>
+
+              <Map data={this.state.gg_saved_places_map}/>
 
               <GoogleSearchWaffleChart data={this.state.gg_search_waffle} 
                                         from="2017-03-01" 

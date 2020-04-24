@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from '@material-ui/core';
-
-import {
-    ComposableMap,
-    Geographies,
-    Geography,
-    Marker
-} from "react-simple-maps";
+import ReactMapGL, { Marker } from 'react-map-gl';
 
 const styles = theme => ({
     card: {
         border: "1px solid #e9ecee",
-        maxWidth: 1024,
-        maxHeight: 2048,
+        maxWidth: 750,
+        maxHeight: 700,
         margin: "24px auto",
         overflow: 'auto',
     },
@@ -36,30 +30,85 @@ const styles = theme => ({
     },
 });
 
-const geoUrl =
-    "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
+const imgStyle = {
+    width: '30px',
+    height: '30px'
+};
 
-const markers = [
-    { name: "Buenos Aires", coordinates: [-58.3816, -34.6037] },
-    { name: "La Paz", coordinates: [-68.1193, -16.4897] },
-    { name: "Brasilia", coordinates: [-47.8825, -15.7942] },
-    { name: "Santiago", coordinates: [-70.6693, -33.4489] },
-    { name: "Bogota", coordinates: [-74.0721, 4.711] },
-    { name: "Quito", coordinates: [-78.4678, -0.1807] },
-    { name: "Georgetown", coordinates: [-58.1551, 6.8013] },
-    { name: "Asuncion", coordinates: [-57.5759, -25.2637] },
-    { name: "Paramaribo", coordinates: [-55.2038, 5.852] },
-    { name: "Montevideo", coordinates: [-56.1645, -34.9011] },
-    { name: "Caracas", coordinates: [-66.9036, 10.4806] },
-    { name: "Lima", coordinates: [-77.0428, -12.0464] }
-];
+/*
+const map = new mapboxgl.Map({
+    container: this.mapContainer,
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [this.state.lng, this.state.lat],
+    zoom: this.state.zoom
+});
+
+map.on('click', function (e) {
+    var features = map.queryRenderedFeatures(e.point, {
+        layers: ['pillbox-data'] // replace this with the name of the layer
+    });
+
+    if (!features.length) {
+        return;
+    }
+
+    var feature = features[0];
+
+    var popup = new mapboxgl.Popup({
+        offset: [0, -15]
+    })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML('<h3>' + feature.properties.title + '</h3><p>' + feature.properties.description + '</p>')
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(map);
+});
+
+map.addControl(new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken
+}));
+*/
 
 class Map extends React.Component {
+
+    state = {
+        viewport: {
+            width: "50vw",
+            height: "50vh",
+            latitude: 40.4237,
+            longitude: -86.9212,
+            zoom: 6
+        }
+    };     
+
+    loadMarkers = () => {
+        return this.props.data.map(spot => {
+            if (spot.length === 2) {
+                console.log(spot)
+                return (
+                    <Marker
+                        latitude={parseFloat(spot[1]["Latitude"])}
+                        longitude={parseFloat(spot[1]["Longitude"])}
+                    >
+                        <img alt="" style={imgStyle} className="mapmarker" src="mapmarker.svg" />
+                    </Marker>
+                );
+            } else if (spot.length === 3) {
+                return (
+                    <Marker
+                        latitude={parseFloat(spot[2]["Latitude"])}
+                        longitude={parseFloat(spot[2]["Longitude"])}
+                    >
+                        <img alt="" style={imgStyle} className="mapmarker" src="mapmarker.svg" />
+                    </Marker>
+                );
+            }
+        });
+    };
 
     render() {
         const { classes } = this.props;
 
-        const markers = this.props.data;
+        const mapboxToken = "pk.eyJ1IjoibGlzYXNpbCIsImEiOiJjazlkbWR3djkwNTkwM2dtbGJwanA1Z25nIn0.lwSZn_ljKgldaVUe3t6-AA";
 
         return (
             <React.Fragment>
@@ -69,54 +118,20 @@ class Map extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title=""
-                        subheader=""
+                        title="Saved Places"
+                        subheader="on Google Maps"
                     />
                     <CardContent>
-                        <ComposableMap
-                            projection="geoAzimuthalEqualArea"
-                            projectionConfig={{
-                                rotate: [58, 20, 0],
-                                scale: 400
-                            }}
-                        >
-                            <Geographies geography={geoUrl}>
-                                {({ geographies }) =>
-                                    geographies
-                                        .filter(d => d.properties.REGION_UN === "Americas")
-                                        .map(geo => (
-                                            <Geography
-                                                key={geo.rsmKey}
-                                                geography={geo}
-                                                fill="#EAEAEC"
-                                                stroke="#D6D6DA"
-                                            />
-                                        ))
-                                }
-                            </Geographies>
-                            {markers.map(({ name, coordinates }) => (
-                                <Marker key={name} coordinates={coordinates}>
-                                    <g
-                                        fill="none"
-                                        stroke="#FF5533"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        transform="translate(-12, -24)"
-                                    >
-                                        <circle cx="12" cy="10" r="3" />
-                                        <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z" />
-                                    </g>
-                                    <text
-                                        textAnchor="middle"
-                                        y={15}
-                                        style={{ fontFamily: "system-ui", fill: "#5D5A6D" }}
-                                    >
-                                        {name}
-                                    </text>
-                                </Marker>
-                            ))}
-                        </ComposableMap>
+                        <ReactMapGL {...this.state.viewport} onViewportChange={(viewport => this.setState({viewport}))} mapboxApiAccessToken={mapboxToken} >
+                            <Marker 
+                                latitude={40.4237} 
+                                longitude={-86.9212}
+                            >
+                                <img alt="Purdue" style={imgStyle} className="mapmarker" src="mapmarker.svg"/>
+                            </Marker>
+                            {this.loadMarkers()}
+                            
+                        </ReactMapGL>
                     </CardContent>
                 </Card>
             </React.Fragment>

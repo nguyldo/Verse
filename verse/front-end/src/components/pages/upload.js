@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 // import React from "react";
 // import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -10,10 +9,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import axios from "axios";
-import { Link, Redirect } from "react-router-dom";
-import html2canvas from "html2canvas";
+import { Redirect } from "react-router-dom";
 import Header from "./../sections/header.js";
-import { lightBlue } from "@material-ui/core/colors";
 import "./../../css/upload.css";
 
 export default class Upload extends Component {
@@ -65,7 +62,7 @@ export default class Upload extends Component {
   handleFile(e) {
 
     const specifiedCompany = e.target.id;
-    if (specifiedCompany == "facebookupload") {
+    if (specifiedCompany === "facebookupload") {
 
       this.setState({ facebookFile: e.target.files[0] });
 
@@ -75,7 +72,7 @@ export default class Upload extends Component {
       } else {
         this.setState({ facebookButton: e.target.files[0].name });
       }
-    } else if (specifiedCompany == "googleupload") {
+    } else if (specifiedCompany === "googleupload") {
       this.setState({ googleFile: e.target.files[0] });
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
@@ -83,7 +80,7 @@ export default class Upload extends Component {
       } else {
         this.setState({ googleButton: e.target.files[0].name });
       }
-    } else if (specifiedCompany == "appleupload") {
+    } else if (specifiedCompany === "appleupload") {
       this.setState({ appleFile: e.target.files[0] });
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
@@ -91,7 +88,7 @@ export default class Upload extends Component {
       } else {
         this.setState({ appleButton: e.target.files[0].name });
       }
-    } else if (specifiedCompany == "netflixupload") {
+    } else if (specifiedCompany === "netflixupload") {
       this.setState({ netflixFile: e.target.files[0] });
       if (e.target.files.length > 1) {
         const label = e.target.files.length + " files selected";
@@ -108,37 +105,37 @@ export default class Upload extends Component {
     const specifiedId = e.target.id;
     let company = null;
     let file = null;
-    if (specifiedId == "facebookuploadconfirm") {
+    if (specifiedId === "facebookuploadconfirm") {
       file = this.state.facebookFile;
       company = "facebook";
-    } else if (specifiedId == "googleuploadconfirm") {
+    } else if (specifiedId === "googleuploadconfirm") {
       file = this.state.googleFile;
       company = "google";
-    } else if (specifiedId == "appleuploadconfirm") {
+    } else if (specifiedId === "appleuploadconfirm") {
       file = this.state.appleFile;
       company = "apple";
-    } else if (specifiedId == "netflixuploadconfirm") {
+    } else if (specifiedId === "netflixuploadconfirm") {
       file = this.state.netflixFile;
       company = "netflix";
     } else {
       console.log("Error in confirming upload");
     }
 
-    if (file == null) {
+    if (file === null) {
       alert("Nothing was uploaded, please try again.");
       return;
     }
 
-    if (company == "facebook") {
+    if (company === "facebook") {
       document.getElementById("facebookoption").style.display = "none";
       this.setState({ facebookTitle: "Facebook: Loading..." });
-    } else if (company == "google") {
+    } else if (company === "google") {
       document.getElementById("googleoption").style.display = "none";
       this.setState({ googleTitle: "Google: Loading..." });
-    } else if (company == "apple") {
+    } else if (company === "apple") {
       document.getElementById("appleoption").style.display = "none";
       this.setState({ appleTitle: "Apple: Loading..." });
-    } else if (company == "netflix") {
+    } else if (company === "netflix") {
       document.getElementById("netflixoption").style.display = "none";
       this.setState({ netflixTitle: "Netflix: Loading..." });
     } else {
@@ -163,19 +160,19 @@ export default class Upload extends Component {
       const status = promise.status;
       if (status === 200) {
   
-        if (company == "facebook") {
+        if (company === "facebook") {
           this.setState({ facebookRequest: promise.data.fileName });
           document.getElementById("facebookoption").style.display = "none";
           this.setState({ facebookTitle: "Facebook: Upload Success!" });
-        } else if (company == "google") {
+        } else if (company === "google") {
           this.setState({ googleRequest: promise.data.fileName });
           document.getElementById("googleoption").style.display = "none";
           this.setState({ googleTitle: "Google: Upload Success!" });
-        } else if (company == "apple") {
+        } else if (company === "apple") {
           this.setState({ appleRequest: promise.data.fileName });
           document.getElementById("appleoption").style.display = "none";
           this.setState({ appleTitle: "Apple: Upload Success!" });
-        } else if (company == "netflix") {
+        } else if (company === "netflix") {
           this.setState({ netflixRequest: promise.data.fileName });
           document.getElementById("netflixoption").style.display = "none";
           this.setState({ netflixTitle: "Netflix: Upload Success!" });
@@ -185,16 +182,16 @@ export default class Upload extends Component {
       }
     } catch {
       console.log(company)
-      if (company == "facebook") {
+      if (company === "facebook") {
         document.getElementById("facebookoption").style.display = "block";
         this.setState({ facebookTitle: "Facebook: Upload Failed..." });
-      } else if (company == "google") {
+      } else if (company === "google") {
         document.getElementById("googleoption").style.display = "block";
         this.setState({ googleTitle: "Google: Upload Failed..." });
-      } else if (company == "apple") {
+      } else if (company === "apple") {
         document.getElementById("appleoption").style.display = "block";
         this.setState({ appleTitle: "Apple: Upload Failed..." });
-      } else if (company == "netflix") {
+      } else if (company === "netflix") {
         document.getElementById("netflixoption").style.display = "block";
         this.setState({ netflixTitle: "Netflix: Upload Failed..." });
       } else {
@@ -206,22 +203,22 @@ export default class Upload extends Component {
 
   prepareData(e) {
     let requests = [];
-    if (this.state.facebookRequest != "") {
+    if (this.state.facebookRequest !== "") {
       requests.push(
         axios.get("http://localhost:8000/facebookData/" + this.state.facebookRequest)
       );
     }
-    if (this.state.googleRequest != "") {
+    if (this.state.googleRequest !== "") {
       requests.push(
         axios.get("http://localhost:8000/googleData/" + this.state.googleRequest)
       )
     }
-    if (this.state.appleRequest != "") {
+    if (this.state.appleRequest !== "") {
       requests.push(
         axios.get("http://localhost:8000/appleData/" + this.state.appleRequest)
       );
     }
-    if (this.state.netflixRequest != "") {
+    if (this.state.netflixRequest !== "") {
       requests.push(
         axios.get("http://localhost:8000/netflixData/" + this.state.netflixRequest)
       );
@@ -231,19 +228,19 @@ export default class Upload extends Component {
       
       let count = 0;
       let retrievedData = {}
-      if (this.state.facebookRequest != "") {
+      if (this.state.facebookRequest !== "") {
         retrievedData["facebook"] = responses[count].data.data;
         count++;
       }
-      if (this.state.googleRequest != "") {
+      if (this.state.googleRequest !== "") {
         retrievedData["google"] = responses[count].data.data;
         count++;
       }
-      if (this.state.appleRequest != "") {
+      if (this.state.appleRequest !== "") {
         retrievedData["apple"] = responses[count].data.data;
         count++;
       }
-      if (this.state.netflixRequest != "") {
+      if (this.state.netflixRequest !== "") {
         retrievedData["netflix"] = responses[count].data.data;
         count++;
       }
