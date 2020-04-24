@@ -775,9 +775,10 @@ export default class Results extends Component {
     var prof = " ";
     prof = "Name: " + this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
     var savedPlace = " ";
-    for (var k, v in this.state.gg_saved_places_map) {
-      savedPlace = savedPlace + this.state.gg_saved_places_map + " " + k + " " + v + '\n';
+    for (var k in this.state.gg_saved_places_map) {
+      savedPlace = savedPlace + " " + k + '\n';
     }
+    savedPlace = savedPlace + JSON.stringify(this.state.gg_saved_places_map);
     var adList = " ";
     for (var g in this.state.gg_ads_list) {
       adList = adList + this.state.gg_ads_list[g]["link"];
