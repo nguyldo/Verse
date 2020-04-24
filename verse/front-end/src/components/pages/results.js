@@ -338,15 +338,15 @@ export default class Results extends Component {
       if (this.state.watch_count == 0) {
         watchCount = "0";
       } else {
-        watchCount = JSON.stringify(this.state.watch_count);
+        watchCount = JSON.stringify(this.state.nf_watch_count);
       }
       var showList;
-      for (var g in this.state.shows) {
-        showList = showList + this.state.shows['label'] + ", "
+      for (var g in this.state.nf_shows) {
+        showList = showList + this.state.nf_shows['title'] + ", "
       }
       var movieList;
-      for (var g in this.state.movies) {
-        movieList = movieList + this.state.movies['label'] + ", "
+      for (var g in this.state.nf_movies) {
+        movieList = movieList + this.state.nf_movies['title'] + ", "
       }
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
                           "Shows: " + showList + '\n\n' +
@@ -632,38 +632,38 @@ export default class Results extends Component {
 
 
       var sitesCount;
-      if (this.state.sites_ct == 0) {
+      if (this.state.fb_sites_ct == 0) {
         sitesCount = "0";
       } else {
-        sitesCount = JSON.stringify(this.state.sites_ct);
+        sitesCount = JSON.stringify(this.state.fb_sites_ct);
       }
       var activitiesCount;
-      if (this.state.off_ct == 0) {
+      if (this.state.fb_off_ct == 0) {
         activitiesCount = "0";
       } else {
-        activitiesCount = JSON.stringify(this.state.off_ct);
+        activitiesCount = JSON.stringify(this.state.fb_off_ct);
       }
       var advertisersCount;
-      if (this.state.advs_ct == 0) {
+      if (this.state.fb_advs_ct == 0) {
         advertisersCount = "0";
       } else {
-        advertisersCount = JSON.stringify(this.state.advs_ct);
+        advertisersCount = JSON.stringify(this.state.fb_advs_ct);
       }
       var siteList = " ";
-      for (var g in this.state.site_list) {
-        siteList = siteList + this.state.site_list[g] + ", ";
+      for (var g in this.state.fb_site_list) {
+        siteList = siteList + this.state.fb_site_list[g] + ", ";
       }
       var off_list = " ";
-      for (var g in this.state.off) {
-        off_list = off_list + this.state.off["businesses_off_facebook"] + ", "
+      for (var g in this.state.fb_off) {
+        off_list = off_list + this.state.fb_off["businesses_off_facebook"] + ", "
       }
       var advList = " ";
-      for (var g in this.state.advs) {
-        advList = advList + this.state.advs[g] + ", ";
+      for (var g in this.state.fb_advs) {
+        advList = advList + this.state.fb_advs[g] + ", ";
       }
 
       var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
-                          "Category: " + this.state.category + '\n\n' +
+                          "Category: " + this.state.fb_category + '\n\n' +
                           "Number of websites logged into with Facebook: " + sitesCount + '\n\n' + 
                           "List of websites logged into with Facebook:" + siteList + '\n\n' + 
                           "Number of off facebook app activities: " + activitiesCount + '\n\n' + 
