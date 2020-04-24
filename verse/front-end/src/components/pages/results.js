@@ -340,17 +340,19 @@ export default class Results extends Component {
       } else {
         watchCount = JSON.stringify(this.state.nf_watch_count);
       }
-      var showList;
+      var showList = " ";
       for (var g in this.state.nf_shows) {
-        showList = showList + this.state.nf_shows['title'] + ", "
+        showList = showList + g + ", "
       }
-      var movieList;
+      var movieList = " ";
+      var i = 0;
       for (var g in this.state.nf_movies) {
-        movieList = movieList + this.state.nf_movies['title'] + ", "
+        movieList = movieList + this.state.nf_movies[i] + ", "
+        i++
       }
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
-                          "Shows: " + showList + '\n\n' +
-                          "Movies: " + movieList + 
+                          "Shows:" + showList + '\n\n' +
+                          "Movies:" + movieList + 
                           '\n\n';
                       
       var netflixAddString;
@@ -441,7 +443,7 @@ export default class Results extends Component {
       if (this.state.total_size == 0) {
         totalSize = "0";
       } else {
-        totalSize = JSON.stringify(this.state.total_size);
+        totalSize = JSON.stringify(this.state.ap_total_size);
       }
       var listen;
       
@@ -451,96 +453,78 @@ export default class Results extends Component {
       listen = hour + " hours, " + 
                minute + " minutes, " + 
                second + " seconds ";
+      if (this.state.ap_listen_time['hours'] == -1) {
+        listen = " N/A";
+      }
 
       var rang = " ";
-      rang = rang + this.state.ap_date_range["activity_date_range"];
-      // var sdl = 1;
-      // for (var jlk in this.state.ap_date_range) {
-      //   if (sdl == 1) {
-      //     rang = rang + jlk + ", ";
-      //   } else if (sdl == 2) {
-      //     if (jlk == 1) {
-      //       rang = rang + "January ";
-      //     } else if (jlk == 2) {
-      //       rang = rang + "February ";
-      //     } else if (jlk == 3) {
-      //       rang = rang + "March ";
-      //     } else if (jlk == 4) {
-      //       rang = rang + "April ";
-      //     } else if (jlk == 5) {
-      //       rang = rang + "May ";
-      //     } else if (jlk == 6) {
-      //       rang = rang + "June ";
-      //     } else if (jlk == 7) {
-      //       rang = rang + "July ";
-      //     } else if (jlk == 8) {
-      //       rang = rang + "August ";
-      //     } else if (jlk == 9) {
-      //       rang = rang + "September ";
-      //     } else if (jlk == 10) {
-      //       rang = rang + "October ";
-      //     } else if (jlk == 11) {
-      //       rang = rang + "November ";
-      //     } else if (jlk == 12) {
-      //       rang = rang + "December ";
-      //     } else {
-      //       rang = rang + "Unknown month "
-      //     }
-      //   } else {
-      //     rang = rang + jlk + "  -  ";
-      //   }
-      //   sdl++;
-      // }
-      // var mon;
-      // if (this.state.ap_date_range[1] == 1) {
-      //   mon = "January ";
-      // } else if (this.state.ap_date_range[1] == 2) {
-      //   mon = "February ";
-      // } else if (this.state.ap_date_range[1] == 3) {
-      //   mon = "March ";
-      // } else if (this.state.ap_date_range[1] == 4) {
-      //   mon = "April ";
-      // } else if (this.state.ap_date_range[1] == 5) {
-      //   mon = "May ";
-      // } else if (this.state.ap_date_range[1] == 6) {
-      //   mon = "June ";
-      // } else if (this.state.ap_date_range[1] == 7) {
-      //   mon = "July ";
-      // } else if (this.state.ap_date_range[1] == 8) {
-      //   mon = "August ";
-      // } else if (this.state.ap_date_range[1] == 9) {
-      //   mon = "September ";
-      // } else if (this.state.ap_date_range[1] == 10) {
-      //   mon = "October ";
-      // } else if (this.state.ap_date_range[1] == 11) {
-      //   mon = "November ";
-      // } else if (this.state.ap_date_range[1] == 12) {
-      //   mon = "December ";
-      // } else {
-      //   mon = "Unknown month "
-      // }
-      // rang = rang + this.state.ap_date_range[0] + ", " + mon + this.state.ap_date_range[2];
+      // this.state.ap_date_range = [[1,2,3],[4,5,6]];
+      var ind = 0;
+      if (this.state.ap_date_range[0][0] != -1) {
 
+        while (ind < 2) {
+          
+          rang = rang + this.state.ap_date_range[ind][0] + ", " ;
+          var m = this.state.ap_date_range[ind][1];
+          if (m == 1) {
+            rang = rang + "January ";
+          } else if (m == 2) {
+            rang = rang + "February ";
+          } else if (m == 3) {
+            rang = rang + "March ";
+          } else if (m == 4) {
+            rang = rang + "April ";
+          } else if (m == 5) {
+            rang = rang + "May ";
+          } else if (m == 6) {
+            rang = rang + "June ";
+          } else if (m == 7) {
+            rang = rang + "July ";
+          } else if (m == 8) {
+            rang = rang + "August ";
+          } else if (m == 9) {
+            rang = rang + "September ";
+          } else if (m == 10) {
+            rang = rang + "October ";
+          } else if (m == 11) {
+            rang = rang + "November ";
+          } else if (m == 12) {
+            rang = rang + "December ";
+          } else {
+            rang = rang + "Unknown month ";
+          }
+          rang = rang + this.state.ap_date_range[ind][2];
+          if (ind == 0) {
+            rang = rang + "  -  ";
+          }
+          
+          ind++;
+        }
+      } else {
+        rang = " N/A";
+      }
+      
+      this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
       var gen_list = " ";
+      var i = 0;
       for (var g in this.state.ap_genres_list) {
-        gen_list = gen_list + this.state.ap_genres_list['Genre'] + ", ";
+        gen_list = gen_list + this.state.ap_genres_list[i] + ", ";
+        i++;
       }
       var art_list = " ";
+      i = 0;
       for (var g in this.state.ap_artists_list) {
-        art_list = art_list + this.state.ap_artists_list["Artist Name"] + ", ";
+        art_list = art_list + this.state.ap_artists_list[i] + ", ";
       }
       var track_list = " ";
       for (var g in this.state.ap_tracks_list) {
         track_list = track_list + this.state.ap_tracks_list["Content Name"] + ", ";
       }
-      var dRange = " ";
-      dRange = "Date range: " + this.state.ap_date_range["activity_date_range"];
 
 
       var appleString = "Total Size of Data Dump: " + totalSize + ' GB\n\n' + 
                         "Total Listen Time: " + listen + '\n\n' +
                         "Date Range of All Activity:" + rang + '\n\n' + 
-                        dRange + '\n\n' + 
                         "Genres List:" + gen_list + '\n\n' + 
                         "Artists List:" + art_list + '\n\n' +
                         "Tracks List:" + track_list + 
