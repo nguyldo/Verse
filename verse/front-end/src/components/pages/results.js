@@ -329,6 +329,9 @@ export default class Results extends Component {
         movies
       */
 
+      docPdf.setDrawColor("#E50A15");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Netflix Summary', 85, 30);
       docPdf.setFontSize(12);
@@ -382,10 +385,13 @@ export default class Results extends Component {
           }
           nfString = netflixString.substr(l, m);
           netflixAddString = docPdf.splitTextToSize(nfString, 150);
-          docPdf.text(netflixAddString, 30, 40);
+          docPdf.text(netflixAddString, 20, 40);
           // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
           if (l + m < r) {
             docPdf.addPage();
+            docPdf.setDrawColor("#E50A15");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
             docPdf.setFontSize(16);
             docPdf.text('Your Data Dump Summary', 70, 20);
             docPdf.text('Netflix Summary', 85, 30);
@@ -404,7 +410,7 @@ export default class Results extends Component {
         
       } else {
         netflixAddString = docPdf.splitTextToSize(netflixString, 150);
-        docPdf.text(netflixAddString, 30, 40);
+        docPdf.text(netflixAddString, 20, 40);
       }
 
 
@@ -433,6 +439,9 @@ export default class Results extends Component {
         tracks list
       */
       
+      docPdf.setDrawColor("#F0A3A3");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
       docPdf.setFontSize(16);
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Apple Summary', 85, 30);
@@ -505,31 +514,31 @@ export default class Results extends Component {
       }
       
       // this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
-      var gen_list = " ";
+      var gen_list = " \n\n";
       for (var g in this.state.ap_genres_list) {
-        gen_list = gen_list + this.state.ap_genres_list[g]["label"] + ", ";
+        gen_list = gen_list + this.state.ap_genres_list[g]["id"] + ") " + 
+                              this.state.ap_genres_list[g]["label"] + ": " + 
+                              this.state.ap_genres_list[g]["value"] + "\n\t";
       }
-      gen_list = gen_list + this.state.ap_genres_list.length;
-      var art_list = " ";
-      i = 0;
+      var art_list = " \n\n";
       for (var g in this.state.ap_artists_list) {
-        art_list = art_list + "label: " + this.state.ap_artists_list[g]["label"] + " " + 
-                              "id: " + this.state.ap_artists_list[g]["id"] + " " + 
-                              "value: " + this.state.ap_artists_list[g]["value"] + "\n\n";
+        art_list = art_list + this.state.ap_artists_list[g]["id"] + ") " + 
+                              this.state.ap_artists_list[g]["label"] + ": " + 
+                              this.state.ap_artists_list[g]["value"] + "\n\t";
       }
-      art_list = art_list + this.state.ap_artists_list.length;
-      var track_list = " ";
+      var track_list = " \n\n";
       for (var g in this.state.ap_tracks_list) {
-        track_list = track_list + this.state.ap_tracks_list[g]["label"] + ", ";
+        track_list = track_list + this.state.ap_tracks_list[g]["id"] + ") " + 
+                                  this.state.ap_tracks_list[g]["label"] + ": " + 
+                                  this.state.ap_tracks_list[g]["value"] + "\n\t";
       }
-      track_list = track_list + this.state.ap_tracks_list.length;
 
       var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
                         "Total Listen Time: " + listen + '\n\n' +
                         "Date Range of All Activity:" + rang + '\n\n' + 
-                        "Genres List:" + gen_list + '\n\n' + 
-                        "Artists List:" + art_list + '\n\n' +
-                        "Tracks List:" + track_list + 
+                        "Top Ten Genres Listened To:" + gen_list + '\n\n' + 
+                        "Top Ten Artists Listened To:" + art_list + '\n\n' +
+                        "Top Ten Tracks Listened To:" + track_list + 
                         '\n\n';
 
 
@@ -560,10 +569,13 @@ export default class Results extends Component {
           }
           apString = appleString.substr(l, m);
           appleAddString = docPdf.splitTextToSize(apString, 150);
-          docPdf.text(appleAddString, 30, 40);
+          docPdf.text(appleAddString, 20, 40);
           // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
           if (l + m < r) {
             docPdf.addPage();
+            docPdf.setDrawColor("#F0A3A3");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
             docPdf.setFontSize(16);
             docPdf.text('Your Data Dump Summary', 70, 20);
             docPdf.text('Apple Summary', 85, 30);
@@ -582,7 +594,7 @@ export default class Results extends Component {
         
       } else {
         appleAddString = docPdf.splitTextToSize(appleString, 150);
-        docPdf.text(appleAddString, 30, 40);
+        docPdf.text(appleAddString, 20, 40);
       }
 
 
@@ -611,6 +623,9 @@ export default class Results extends Component {
         facebook advertisers count
       */
 
+      docPdf.setDrawColor("#3B5998");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
       docPdf.setFontSize(16);
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Facebook Summary', 80, 30);
@@ -685,10 +700,13 @@ export default class Results extends Component {
           }
           fbString = facebookString.substr(l, m);
           facebookAddString = docPdf.splitTextToSize(fbString, 150);
-          docPdf.text(facebookAddString, 30, 40);
+          docPdf.text(facebookAddString, 20, 40);
           // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
           if (l + m < r) {
             docPdf.addPage();
+            docPdf.setDrawColor("#3B5998");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
             docPdf.setFontSize(16);
             docPdf.text('Your Data Dump Summary', 70, 20);
             docPdf.text('Facebook Summary', 80, 30);
@@ -707,7 +725,7 @@ export default class Results extends Component {
         
       } else {
         facebookAddString = docPdf.splitTextToSize(facebookString, 150);
-        docPdf.text(facebookAddString, 30, 40);
+        docPdf.text(facebookAddString, 20, 40);
       }
 
 
@@ -737,118 +755,122 @@ export default class Results extends Component {
       map routes count
       search count
       */
-    
-    docPdf.setFontSize(16);
-    docPdf.text('Your Data Dump Summary', 70, 20);
-    docPdf.text('Google Summary', 84, 30);
-    docPdf.setFontSize(12);
-    
-    
-    var totalSizeGG;
-    if (this.state.gg_total_size_GB == 0) {
-      totalSizeGG = "0";
-    } else {
-      totalSizeGG = JSON.stringify(this.state.gg_total_size_GB);
-    }
-    var bookmarksCount;
-    if (this.state.gg_bookmarks_count == 0) {
-      bookmarksCount = "0";
-    } else {
-      bookmarksCount = JSON.stringify(this.state.gg_bookmarks_count);
-    }
-    var advertisersCountGG;
-    if (this.state.gg_ads_count == 0) {
-      advertisersCountGG = "0";
-    } else {
-      advertisersCountGG = JSON.stringify(this.state.gg_ads_count);
-    }
-    var routeCount;
-    if (this.state.gg_maps_routes_count == 0) {
-      routeCount = "0";
-    } else {
-      routeCount = JSON.stringify(this.state.gg_maps_routes_count);
-    }
-    var searchCount;
-    if (this.state.gg_search_count == 0) {
-      searchCount = "0";
-    } else {
-      searchCount = JSON.stringify(this.state.gg_search_count);
-    }
-    var prof = " ";
-    prof = "Name: " + this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
-    var savedPlace = " ";
-    for (var k in this.state.gg_saved_places_map) {
-      savedPlace = savedPlace + " " + k + '\n';
-    }
-    savedPlace = savedPlace + JSON.stringify(this.state.gg_saved_places_map);
-    var adList = " ";
-    for (var g in this.state.gg_ads_list) {
-      adList = adList + this.state.gg_ads_list[g]["link"];
-    }
+      docPdf.setDrawColor("#F4B400");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+      docPdf.setFontSize(16);
+      docPdf.text('Your Data Dump Summary', 70, 20);
+      docPdf.text('Google Summary', 84, 30);
+      docPdf.setFontSize(12);
       
-    var googleString = "Total Size of Data Dump (GB): " + totalSizeGG + '\n\n' + 
-    "Profile: " + prof + '\n\n' +
-    "Number of bookmarks: " + bookmarksCount + '\n\n' + 
-    "Saved places on your map: " + savedPlace + '\n\n' + 
-    "Number of advertisers who have your data: " + advertisersCountGG + '\n\n' + 
-    "List of advertisers who have your data: " + adList + '\n\n' +
-    "Number of routes input into Google Maps: " + routeCount + '\n\n' + 
-    "Number of searches you've made on Google: " + searchCount + 
-    '\n\n';
       
-    var googleAddString;
-    if (googleString.length > 2000) {
-      var l = 0;
-      var r = googleString.length;
-      var m = r/2 - l;
-      if (m > 2000) {
-        m = 2000;
+      var totalSizeGG;
+      if (this.state.gg_total_size_GB == 0) {
+        totalSizeGG = "0";
+      } else {
+        totalSizeGG = JSON.stringify(this.state.gg_total_size_GB);
       }
-      do {
-        var index = m;
-        var ggString = googleString.substr(l, m - l);
-        while (index > l) {
-          if (ggString[index] == "," || ggString[index] == "\n") {
-            index++;
-            break;
-          } else {
-            index--;
+      var bookmarksCount;
+      if (this.state.gg_bookmarks_count == 0) {
+        bookmarksCount = "0";
+      } else {
+        bookmarksCount = JSON.stringify(this.state.gg_bookmarks_count);
+      }
+      var advertisersCountGG;
+      if (this.state.gg_ads_count == 0) {
+        advertisersCountGG = "0";
+      } else {
+        advertisersCountGG = JSON.stringify(this.state.gg_ads_count);
+      }
+      var routeCount;
+      if (this.state.gg_maps_routes_count == 0) {
+        routeCount = "0";
+      } else {
+        routeCount = JSON.stringify(this.state.gg_maps_routes_count);
+      }
+      var searchCount;
+      if (this.state.gg_search_count == 0) {
+        searchCount = "0";
+      } else {
+        searchCount = JSON.stringify(this.state.gg_search_count);
+      }
+      var prof = " ";
+      prof = "Name: " + this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
+      var savedPlace = " ";
+      for (var g in this.state.gg_saved_places_map) {
+        savedPlace = savedPlace + this.state.gg_saved_places_map[g]["label"];
+      }
+      var adList = " ";
+      for (var g in this.state.gg_ads_list) {
+        adList = adList + this.state.gg_ads_list[g]["label"];
+      }
+        
+      var googleString = "Total Size of Data Dump: " + totalSizeGG + ' GB\n\n' + 
+                        prof + '\n\n' +
+                        "Number of Bookmarks: " + bookmarksCount + '\n\n' + 
+                        "Saved Places on Your Map: " + savedPlace + '\n\n' + 
+                        "Number of Advertisers Served by Google: " + advertisersCountGG + '\n\n' + 
+                        "List of Advertisers Served by Google: " + adList + '\n\n' +
+                        "Number of Routes Input Into Google Maps: " + routeCount + '\n\n' + 
+                        "Number of Searches You've Made on Google: " + searchCount + 
+                        '\n\n';
+        
+      var googleAddString;
+      if (googleString.length > 2000) {
+        var l = 0;
+        var r = googleString.length;
+        var m = r/2 - l;
+        if (m > 2000) {
+          m = 2000;
+        }
+        do {
+          var index = m;
+          var ggString = googleString.substr(l, m - l);
+          while (index > l) {
+            if (ggString[index] == "," || ggString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
           }
-        }
-        // var pastM = m;
-        if (index > l) {
-          m = index;
-        } else {
-          m = m - l;
-        }
-        ggString = googleString.substr(l, m);
-        googleAddString = docPdf.splitTextToSize(ggString, 150);
-        docPdf.text(googleAddString, 30, 40);
-        // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-        if (l + m < r) {
-          docPdf.addPage();
-          docPdf.setFontSize(16);
-          docPdf.text('Your Data Dump Summary', 70, 20);
-          docPdf.text('Google Summary', 84, 30);
-          docPdf.setFontSize(12);
-        }
-        l += m;
-        m = l;
-        if (r - m > 2750) {
-          m = m + 2750;
-        } else if (r - m > 0) {
-          m = r;
-        } else {
-          m = r + 1;
-        }
-      } while (m <= r);
-      
-    } else {
-      googleAddString = docPdf.splitTextToSize(googleString, 150);
-      docPdf.text(googleAddString, 30, 40);
-    }
-      
-      
+          // var pastM = m;
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          ggString = googleString.substr(l, m);
+          googleAddString = docPdf.splitTextToSize(ggString, 150);
+          docPdf.text(googleAddString, 20, 40);
+          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setDrawColor("#F4B400");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Google Summary', 84, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 2750) {
+            m = m + 2750;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+        
+      } else {
+        googleAddString = docPdf.splitTextToSize(googleString, 150);
+        docPdf.text(googleAddString, 20, 40);
+      }
+        
+        
     }
 
     docPdf.save('Test.pdf');
