@@ -507,14 +507,14 @@ export default class Results extends Component {
       // this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
       var gen_list = " ";
       var i = 0;
-      for (var g in this.state.ap_genres_list) {
-        gen_list = gen_list + this.state.ap_genres_list[i]["Genre"] + ", ";
-        i++;
-      }
+      // for (var g in this.state.ap_genres_list) {
+        gen_list = gen_list + JSON.stringify(this.state.ap_genres_list) + ", ";
+      //   i++;
+      // }
       var art_list = " ";
       i = 0;
       for (var g in this.state.ap_artists_list) {
-        art_list = art_list + this.state.ap_artists_list[i]["Artist Name"] + ", ";
+        art_list = art_list + this.state.ap_artists_list["Artist Name"][i] + ", ";
       }
       var track_list = " ";
       for (var g in this.state.ap_tracks_list) {
@@ -634,8 +634,8 @@ export default class Results extends Component {
         advertisersCount = JSON.stringify(this.state.fb_advs_ct);
       }
       var siteList = " ";
-      for (var g in this.state.fb_site_list) {
-        siteList = siteList + this.state.fb_site_list[g] + ", ";
+      for (var g in this.state.fb_sites) {
+        siteList = siteList + this.state.fb_sites[g] + ", ";
       }
       var off_list = " ";
       for (var g in this.state.fb_off) {
@@ -775,9 +775,13 @@ export default class Results extends Component {
     var prof = " ";
     prof = "Name: " + this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
     var savedPlace = " ";
-    savedPlace = savedPlace + this.state.gg_saved_places_map["Title"];
+    for (var k, v in this.state.gg_saved_places_map) {
+      savedPlace = savedPlace + this.state.gg_saved_places_map + " " + k + " " + v + '\n';
+    }
     var adList = " ";
-    adList = adList + this.state.gg_ads_list['href'];
+    for (var g in this.state.gg_ads_list) {
+      adList = adList + this.state.gg_ads_list[g]["link"];
+    }
       
     var googleString = "Total Size of Data Dump (GB): " + totalSizeGG + '\n\n' + 
     "Profile: " + prof + '\n\n' +
