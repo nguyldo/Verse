@@ -509,16 +509,20 @@ export default class Results extends Component {
       for (var g in this.state.ap_genres_list) {
         gen_list = gen_list + this.state.ap_genres_list[g]["label"] + ", ";
       }
+      gen_list = gen_list + this.state.ap_genres_list.length;
       var art_list = " ";
       i = 0;
       for (var g in this.state.ap_artists_list) {
-        art_list = art_list + this.state.ap_artists_list[g]["label"] + ", ";
+        art_list = art_list + "label: " + this.state.ap_artists_list[g]["label"] + " " + 
+                              "id: " + this.state.ap_artists_list[g]["id"] + " " + 
+                              "value: " + this.state.ap_artists_list[g]["value"] + "\n\n";
       }
+      art_list = art_list + this.state.ap_artists_list.length;
       var track_list = " ";
       for (var g in this.state.ap_tracks_list) {
         track_list = track_list + this.state.ap_tracks_list[g]["label"] + ", ";
       }
-
+      track_list = track_list + this.state.ap_tracks_list.length;
 
       var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
                         "Total Listen Time: " + listen + '\n\n' +
@@ -655,12 +659,12 @@ export default class Results extends Component {
                           '\n\n';
 
       var facebookAddString;
-      if (facebookString.length > 2250) {
+      if (facebookString.length > 2750) {
         var l = 0;
         var r = facebookString.length;
         var m = r/2 - l;
-        if (m > 2250) {
-          m = 2250;
+        if (m > 2750) {
+          m = 2750;
         }
         do {
           var index = m;
@@ -692,8 +696,8 @@ export default class Results extends Component {
           }
           l += m;
           m = l;
-          if (r - m > 2400) {
-            m = m + 2400;
+          if (r - m > 2750) {
+            m = m + 2750;
           } else if (r - m > 0) {
             m = r;
           } else {
