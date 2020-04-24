@@ -335,19 +335,19 @@ export default class Results extends Component {
 
 
       var watchCount;
-      if (this.state.watch_count == 0) {
-        watchCount = "0";
+      if (this.state.nf_watch_count == -1) {
+        watchCount = "N/A";
       } else {
         watchCount = JSON.stringify(this.state.nf_watch_count);
       }
       var showList = " ";
       for (var g in this.state.nf_shows) {
-        showList = showList + g + ", "
+        showList = showList + this.state.nf_shows[g]["label"] + ", "
       }
       var movieList = " ";
       var i = 0;
       for (var g in this.state.nf_movies) {
-        movieList = movieList + this.state.nf_movies[i] + ", "
+        movieList = movieList + this.state.nf_movies[g]["label"] + ", "
         i++
       }
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
@@ -440,10 +440,10 @@ export default class Results extends Component {
 
 
       var totalSize;
-      if (this.state.total_size == 0) {
-        totalSize = "0";
+      if (this.state.ap_total_size_GB == -1) {
+        totalSize = "N/A";
       } else {
-        totalSize = JSON.stringify(this.state.ap_total_size);
+        totalSize = JSON.stringify(this.state.ap_total_size_GB) + " GB";
       }
       var listen;
       
@@ -508,21 +508,21 @@ export default class Results extends Component {
       var gen_list = " ";
       var i = 0;
       for (var g in this.state.ap_genres_list) {
-        gen_list = gen_list + this.state.ap_genres_list[i] + ", ";
+        gen_list = gen_list + this.state.ap_genres_list[i]["Genre"] + ", ";
         i++;
       }
       var art_list = " ";
       i = 0;
       for (var g in this.state.ap_artists_list) {
-        art_list = art_list + this.state.ap_artists_list[i] + ", ";
+        art_list = art_list + this.state.ap_artists_list[i]["Artist Name"] + ", ";
       }
       var track_list = " ";
       for (var g in this.state.ap_tracks_list) {
-        track_list = track_list + this.state.ap_tracks_list["Content Name"] + ", ";
+        track_list = track_list + this.state.ap_tracks_list[g]["Content Name"] + ", ";
       }
 
 
-      var appleString = "Total Size of Data Dump: " + totalSize + ' GB\n\n' + 
+      var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
                         "Total Listen Time: " + listen + '\n\n' +
                         "Date Range of All Activity:" + rang + '\n\n' + 
                         "Genres List:" + gen_list + '\n\n' + 
@@ -616,30 +616,30 @@ export default class Results extends Component {
 
 
       var sitesCount;
-      if (this.state.fb_sites_ct == 0) {
-        sitesCount = "0";
+      if (this.state.fb_sites_ct == -1) {
+        sitesCount = "N/A";
       } else {
         sitesCount = JSON.stringify(this.state.fb_sites_ct);
       }
       var activitiesCount;
-      if (this.state.fb_off_ct == 0) {
-        activitiesCount = "0";
+      if (this.state.fb_off_ct == -1) {
+        activitiesCount = "N/A";
       } else {
         activitiesCount = JSON.stringify(this.state.fb_off_ct);
       }
       var advertisersCount;
-      if (this.state.fb_advs_ct == 0) {
-        advertisersCount = "0";
+      if (this.state.fb_advs_ct == -1) {
+        advertisersCount = "N/A";
       } else {
         advertisersCount = JSON.stringify(this.state.fb_advs_ct);
       }
       var siteList = " ";
       for (var g in this.state.fb_site_list) {
-        siteList = siteList + this.state.fb_site_list["websites_list"] + ", ";
+        siteList = siteList + this.state.fb_site_list[g] + ", ";
       }
       var off_list = " ";
       for (var g in this.state.fb_off) {
-        off_list = off_list + this.state.fb_off["off_facebook_activity_list"] + ", "
+        off_list = off_list + this.state.fb_off[g] + ", "
       }
       var advList = " ";
       for (var g in this.state.fb_advs) {
