@@ -506,19 +506,17 @@ export default class Results extends Component {
       
       // this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
       var gen_list = " ";
-      var i = 0;
-      // for (var g in this.state.ap_genres_list) {
-        gen_list = gen_list + JSON.stringify(this.state.ap_genres_list) + ", ";
-      //   i++;
-      // }
+      for (var g in this.state.ap_genres_list) {
+        gen_list = gen_list + this.state.ap_genres_list[g]["label"] + ", ";
+      }
       var art_list = " ";
       i = 0;
       for (var g in this.state.ap_artists_list) {
-        art_list = art_list + this.state.ap_artists_list["Artist Name"][i] + ", ";
+        art_list = art_list + this.state.ap_artists_list[g]["label"] + ", ";
       }
       var track_list = " ";
       for (var g in this.state.ap_tracks_list) {
-        track_list = track_list + this.state.ap_tracks_list[g]["Content Name"] + ", ";
+        track_list = track_list + this.state.ap_tracks_list[g]["label"] + ", ";
       }
 
 
