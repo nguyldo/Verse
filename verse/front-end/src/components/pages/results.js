@@ -8,6 +8,10 @@ import html2canvas from "html2canvas";
 import Grid from '@material-ui/core/Grid';
 import ReactTooltip from "react-tooltip";
 
+// import jsPDF from "../visuals/jspdf.min.js";
+import jsPDF from 'jspdf';
+import { json } from "d3";
+
 //Facebook Visuals
 import IPAddressChart from "../visuals/IPAddressChart";
 import ReactionBarChart from "../visuals/ReactionBarChart";
@@ -52,23 +56,6 @@ import BookmarksBigNum from "../visuals/BookmarksBigNum.js";
 import AdsBigNum from "../visuals/AdsBigNum.js";
 import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
 import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
-
-
-function MapWrapper(data) {
-  const [content, setContent] = useState("");
-  return (
-    <div>
-      <Map setTooltipContent={setContent, data} />
-      <ReactTooltip>{content}</ReactTooltip>
-    </div>
-  );
-}
-
-// import jsPDF from "../visuals/jspdf.min.js";
-import jsPDF from 'jspdf';
-import { json } from "d3";
-
-
 
 export default class Results extends Component {
   
