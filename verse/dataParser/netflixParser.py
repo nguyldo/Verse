@@ -25,6 +25,11 @@ def getShowTitle(title):
     
     return title[:count]
 
+def convertDate(date):
+    dates = date.split('/')
+    return "" + dates[1] + "/" + dates[0] + "/" + dates[2]
+
+
 def parseDate(date):
     dates = date.split('/')
     dates.reverse()
