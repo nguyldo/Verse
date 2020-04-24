@@ -504,7 +504,7 @@ export default class Results extends Component {
         rang = " N/A";
       }
       
-      this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
+      // this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
       var gen_list = " ";
       var i = 0;
       for (var g in this.state.ap_genres_list) {
@@ -635,11 +635,11 @@ export default class Results extends Component {
       }
       var siteList = " ";
       for (var g in this.state.fb_site_list) {
-        siteList = siteList + this.state.fb_site_list[g] + ", ";
+        siteList = siteList + this.state.fb_site_list["websites_list"] + ", ";
       }
       var off_list = " ";
       for (var g in this.state.fb_off) {
-        off_list = off_list + this.state.fb_off["businesses_off_facebook"] + ", "
+        off_list = off_list + this.state.fb_off["off_facebook_activity_list"] + ", "
       }
       var advList = " ";
       for (var g in this.state.fb_advs) {
