@@ -25,11 +25,22 @@ monthToNum = {
     "Dec": "12"
 }
 
-# Function: get geolocation from IP address
-# Return: geolocation
-def getCoordinates(ip_addr):
+# Function: given ip address
+# Return: geolocation coordinates
+def getLocation(ip_addr):
     details = handler.getDetails(ip_addr)
-    return details.loc
+    coords = details.loc
+    city = details.city
+    state = details.region
+    return [coords, city, state]
+
+# Function: given a dictionary and name of IP addr field in that dict,
+# Return: an updated dictionary with coordinates inserted for each value
+def insertCoordinatesFromIP(List, columnName):
+    df = pd.DataFrame(List)
+    df["Location"] = df[columnName].apply(lambda x: getLocation(x))
+    df = df.to_dict('records')
+    return df
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
@@ -161,7 +172,7 @@ def deleteData(rootPath):
 # ==================== FOR APPLE ONLY ====================
 
 # Function: filters the given Dict by column and handles empty or null values
-# Return: a dictionary containing only the columns specified in fieldNames
+# Return: a list of dictionaries containing only the columns specified in fieldNames
 def filterByField(Dict, fieldNames):
     df = pd.DataFrame.from_dict(Dict)
     df = df.replace(r'^\s*$', np.NaN, regex=True)
