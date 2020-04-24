@@ -158,10 +158,23 @@ export default class Results extends Component {
       this.state.gg_profile_info_header = this.state.compiledRequest.google.profile_info_header;
       this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_count;
       this.state.gg_saved_places_map = this.state.compiledRequest.google.saved_places_map;
+
       //this.state.gg_youtube_playlists = this.state.compiledRequest.google.youtube_playlists;
-      //this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
+
+      if (this.state.compiledRequest.google.youtube_playlists_count == -1) {
+        this.state.gg_youtube_playlists_count = "N/A"
+      } else {
+        this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtube_playlists_count;
+      }
+
       //this.state.gg_youtube_subscriptions = this.state.compiledRequest.google.youtube_subscriptions;
-      //this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
+
+      if (this.state.compiledRequest.google.youtube_subscriptions_count == -1) {
+        this.state.gg_youtube_subscriptions_count = "N/A"
+      } else {
+        this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
+      }
+
       this.state.gg_ads_count = this.state.compiledRequest.google.ads_count;
       this.state.gg_ads_list = this.state.compiledRequest.google.ads_list;
       this.state.gg_ads_waffle = this.state.compiledRequest.google.ads_waffle;
@@ -178,9 +191,9 @@ export default class Results extends Component {
       this.state.gg_bookmarks_count = [];
       this.state.gg_saved_places_map = [["", ["", ""]]];
       //this.state.gg_youtube_playlists = [];
-      //this.state.gg_youtube_playlists_count = -1;
+      this.state.gg_youtube_playlists_count = -1;
       //this.state.gg_youtube_subscriptions = [];
-      //this.state.gg_youtube_subscriptions_count = -1;
+      this.state.gg_youtube_subscriptions_count = -1;
       this.state.gg_ads_count = -1;
       this.state.gg_ads_list = [];
       this.state.gg_ads_waffle = [];
@@ -458,7 +471,7 @@ export default class Results extends Component {
                       </Grid>
 
                       <Grid key={15}>
-                        <YoutubePlaylistsBigNum />
+                        <YoutubePlaylistsBigNum data={this.state.gg_youtube_playlists_count}/>
                       </Grid>
                     </Grid>
                     
@@ -468,7 +481,7 @@ export default class Results extends Component {
                       </Grid>
 
                       <Grid key={17}>
-                        <YoutubeSubscriptionsBigNum />
+                        <YoutubeSubscriptionsBigNum data={this.state.gg_youtube_subscriptions_count}/>
                       </Grid>
                     </Grid>
                   </Grid>

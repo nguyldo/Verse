@@ -101,7 +101,9 @@ def parseGoogleData(googleDataDumpName):
             # -----  -----
             Dict["youtube_playlists_count"] = len(data_playlists)
             
-        else: print("/YouTube and YouTube Music/playlists not found")
+        else: 
+            Dict["youtube_playlists_count"] = -1
+            print("/YouTube and YouTube Music/playlists not found")
 
         
         file_subscriptions = youtubeDirPath + "/subscriptions/subscriptions.json"
@@ -115,7 +117,9 @@ def parseGoogleData(googleDataDumpName):
             # -----  -----
             Dict["youtube_subscriptions_count"] = len(data_subscriptions)
 
-        else: print("/subscriptions/subscriptions.json not found")
+        else: 
+            Dict["youtube_subscriptions_count"] = -1
+            print("/subscriptions/subscriptions.json not found")
 
         # ---------- Activity Data ----------
         activityDirPath = rootPathName + "/My Activity"

@@ -45,7 +45,7 @@ class YoutubePlaylistsBigNum extends React.Component {
                         subheader="on Youtube"
                     />
                     <CardContent>
-                        <h1>{20}</h1>
+                        <h1>{this.props.data}</h1>
                     </CardContent>
                 </Card>
             </React.Fragment>
