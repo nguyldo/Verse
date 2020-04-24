@@ -38,7 +38,7 @@ import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
 
 //Google Visuals
-import Map from "../visuals/Map.js"
+import SavedPlacesMap from "../visuals/SavedPlacesMap.js"
 import SearchesBigNum from "../visuals/SearchesBigNum.js";
 //import SearchLineChart from "../visuals/SearchLineChart.js"
 import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
@@ -990,7 +990,7 @@ export default class Results extends Component {
                 </Grid>
               </Grid>
 
-              <Map data={this.state.gg_saved_places_map}/>
+              <SavedPlacesMap data={this.state.gg_saved_places_map}/>
 
               <GoogleSearchWaffleChart data={this.state.gg_search_waffle} 
                                         from="2017-03-01" 

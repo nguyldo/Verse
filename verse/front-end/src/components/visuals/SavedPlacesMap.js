@@ -3,7 +3,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from '@material-ui/core';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapGL, { Marker, Popup } from 'react-map-gl';
 
 const styles = theme => ({
     card: {
@@ -35,40 +35,7 @@ const imgStyle = {
     height: '30px'
 };
 
-/*
-const map = new mapboxgl.Map({
-    container: this.mapContainer,
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [this.state.lng, this.state.lat],
-    zoom: this.state.zoom
-});
-
-map.on('click', function (e) {
-    var features = map.queryRenderedFeatures(e.point, {
-        layers: ['pillbox-data'] // replace this with the name of the layer
-    });
-
-    if (!features.length) {
-        return;
-    }
-
-    var feature = features[0];
-
-    var popup = new mapboxgl.Popup({
-        offset: [0, -15]
-    })
-        .setLngLat(feature.geometry.coordinates)
-        .setHTML('<h3>' + feature.properties.title + '</h3><p>' + feature.properties.description + '</p>')
-        .setLngLat(feature.geometry.coordinates)
-        .addTo(map);
-});
-
-map.addControl(new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken
-}));
-*/
-
-class Map extends React.Component {
+class SavedPlacesMap extends React.Component {
 
     state = {
         viewport: {
@@ -77,34 +44,56 @@ class Map extends React.Component {
             latitude: 40.4237,
             longitude: -86.9212,
             zoom: 6
-        }
+        },
+        selectedHotspot: null
     };     
+
+    setSelectedHotspot = object => {
+        this.setState({
+            selectedHotspot: object
+        });
+    };
+
+    closePopup = () => {
+        this.setState({
+            selectedHotspot: null
+        });
+    };
 
     loadMarkers = () => {
         return this.props.data.map(spot => {
-            if (spot.length === 2) {
-                console.log(spot)
-                return (
-                    <Marker
-                        latitude={parseFloat(spot[1]["Latitude"])}
-                        longitude={parseFloat(spot[1]["Longitude"])}
-                    >
-                        <img alt="" style={imgStyle} className="mapmarker" src="mapmarker.svg" />
-                    </Marker>
-                );
-            } else if (spot.length === 3) {
-                return (
+            return (
+                <div>
                     <Marker
                         latitude={parseFloat(spot[2]["Latitude"])}
                         longitude={parseFloat(spot[2]["Longitude"])}
                     >
-                        <img alt="" style={imgStyle} className="mapmarker" src="mapmarker.svg" />
+                        <img
+                            onClick={() => {
+                                this.setSelectedHotspot(spot);
+                            }}
+                            alt="spot.length=3"
+                            style={imgStyle}
+                            className="mapmarker"
+                            src="mapmarker.svg"
+                        />
                     </Marker>
-                );
-            }
+                    {
+                        this.state.selectedHotspot !== null ? (
+                            <Popup
+                                latitude={parseFloat(this.state.selectedHotspot[2]["Latitude"])}
+                                longitude={parseFloat(this.state.selectedHotspot[2]["Longitude"])}
+                                onClose={this.closePopup}
+                            >
+                                <p>{this.state.selectedHotspot[0]}</p>
+                            </Popup>
+                        ) : null
+                    }
+                </div>
+            );
         });
-    };
-
+    }; 
+    
     render() {
         const { classes } = this.props;
 
@@ -130,7 +119,6 @@ class Map extends React.Component {
                                 <img alt="Purdue" style={imgStyle} className="mapmarker" src="mapmarker.svg"/>
                             </Marker>
                             {this.loadMarkers()}
-                            
                         </ReactMapGL>
                     </CardContent>
                 </Card>
@@ -139,4 +127,4 @@ class Map extends React.Component {
     }
 }
 
-export default withStyles(styles)(Map);
+export default withStyles(styles)(SavedPlacesMap);

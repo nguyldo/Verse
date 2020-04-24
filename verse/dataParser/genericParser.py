@@ -4,6 +4,7 @@ import pandas as pd #parse csv
 import numpy as np
 import json
 import operator
+import datetime
 from bs4 import BeautifulSoup
 
 import ipinfo
@@ -34,13 +35,18 @@ def getLocation(ip_addr):
     state = details.region
     return [coords, city, state]
 
-# Function: given a dictionary and name of IP addr field in that dict,
+# Function: given a list of dictionaries and name of IP addr field in that dict,
 # Return: an updated dictionary with coordinates inserted for each value
 def insertCoordinatesFromIP(List, columnName):
     df = pd.DataFrame(List)
     df["Location"] = df[columnName].apply(lambda x: getLocation(x))
     df = df.to_dict('records')
     return df
+
+# Function: given an epoch timestamp 
+# Return: a human readable format
+def getDatetimeFromEpoch(epoch):
+    return datetime.datetime.fromtimestamp(epoch).strftime('%c')
 
 # Function: traverse *some_dir* with a specified *level* of recursive depth
 # Return: null
