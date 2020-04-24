@@ -53,6 +53,9 @@ import AdsBigNum from "../visuals/AdsBigNum.js";
 import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
 import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
 
+// import jsPDF from "../visuals/jspdf.min.js";
+import jsPDF from 'jspdf';
+import { json } from "d3";
 
 function MapWrapper(data) {
   const [content, setContent] = useState("");
@@ -64,9 +67,6 @@ function MapWrapper(data) {
   );
 }
 
-// import jsPDF from "../visuals/jspdf.min.js";
-import jsPDF from 'jspdf';
-import { json } from "d3";
 
 
 
@@ -180,7 +180,7 @@ export default class Results extends Component {
       this.state.gg_youtube_search_waffle = this.state.compiledRequest.google.youtube_search_waffle;
     } else {
       console.log("cwm: google data was NOT loaded");
-      this.state.gg_size = -1;
+      this.state.gg_total_size_GB = -1;
       this.state.gg_profile_info_header = {"name": "", "email": ""};
       this.state.gg_bookmarks_count = [];
       this.state.gg_saved_places_map = [["", ["", ""]]];
@@ -342,11 +342,11 @@ export default class Results extends Component {
       }
       var showList;
       for (var g in this.state.shows) {
-        showList = showList + this.state.shows[g] + ", "
+        showList = showList + this.state.shows['label'] + ", "
       }
       var movieList;
       for (var g in this.state.movies) {
-        movieList = movieList + this.state.movies[g] + ", "
+        movieList = movieList + this.state.movies['label'] + ", "
       }
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
                           "Shows: " + showList + '\n\n' +
@@ -444,90 +444,106 @@ export default class Results extends Component {
         totalSize = JSON.stringify(this.state.total_size);
       }
       var listen;
-      listen = this.state.listen_time['hours'] + " hours, " + 
-               this.state.listen_time['minutes'] + " minutes, " + 
-               this.state.listen_time['seconds'] + " seconds ";
+      
+      var hour = Math.round(this.state.ap_listen_time['hours']);
+      var minute = Math.round(this.state.ap_listen_time['minutes']);
+      var second = Math.round(this.state.ap_listen_time['seconds']);
+      listen = hour + " hours, " + 
+               minute + " minutes, " + 
+               second + " seconds ";
 
       var rang = " ";
-      var sdl = 1;
-      for (var jlk in this.state.date_range) {
-        if (sdl == 1) {
-          rang = rang + jlk + ", ";
-        } else if (sdl == 2) {
-          if (jlk == 1) {
-            rang = rang + "January ";
-          } else if (jlk == 2) {
-            rang = rang + "February ";
-          } else if (jlk == 3) {
-            rang = rang + "March ";
-          } else if (jlk == 4) {
-            rang = rang + "April ";
-          } else if (jlk == 5) {
-            rang = rang + "May ";
-          } else if (jlk == 6) {
-            rang = rang + "June ";
-          } else if (jlk == 7) {
-            rang = rang + "July ";
-          } else if (jlk == 8) {
-            rang = rang + "August ";
-          } else if (jlk == 9) {
-            rang = rang + "September ";
-          } else if (jlk == 10) {
-            rang = rang + "October ";
-          } else if (jlk == 11) {
-            rang = rang + "November ";
-          } else if (jlk == 12) {
-            rang = rang + "December ";
-          } else {
-            rang = rang + "Unknown month "
-          }
-        } else {
-          rang = rang + jlk + "  -  ";
-        }
-        sdl++;
-      }
-      var mon;
-      if (this.state.date_range[1] == 1) {
-        mon = "January ";
-      } else if (this.state.date_range[1] == 2) {
-        mon = "February ";
-      } else if (this.state.date_range[1] == 3) {
-        mon = "March ";
-      } else if (this.state.date_range[1] == 4) {
-        mon = "April ";
-      } else if (this.state.date_range[1] == 5) {
-        mon = "May ";
-      } else if (this.state.date_range[1] == 6) {
-        mon = "June ";
-      } else if (this.state.date_range[1] == 7) {
-        mon = "July ";
-      } else if (this.state.date_range[1] == 8) {
-        mon = "August ";
-      } else if (this.state.date_range[1] == 9) {
-        mon = "September ";
-      } else if (this.state.date_range[1] == 10) {
-        mon = "October ";
-      } else if (this.state.date_range[1] == 11) {
-        mon = "November ";
-      } else if (this.state.date_range[1] == 12) {
-        mon = "December ";
-      } else {
-        mon = "Unknown month "
-      }
-      rang = rang + this.state.date_range[0] + ", " + mon + this.state.date_range[2];
+      rang = rang + this.state.ap_date_range["activity_date_range"];
+      // var sdl = 1;
+      // for (var jlk in this.state.ap_date_range) {
+      //   if (sdl == 1) {
+      //     rang = rang + jlk + ", ";
+      //   } else if (sdl == 2) {
+      //     if (jlk == 1) {
+      //       rang = rang + "January ";
+      //     } else if (jlk == 2) {
+      //       rang = rang + "February ";
+      //     } else if (jlk == 3) {
+      //       rang = rang + "March ";
+      //     } else if (jlk == 4) {
+      //       rang = rang + "April ";
+      //     } else if (jlk == 5) {
+      //       rang = rang + "May ";
+      //     } else if (jlk == 6) {
+      //       rang = rang + "June ";
+      //     } else if (jlk == 7) {
+      //       rang = rang + "July ";
+      //     } else if (jlk == 8) {
+      //       rang = rang + "August ";
+      //     } else if (jlk == 9) {
+      //       rang = rang + "September ";
+      //     } else if (jlk == 10) {
+      //       rang = rang + "October ";
+      //     } else if (jlk == 11) {
+      //       rang = rang + "November ";
+      //     } else if (jlk == 12) {
+      //       rang = rang + "December ";
+      //     } else {
+      //       rang = rang + "Unknown month "
+      //     }
+      //   } else {
+      //     rang = rang + jlk + "  -  ";
+      //   }
+      //   sdl++;
+      // }
+      // var mon;
+      // if (this.state.ap_date_range[1] == 1) {
+      //   mon = "January ";
+      // } else if (this.state.ap_date_range[1] == 2) {
+      //   mon = "February ";
+      // } else if (this.state.ap_date_range[1] == 3) {
+      //   mon = "March ";
+      // } else if (this.state.ap_date_range[1] == 4) {
+      //   mon = "April ";
+      // } else if (this.state.ap_date_range[1] == 5) {
+      //   mon = "May ";
+      // } else if (this.state.ap_date_range[1] == 6) {
+      //   mon = "June ";
+      // } else if (this.state.ap_date_range[1] == 7) {
+      //   mon = "July ";
+      // } else if (this.state.ap_date_range[1] == 8) {
+      //   mon = "August ";
+      // } else if (this.state.ap_date_range[1] == 9) {
+      //   mon = "September ";
+      // } else if (this.state.ap_date_range[1] == 10) {
+      //   mon = "October ";
+      // } else if (this.state.ap_date_range[1] == 11) {
+      //   mon = "November ";
+      // } else if (this.state.ap_date_range[1] == 12) {
+      //   mon = "December ";
+      // } else {
+      //   mon = "Unknown month "
+      // }
+      // rang = rang + this.state.ap_date_range[0] + ", " + mon + this.state.ap_date_range[2];
 
-      var gen_list;
-      for (var g in this.state.genres_list) {
-        gen_list = gen_list + JSON.stringify(g) + ", "
+      var gen_list = " ";
+      for (var g in this.state.ap_genres_list) {
+        gen_list = gen_list + this.state.ap_genres_list['Genre'] + ", ";
       }
+      var art_list = " ";
+      for (var g in this.state.ap_artists_list) {
+        art_list = art_list + this.state.ap_artists_list["Artist Name"] + ", ";
+      }
+      var track_list = " ";
+      for (var g in this.state.ap_tracks_list) {
+        track_list = track_list + this.state.ap_tracks_list["Content Name"] + ", ";
+      }
+      var dRange = " ";
+      dRange = "Date range: " + this.state.ap_date_range["activity_date_range"];
 
 
-      var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
+      var appleString = "Total Size of Data Dump: " + totalSize + ' GB\n\n' + 
                         "Total Listen Time: " + listen + '\n\n' +
                         "Date Range of All Activity:" + rang + '\n\n' + 
-                        "Genres List: " + gen_list + '\n\n' + 
-                        "Artists List: " + this.state.artists_list + '\n\n' +
-                        "Tracks List: " + this.state.tracks_list + 
+                        dRange + '\n\n' + 
+                        "Genres List:" + gen_list + '\n\n' + 
+                        "Artists List:" + art_list + '\n\n' +
+                        "Tracks List:" + track_list + 
                         '\n\n';
 
 
@@ -631,7 +647,7 @@ export default class Results extends Component {
       if (this.state.advs_ct == 0) {
         advertisersCount = "0";
       } else {
-        advertisersCount = toString(this.state.advs_ct);
+        advertisersCount = JSON.stringify(this.state.advs_ct);
       }
       var siteList = " ";
       for (var g in this.state.site_list) {
@@ -639,7 +655,7 @@ export default class Results extends Component {
       }
       var off_list = " ";
       for (var g in this.state.off) {
-        off_list = off_list + g + ", "
+        off_list = off_list + this.state.off["businesses_off_facebook"] + ", "
       }
       var advList = " ";
       for (var g in this.state.advs) {
@@ -712,131 +728,137 @@ export default class Results extends Component {
     // }
 
 
-    // if ("google" in this.state.compiledRequest) {
+    if ("google" in this.state.compiledRequest) {
 
-    //   docPdf.addPage();
+      docPdf.addPage();
       
-    //   //Google
+      //Google
       
-    //   // Not used in pdf:
-    //   // this.state.gg_ads_waffle
-    //   // this.state.gg_maps_activity
-    //   // this.state.gg_search_waffle
-    //   // this.state.gg_youtube_piechart
-    //   // this.state.gg_youtube_search_waffle
+      // Not used in pdf:
+      // this.state.gg_ads_waffle
+      // this.state.gg_maps_activity
+      // this.state.gg_search_waffle
+      // this.state.gg_youtube_piechart
+      // this.state.gg_youtube_search_waffle
       
-    //   /*
-    //   total size
-    //   profile info
-    //   bookmarks count
-    //   saved places on your map
-    //   ads count
-    //   ads
-    //   map routes count
-    //   search count
-    //   */
+      /*
+      total size
+      profile info
+      bookmarks count
+      saved places on your map
+      ads count
+      ads
+      map routes count
+      search count
+      */
     
-    // docPdf.setFontSize(16);
-    // docPdf.text('Your Data Dump Summary', 70, 20);
-    // docPdf.text('Google Summary', 84, 30);
-    // docPdf.setFontSize(12);
+    docPdf.setFontSize(16);
+    docPdf.text('Your Data Dump Summary', 70, 20);
+    docPdf.text('Google Summary', 84, 30);
+    docPdf.setFontSize(12);
     
     
-    // var totalSizeGG;
-    // if (this.state.gg_total_size_GB == 0) {
-    //   totalSizeGG = "0";
-    //   } else {
-    //     totalSizeGG = toString(this.state.gg_total_size_GB);
-    //   }
-    //   var bookmarksCount;
-    //   if (this.state.gg_bookmarks_count == 0) {
-    //     bookmarksCount = "0";
-    //   } else {
-    //     bookmarksCount = toString(this.state.gg_bookmarks_count);
-    //   }
-    //   var advertisersCountGG;
-    //   if (this.state.gg_ads_count == 0) {
-    //     advertisersCountGG = "0";
-    //   } else {
-    //     advertisersCountGG = toString(this.state.gg_ads_count);
-    //   }
-    //   var routeCount;
-    //   if (this.state.gg_maps_routes_count == 0) {
-    //     routeCount = "0";
-    //   } else {
-    //     routeCount = toString(this.state.gg_maps_routes_count);
-    //   }
-    //   var searchCount;
-    //   if (this.state.gg_search_count == 0) {
-    //     searchCount = "0";
-    //   } else {
-    //     searchCount = toString(this.state.gg_search_count);
-    //   }
+    var totalSizeGG;
+    if (this.state.gg_total_size_GB == 0) {
+      totalSizeGG = "0";
+    } else {
+      totalSizeGG = JSON.stringify(this.state.gg_total_size_GB);
+    }
+    var bookmarksCount;
+    if (this.state.gg_bookmarks_count == 0) {
+      bookmarksCount = "0";
+    } else {
+      bookmarksCount = JSON.stringify(this.state.gg_bookmarks_count);
+    }
+    var advertisersCountGG;
+    if (this.state.gg_ads_count == 0) {
+      advertisersCountGG = "0";
+    } else {
+      advertisersCountGG = JSON.stringify(this.state.gg_ads_count);
+    }
+    var routeCount;
+    if (this.state.gg_maps_routes_count == 0) {
+      routeCount = "0";
+    } else {
+      routeCount = JSON.stringify(this.state.gg_maps_routes_count);
+    }
+    var searchCount;
+    if (this.state.gg_search_count == 0) {
+      searchCount = "0";
+    } else {
+      searchCount = JSON.stringify(this.state.gg_search_count);
+    }
+    var prof = " ";
+    prof = "Name: " + this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
+    var savedPlace = " ";
+    savedPlace = savedPlace + this.state.gg_saved_places_map["Title"];
+    var adList = " ";
+    adList = adList + this.state.gg_ads_list['href'];
       
-    //   var googleString = "Total Size of Data Dump (GB): " + totalsizeGG + '\n\n' + 
-    //   "Profile: " + this.state.gg_profile_info_header + '\n\n' +
-    //   "Number of bookmarks: " + bookmarksCount + '\n\n' + 
-    //   "Saved places on your map: " + this.state.gg_saved_places_map + '\n\n' + 
-    //   "Number of advertisers who have your data: " + advertisersCountGG + '\n\n' + 
-    //   "List of advertisers who have your data: " + this.state.gg_ads_list + '\n\n' +
-    //   "Number of routes input into Google Maps: " + routeCount + '\n\n' + 
-    //   "Number of searches you've made on Google: " + searchCount + 
-    //   '\n\n';
+    var googleString = "Total Size of Data Dump (GB): " + totalSizeGG + '\n\n' + 
+    "Profile: " + prof + '\n\n' +
+    "Number of bookmarks: " + bookmarksCount + '\n\n' + 
+    "Saved places on your map: " + savedPlace + '\n\n' + 
+    "Number of advertisers who have your data: " + advertisersCountGG + '\n\n' + 
+    "List of advertisers who have your data: " + adList + '\n\n' +
+    "Number of routes input into Google Maps: " + routeCount + '\n\n' + 
+    "Number of searches you've made on Google: " + searchCount + 
+    '\n\n';
       
-    // var googleAddString;
-    // if (googleString.length > 2000) {
-    //   var l = 0;
-    //   var r = googleString.length;
-    //   var m = r/2 - l;
-    //   if (m > 2000) {
-    //     m = 2000;
-    //   }
-    //   do {
-    //     var index = m;
-    //     var ggString = googleString.substr(l, m - l);
-    //     while (index > l) {
-    //       if (ggString[index] == "," || ggString[index] == "\n") {
-    //         index++;
-    //         break;
-    //       } else {
-    //         index--;
-    //       }
-    //     }
-    //     // var pastM = m;
-    //     if (index > l) {
-    //       m = index;
-    //     } else {
-    //       m = m - l;
-    //     }
-    //     ggString = googleString.substr(l, m);
-    //     googleAddString = docPdf.splitTextToSize(ggString, 150);
-    //     docPdf.text(googleAddString, 30, 40);
-    //     // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-    //     if (l + m < r) {
-    //       docPdf.addPage();
-    //       docPdf.setFontSize(16);
-    //       docPdf.text('Your Data Dump Summary', 70, 20);
-    //       docPdf.text('Google Summary', 84, 30);
-    //       docPdf.setFontSize(12);
-    //     }
-    //     l += m;
-    //     m = l;
-    //     if (r - m > 2750) {
-    //       m = m + 2750;
-    //     } else if (r - m > 0) {
-    //       m = r;
-    //     } else {
-    //       m = r + 1;
-    //     }
-    //   } while (m <= r);
+    var googleAddString;
+    if (googleString.length > 2000) {
+      var l = 0;
+      var r = googleString.length;
+      var m = r/2 - l;
+      if (m > 2000) {
+        m = 2000;
+      }
+      do {
+        var index = m;
+        var ggString = googleString.substr(l, m - l);
+        while (index > l) {
+          if (ggString[index] == "," || ggString[index] == "\n") {
+            index++;
+            break;
+          } else {
+            index--;
+          }
+        }
+        // var pastM = m;
+        if (index > l) {
+          m = index;
+        } else {
+          m = m - l;
+        }
+        ggString = googleString.substr(l, m);
+        googleAddString = docPdf.splitTextToSize(ggString, 150);
+        docPdf.text(googleAddString, 30, 40);
+        // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+        if (l + m < r) {
+          docPdf.addPage();
+          docPdf.setFontSize(16);
+          docPdf.text('Your Data Dump Summary', 70, 20);
+          docPdf.text('Google Summary', 84, 30);
+          docPdf.setFontSize(12);
+        }
+        l += m;
+        m = l;
+        if (r - m > 2750) {
+          m = m + 2750;
+        } else if (r - m > 0) {
+          m = r;
+        } else {
+          m = r + 1;
+        }
+      } while (m <= r);
       
-    // } else {
-    //   googleAddString = docPdf.splitTextToSize(googleString, 150);
-    //   docPdf.text(googleAddString, 30, 40);
-    // }
+    } else {
+      googleAddString = docPdf.splitTextToSize(googleString, 150);
+      docPdf.text(googleAddString, 30, 40);
+    }
       
       
-    // }
+    }
 
     docPdf.save('Test.pdf');
       
