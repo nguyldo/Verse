@@ -313,7 +313,6 @@ export default class Results extends Component {
   genPDF() {
     var docPdf = new jsPDF();
     if ("facebook" in this.state.compiledRequest) {
-      docPdf.addPage();
       docPdf.setDrawColor("#3B5998");
       docPdf.setLineWidth(1.5);
       docPdf.roundedRect(10, 10, 190, 277, 3, 3);
@@ -554,8 +553,7 @@ export default class Results extends Component {
     }
     
     if ("netflix" in this.state.compiledRequest) {
-      // Netflix:
-
+      docPdf.addPage();
       docPdf.setDrawColor("#E50A15");
       docPdf.setLineWidth(1.5);
       docPdf.roundedRect(10, 10, 190, 277, 3, 3);
