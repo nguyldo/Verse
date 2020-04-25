@@ -60,8 +60,8 @@ class ShowsList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(show => (
-                                <ListItem dense>
+                            {this.props.data.map((show, i) => (
+                                <ListItem dense key={i}>
                                     <h3>{show.id + 1}</h3>
                                     <br />
                                     <ListItemText inset

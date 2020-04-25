@@ -4,8 +4,7 @@ import { ResponsiveBar } from '@nivo/bar'
 class BarChart extends React.Component {
 
     render() {
-        const { data } = this.props;
-
+        
         return (
             <ResponsiveBar
                 data={this.props.data}

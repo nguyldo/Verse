@@ -1,12 +1,13 @@
-import React, { Component, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from "react";
 
 //import axios from "axios";
 import Header from "./../sections/header.js";
 import html2canvas from "html2canvas";
 
 import Grid from '@material-ui/core/Grid';
-import ReactTooltip from "react-tooltip";
+
+// import jsPDF from "../visuals/jspdf.min.js";
+import jsPDF from 'jspdf';
 
 //Facebook Visuals
 import IPAddressChart from "../visuals/IPAddressChart";
@@ -34,12 +35,10 @@ import MoviesList from "../visuals/moviesList.js";
 import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
 import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
-
 //Google Visuals
-import IPMap from "../visuals/IPMap.js";
-import Map from "../visuals/atomicGraphs/Map.js"
+import SavedPlacesMap from "../visuals/SavedPlacesMap.js";
+import CallList from "../visuals/CallList.js";
 import SearchesBigNum from "../visuals/SearchesBigNum.js";
-//import SearchLineChart from "../visuals/SearchLineChart.js"
 import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
 import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
 import AdWaffleChart from "../visuals/AdWaffleChart.js";
@@ -67,8 +66,8 @@ function MapWrapper(data) {
   );
 }
 
-
-
+import MapsActivityMap from "../visuals/MapsActivityMap.js";
+import AppsMap from "../visuals/AppsMap.js";
 
 export default class Results extends Component {
   
@@ -98,6 +97,7 @@ export default class Results extends Component {
       this.state.fb_off_ct = this.state.compiledRequest.facebook.off_facebook_activity_count;
       this.state.fb_advs = this.state.compiledRequest.facebook.advertisers_list;
       this.state.fb_advs_ct = this.state.compiledRequest.facebook.advertisers_count;
+      this.state.fb_login_logout_map = this.state.compiledRequest.facebook.login_logout_map;
     }
 
     else {
@@ -113,6 +113,7 @@ export default class Results extends Component {
       this.state.fb_off_ct = -1;
       this.state.fb_advs = [];
       this.state.fb_advs_ct = -1;
+      this.state.fb_login_logout_map = []
     }
 
     // Apple API Response
@@ -155,7 +156,7 @@ export default class Results extends Component {
       this.state.ap_library_gantt = [];
       this.state.ap_genre_timeline = {};
       this.state.ap_apps_timeline = {};
-      this.state.ap_apps_map = {};
+      this.state.ap_apps_map = [];
     }
 
     // Google API Response
@@ -165,14 +166,13 @@ export default class Results extends Component {
       this.state.gg_profile_info_header = this.state.compiledRequest.google.profile_info_header;
       this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_count;
       this.state.gg_saved_places_map = this.state.compiledRequest.google.saved_places_map;
-      //this.state.gg_youtube_playlists = this.state.compiledRequest.google.youtube_playlists;
-      //this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
-      //this.state.gg_youtube_subscriptions = this.state.compiledRequest.google.youtube_subscriptions;
-      //this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
+      this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
+      this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
       this.state.gg_ads_count = this.state.compiledRequest.google.ads_count;
       this.state.gg_ads_list = this.state.compiledRequest.google.ads_list;
       this.state.gg_ads_waffle = this.state.compiledRequest.google.ads_waffle;
       this.state.gg_maps_activity = this.state.compiledRequest.google.maps_activity;
+      this.state.gg_maps_call_list = this.state.compiledRequest.google.maps_call_list;
       this.state.gg_maps_routes_count = this.state.compiledRequest.google.maps_routes_count;
       this.state.gg_search_count = this.state.compiledRequest.google.search_count;
       this.state.gg_search_waffle = this.state.compiledRequest.google.search_waffle;
@@ -183,15 +183,14 @@ export default class Results extends Component {
       this.state.gg_total_size_GB = -1;
       this.state.gg_profile_info_header = {"name": "", "email": ""};
       this.state.gg_bookmarks_count = [];
-      this.state.gg_saved_places_map = [["", ["", ""]]];
-      //this.state.gg_youtube_playlists = [];
-      //this.state.gg_youtube_playlists_count = -1;
-      //this.state.gg_youtube_subscriptions = [];
-      //this.state.gg_youtube_subscriptions_count = -1;
+      this.state.gg_saved_places_map = [["", "", {"Latitude": "", "Longitude": ""}]];
+      this.state.gg_youtube_playlists_count = -1;
+      this.state.gg_youtube_subscriptions_count = -1;
       this.state.gg_ads_count = -1;
       this.state.gg_ads_list = [];
       this.state.gg_ads_waffle = [];
       this.state.gg_maps_activity = { "usages": [""], "links": ["", ""], "views": ["", ""], "searches": ["", ""], "calls": ["", ""], "directions": ["", "", "", ""]};
+      this.state.gg_maps_call_list = [["", "", ""]]
       this.state.gg_maps_routes_count = -1;
       this.state.gg_search_count = -1;
       this.state.gg_search_waffle = [];
@@ -273,8 +272,8 @@ export default class Results extends Component {
 
   toggleSection(e) {
     const id = e.target.id;
-    if (id == "showfacebookvisuals") {
-      if (document.getElementById("facebookvisuals").style.display == "none") {
+    if (id === "showfacebookvisuals") {
+      if (document.getElementById("facebookvisuals").style.display === "none") {
         document.getElementById("facebookvisuals").style.display = "block";
         document.getElementById("showfacebookvisuals").style.backgroundColor = "#69A4BA";
       } else {
@@ -282,16 +281,16 @@ export default class Results extends Component {
         document.getElementById("showfacebookvisuals").style.backgroundColor = "#F0F0F0";
         
       }
-    } else if (id == "showgooglevisuals") {
-      if (document.getElementById("googlevisuals").style.display == "none") {
+    } else if (id === "showgooglevisuals") {
+      if (document.getElementById("googlevisuals").style.display === "none") {
         document.getElementById("googlevisuals").style.display = "block";
         document.getElementById("showgooglevisuals").style.backgroundColor = "#FFFF77";
       } else {
         document.getElementById("googlevisuals").style.display = "none";
         document.getElementById("showgooglevisuals").style.backgroundColor = "#F0F0F0";
       }
-    } else if (id == "showapplevisuals") {
-      if (document.getElementById("applevisuals").style.display == "none") {
+    } else if (id === "showapplevisuals") {
+      if (document.getElementById("applevisuals").style.display === "none") {
         document.getElementById("applevisuals").style.display = "block";
         document.getElementById("showapplevisuals").style.backgroundColor = "#FFB2B2";
       } else {
@@ -299,7 +298,7 @@ export default class Results extends Component {
         document.getElementById("showapplevisuals").style.backgroundColor = "#F0F0F0";
       }
     } else {
-      if (document.getElementById("netflixvisuals").style.display == "none") {
+      if (document.getElementById("netflixvisuals").style.display === "none") {
         document.getElementById("netflixvisuals").style.display = "block";
         document.getElementById("shownetflixvisuals").style.backgroundColor = "#FF4A55";
       } else {
@@ -320,6 +319,7 @@ export default class Results extends Component {
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Facebook Summary', 80, 30);
       docPdf.setFontSize(12);
+      
       var sitesCount;
       if (this.state.fb_sites_ct == -1) {
         sitesCount = "N/A";
@@ -511,7 +511,7 @@ export default class Results extends Component {
           var index = m;
           var apString = appleString.substr(l, m - l);
           while (index > l) {
-            if (apString[index] == "," || apString[index] == "\n") {
+            if (apString[index] === "," || apString[index] === "\n") {
               index++;
               break;
             } else {
@@ -647,7 +647,7 @@ export default class Results extends Component {
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Google Summary', 84, 30);
       docPdf.setFontSize(12);
-      
+
       var totalSizeGG;
       if (this.state.gg_total_size_GB == 0) {
         totalSizeGG = "0";
@@ -697,22 +697,7 @@ export default class Results extends Component {
 
   render() {
 
-    const styles = theme => ({
-      root: {
-        flexGrow: 1,
-      },
-      paper: {
-        height: 140,
-        width: 100,
-      },
-      control: {
-        padding: theme.spacing(5),
-      },
-    })
-
     const { classes } = this.props;
-
-    /*<IPMap data={this.state.fb_locations_bar} />*/
 
     return (
       <div id="resultspage">
@@ -798,6 +783,7 @@ export default class Results extends Component {
 
               </Grid>
 
+              {/*<AppsMap data={this.state.ap_apps_map} />*/}
               <GenresPieChart data={this.state.ap_genres_pie} />
               <ArtistsBarChart data={this.state.ap_artists_barchart} />
               <TracksBarChart data={this.state.ap_tracks_barchart} />
@@ -834,40 +820,53 @@ export default class Results extends Component {
 
               <Grid container spacing={5}>
                 <Grid item xs={12}>
+
+                  <Grid key={12}>
+                    <TotalSizeBigNum data={this.state.gg_total_size_GB} />
+                  </Grid>
+
                   <Grid container justify="center" spacing={3}>
 
-                    <Grid spacing={3}>
-                      <Grid key={12}> 
+                    <Grid>
+                      <Grid key={13}> 
                         <SearchesBigNum data={this.state.gg_search_count} />
                       </Grid>
 
-                      <Grid key={13}>
+                      <Grid key={14}>
                         <DirectionsBigNum data={this.state.gg_maps_routes_count} />
                       </Grid>
                     </Grid>
                     
-                    <Grid spacing={3}>
-                      <Grid key={14}>
+                    <Grid >
+                      <Grid key={15}>
                         <AdsBigNum data={this.state.gg_ads_count} />
                       </Grid>
 
-                      <Grid key={15}>
-                        <YoutubePlaylistsBigNum />
+                      <Grid key={16}>
+                        <YoutubePlaylistsBigNum data={this.state.gg_youtube_playlists_count}/>
                       </Grid>
                     </Grid>
                     
-                    <Grid spacing={3}>
-                      <Grid key={16}>
+                    <Grid >
+                      <Grid key={17}>
                         <BookmarksBigNum data={this.state.gg_bookmarks_count} />
                       </Grid>
 
-                      <Grid key={17}>
-                        <YoutubeSubscriptionsBigNum />
+                      <Grid key={18}>
+                        <YoutubeSubscriptionsBigNum data={this.state.gg_youtube_subscriptions_count}/>
                       </Grid>
                     </Grid>
                   </Grid>
+
+                  <Grid key={19}>
+                    <CallList key={21} data={this.state.gg_maps_call_list} />
+                  </Grid>
                 </Grid>
               </Grid>
+
+              <SavedPlacesMap data={this.state.gg_saved_places_map}/>
+
+              <MapsActivityMap data={this.state.gg_maps_activity} />
 
               <GoogleSearchWaffleChart data={this.state.gg_search_waffle} 
                                         from="2017-03-01" 

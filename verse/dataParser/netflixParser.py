@@ -75,9 +75,9 @@ def parseNetflixData(netflixDataDumpName):
     if os.path.exists(rootPathName):
 
         netflixData = genericParser.csvToDict(rootPathName, ("Title", "Date"))
-        print("Uploading netflix data")
-        print(netflixData)
-        print("End of raw Netflix data")
+        #print("Uploading netflix data")
+        #print(netflixData)
+        #print("End of raw Netflix data")
 
         shows = {}
         movies = []
@@ -98,9 +98,9 @@ def parseNetflixData(netflixDataDumpName):
 
         # for item in netflixData:
 
-        pp = pprint.PrettyPrinter(indent=4)
-        print("Shows")
-        pp.pprint(shows)
+        #pp = pprint.PrettyPrinter(indent=4)
+        #print("Shows")
+        #pp.pprint(shows)
         # print("Movies")
         # print(movies)
 
@@ -125,7 +125,7 @@ def parseNetflixData(netflixDataDumpName):
             formattedShow.append("null")
             showsGantt.append(formattedShow)
             count += 1
-        pp.pprint(showsGantt)
+        #pp.pprint(showsGantt)
 
         # all shows list
         allShows = []
@@ -164,7 +164,7 @@ def parseNetflixData(netflixDataDumpName):
         analyzedData["totalCount"] = totalWatchCount
         analyzedData["movies"] = allMovies
         analyzedData["shows"] = allShows
-        print(analyzedData)
+        #print(analyzedData)
 
         genericParser.writeToJsonFile(analyzedData, "media/processedData/netflix/" + netflixDataDumpName)
 

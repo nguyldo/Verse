@@ -4,6 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core';
 
@@ -39,12 +40,18 @@ const styles = theme => ({
     },
 });
 
-class CompanyAdsList extends React.Component {
+function decode(encoded) {
+    return(decodeURIComponent(encoded.replace(/\+/g, " ")));
+}
+
+class CallList extends React.Component {
 
     render() {
+
         const { classes } = this.props;
 
         return (
+
             <React.Fragment>
                 <Card className={classes.card} elevation={0}>
                     <CardHeader
@@ -52,23 +59,27 @@ class CompanyAdsList extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Advertisers Who Have Uploaded Your Info"
-                        subheader={"Total: " + this.props.count}
+                        title="Calls You've Placed"
+                        subheader="through Google Maps"
                     />
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map((company, i) => (
+                            {this.props.data.map((call, i) => (
                                 <ListItem dense key={i}>
-                                    <h3>{company}</h3>
+                                    <br />
+                                    <ListItemText
+                                        primary={decode(call[1])}
+                                        secondary={call[2]}
+                                    />
                                 </ListItem>
                             ))}
                         </List>
                     </CardContent>
                 </Card>
             </React.Fragment>
-        )
+        );
     }
 }
 
-export default withStyles(styles)(CompanyAdsList);
+export default withStyles(styles)(CallList);

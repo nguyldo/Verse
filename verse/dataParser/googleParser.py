@@ -65,34 +65,26 @@ def parseGoogleData(googleDataDumpName):
                 place = []
 
                 name = data_pt["properties"]["Title"]
-                place.append(name)
-
                 locations = data_pt["properties"]["Location"]
             
                 if "Geo Coordinates" in locations.keys() and "Address" in locations.keys():
                     address = locations["Address"]
                     coords = locations["Geo Coordinates"]
 
+                    place.append(name)
                     place.append(address)
                     place.append(coords)
 
-                else: 
-                    coords = locations
-                    place.append(coords)
-
-                val_saved_places.append(place)
+                    val_saved_places.append(place)
 
             Dict["saved_places_map"] = val_saved_places
 
         else: print("/Maps (your places)/Saved Places.json not found")
 
         # ---------- YouTube Data ----------
-        youtubeDirPath = rootPathName + "/YouTube and YouTube Music"
-
-        
-        file_playlists = youtubeDirPath + "/playlists/all-playlists.json"
+        file_playlists = rootPathName + "/YouTube and YouTube Music/playlists/all-playlists.json"
+        file_playlists2 = rootPathName + "/YouTube/playlists/all-playlists.json"
         if os.path.exists(file_playlists):
-
             data_playlists = genericParser.jsonToDict(file_playlists, ())
 
             # -----  -----
@@ -100,14 +92,31 @@ def parseGoogleData(googleDataDumpName):
 
             # -----  -----
             Dict["youtube_playlists_count"] = len(data_playlists)
+
+        elif os.path.exists(file_playlists2):
+            data_playlists = genericParser.jsonToDict(file_playlists2, ())
+
+            # -----  -----
+            Dict["youtube_playlists"] = data_playlists
+
+            # -----  -----
+            Dict["youtube_playlists_count"] = len(data_playlists)
             
-        else: print("/YouTube and YouTube Music/playlists not found")
+        else: print("/playlists/all-playlists.json not found")
 
-        
-        file_subscriptions = youtubeDirPath + "/subscriptions/subscriptions.json"
+        file_subscriptions = rootPathName + "/YouTube and YouTube Music/subscriptions/subscriptions.json"
+        file_subscriptions2 = rootPathName + "/YouTube/subscriptions/subscriptions.json"
         if os.path.exists(file_subscriptions):
-
             data_subscriptions = genericParser.jsonToDict(file_subscriptions, ())
+
+            # -----  -----
+            Dict["youtube_subscriptions"] = data_subscriptions
+
+            # -----  -----
+            Dict["youtube_subscriptions_count"] = len(data_subscriptions)
+
+        elif os.path.exists(file_subscriptions2):
+            data_subscriptions = genericParser.jsonToDict(file_subscriptions2, ())
 
             # -----  -----
             Dict["youtube_subscriptions"] = data_subscriptions
@@ -175,91 +184,76 @@ def parseGoogleData(googleDataDumpName):
 
             # dict of lists of (link, date) tuples
             val_maps = {}
-
-            usages = []     #list of timestamps maps was used
-            links = []      
+   
             views = []      
             searches = []   
             calls = []      
             directions = []
-            others = []
 
             maps = genericParser.htmlToSoup(file_maps, "div", "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1")
 
             for item in maps:
 
-                if len(item.contents) == 3:
-                    if "Used" in str(item.contents[0]):
-                        date = item.contents[2]
-
-                        usages.append(date)
-
-                    elif "Viewed" in str(item.contents[0]):
-                        try:
-                            link = item.contents[0]['href']
-                        except: link = ""
-                        date = item.contents[2]
-
-                        views.append((link, date))
-
-                    else:
-                        try:
-                            link = item.contents[0]['href']
-                        except: link = ""
-                        date = item.contents[2]
-
-                        links.append((link, date))
-
-                elif len(item.contents) == 4:
+                if len(item.contents) == 4:
                     if "Viewed" in str(item.contents[0]):
                         try:
                             link = item.contents[1]['href']
-                        except: link = ""
-                        date = item.contents[3]
+                            link = link.split('/')
+                            coords = link[4][1:]
+                            coords = coords.split(',')[:2]
 
-                        views.append((link, date))
+                            date = item.contents[3]
+
+                            views.append(("Viewed", coords, date))
+
+                        except: print("Beautiful Soup can't parse this")
 
                     elif "Searched" in str(item.contents[0]):
                         try:
                             link = item.contents[1]['href']
-                        except: link = ""
-                        date = item.contents[3]
+                            link = link.split('/')
 
-                        searches.append((link, date))
+                            date = item.contents[3]
 
+                            if link[4] == "search":
+                                query = link[5]
+                                coords = link[6][1:-4].split(',')
+
+                                searches.append(("Searched", query, coords, date))
+                        except: print("Beautiful Soup can't parse this")
+                        
                     elif "Called" in str(item.contents[0]):
                         try:
                             link = item.contents[1]['href']
-                        except: link = ""
-                        date = item.contents[3]
+                            link = link.split('/')
+                            name = link[3].split('=')[1].split('&')[0]
 
-                        calls.append((link, date))
+                            date = item.contents[3]
+
+                            calls.append(("Called", name, date))
+                        except: print("Beautiful Soup can't parse this")
 
                 elif len(item.contents) == 8:
                     try:
                         link = item.contents[1]['href']
-                    except: link = ""
-                    origin = item.contents[3]
-                    dest = item.contents[5]
-                    date = item.contents[7]
 
-                    directions.append((link, origin, dest, date))
+                        origin = item.contents[3]
+                        dest = item.contents[5]
+                        date = item.contents[7]
 
-                else: 
-                    others.append(item.contents)
-
-            val_maps["usages"] = usages
-            val_maps["links"] = links
+                        directions.append(("Directions", link, origin, dest, date))
+                    except: print("Beautiful Soup can't parse this")
+                    
             val_maps["views"] = views
             val_maps["searches"] = searches
-            val_maps["calls"] = calls
-            val_maps["directions"] = directions 
-            #val_maps["others"] = others   
 
             Dict["maps_activity"] = val_maps
 
             # -----  -----
             Dict["maps_routes_count"] = len(directions)
+
+            # ----- -----
+            Dict["maps_call_list"] = calls
         
         else: print("/My Activity/Maps/MyActivity.html not found")
 
