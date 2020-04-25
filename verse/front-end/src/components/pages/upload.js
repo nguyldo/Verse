@@ -318,14 +318,6 @@ export default class Upload extends Component {
             </form>
           </div>
           <div class="uploadoption">
-            <p class="uploadtitle">{this.state.googleTitle}</p>
-            <form id="googleoption">
-              <label for="googleupload" class="customupload">{this.state.googleButton}</label>
-              <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
-              <button type="button" id="googleuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
-            </form>
-          </div>
-          <div class="uploadoption">
             <p class="uploadtitle">{this.state.appleTitle}</p>
             <form id="appleoption">
               <label for="appleupload" class="customupload">{this.state.appleButton}</label>
@@ -339,6 +331,14 @@ export default class Upload extends Component {
               <label for="netflixupload" class="customupload">{this.state.netflixButton}</label>
               <input multiple id="netflixupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
               <button type="button" id="netflixuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
+            </form>
+          </div>
+          <div class="uploadoption">
+            <p class="uploadtitle">{this.state.googleTitle}</p>
+            <form id="googleoption">
+              <label for="googleupload" class="customupload">{this.state.googleButton}</label>
+              <input multiple id="googleupload" type="file" name="file" onChange={(e) => this.handleFile(e)} />
+              <button type="button" id="googleuploadconfirm" class="ubutton" onClick={(e) => this.globalUpload(e)}>Upload</button>
             </form>
           </div>
           <button id="createvisuals" onClick={(e) => this.prepareData(e)}>Create Visuals</button>
