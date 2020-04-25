@@ -653,7 +653,7 @@ export default class Results extends Component {
       }
       var siteList = " ";
       for (var g in this.state.fb_sites) {
-        siteList = siteList + this.state.fb_sites[g]["label"] + ", ";
+        siteList = siteList + this.state.fb_sites[g]["name"] + ", ";
       }
       var off_list = " ";
       for (var g in this.state.fb_off) {
