@@ -8,7 +8,6 @@ import Grid from '@material-ui/core/Grid';
 
 // import jsPDF from "../visuals/jspdf.min.js";
 import jsPDF from 'jspdf';
-import { json } from "d3";
 
 //Facebook Visuals
 import IPAddressChart from "../visuals/IPAddressChart";
@@ -38,7 +37,8 @@ import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
 
 //Google Visuals
-import SavedPlacesMap from "../visuals/SavedPlacesMap.js"
+import SavedPlacesMap from "../visuals/SavedPlacesMap.js";
+import CallList from "../visuals/CallList.js";
 import SearchesBigNum from "../visuals/SearchesBigNum.js";
 //import SearchLineChart from "../visuals/SearchLineChart.js"
 import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
@@ -53,6 +53,7 @@ import BookmarksBigNum from "../visuals/BookmarksBigNum.js";
 import AdsBigNum from "../visuals/AdsBigNum.js";
 import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
 import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
+import MapsActivityMap from "../visuals/MapsActivityMap.js";
 
 export default class Results extends Component {
   
@@ -150,13 +151,14 @@ export default class Results extends Component {
       this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_count;
       this.state.gg_saved_places_map = this.state.compiledRequest.google.saved_places_map;
       //this.state.gg_youtube_playlists = this.state.compiledRequest.google.youtube_playlists;
-      //this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
+      this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
       //this.state.gg_youtube_subscriptions = this.state.compiledRequest.google.youtube_subscriptions;
-      //this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
+      this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
       this.state.gg_ads_count = this.state.compiledRequest.google.ads_count;
       this.state.gg_ads_list = this.state.compiledRequest.google.ads_list;
       this.state.gg_ads_waffle = this.state.compiledRequest.google.ads_waffle;
       this.state.gg_maps_activity = this.state.compiledRequest.google.maps_activity;
+      this.state.gg_maps_call_list = this.state.compiledRequest.google.maps_call_list;
       this.state.gg_maps_routes_count = this.state.compiledRequest.google.maps_routes_count;
       this.state.gg_search_count = this.state.compiledRequest.google.search_count;
       this.state.gg_search_waffle = this.state.compiledRequest.google.search_waffle;
@@ -169,9 +171,9 @@ export default class Results extends Component {
       this.state.gg_bookmarks_count = [];
       this.state.gg_saved_places_map = [["", ["", ""]]];
       //this.state.gg_youtube_playlists = [];
-      //this.state.gg_youtube_playlists_count = -1;
+      this.state.gg_youtube_playlists_count = -1;
       //this.state.gg_youtube_subscriptions = [];
-      //this.state.gg_youtube_subscriptions_count = -1;
+      this.state.gg_youtube_subscriptions_count = -1;
       this.state.gg_ads_count = -1;
       this.state.gg_ads_list = [];
       this.state.gg_ads_waffle = [];
@@ -951,7 +953,7 @@ export default class Results extends Component {
               <Grid container spacing={5}>
                 <Grid item xs={12}>
 
-                  <Grid>
+                  <Grid key={0}>
                     <TotalSizeBigNum data={this.state.gg_total_size_GB} />
                   </Grid>
 
@@ -973,7 +975,7 @@ export default class Results extends Component {
                       </Grid>
 
                       <Grid key={15}>
-                        <YoutubePlaylistsBigNum />
+                        <YoutubePlaylistsBigNum data={this.state.gg_youtube_playlists_count}/>
                       </Grid>
                     </Grid>
                     
@@ -983,31 +985,40 @@ export default class Results extends Component {
                       </Grid>
 
                       <Grid key={17}>
-                        <YoutubeSubscriptionsBigNum />
+                        <YoutubeSubscriptionsBigNum data={this.state.gg_youtube_subscriptions_count}/>
                       </Grid>
                     </Grid>
+                  </Grid>
+
+                  <Grid key={18}>
+                    <CallList data={this.state.gg_maps_call_list} />
                   </Grid>
                 </Grid>
               </Grid>
 
-              <SavedPlacesMap data={this.state.gg_saved_places_map}/>
+              <SavedPlacesMap key={19} data={this.state.gg_saved_places_map}/>
 
-              <GoogleSearchWaffleChart data={this.state.gg_search_waffle} 
+              <MapsActivityMap key={20} data={this.state.gg_maps_activity} />
+
+              <GoogleSearchWaffleChart key={21}
+                                        data={this.state.gg_search_waffle} 
                                         from="2017-03-01" 
                                         to="2020-04-01" 
                                         maxValue={30}/>
               
-              <YoutubeSearchWaffleChart data={this.state.gg_youtube_search_waffle} 
+              <YoutubeSearchWaffleChart key={22}
+                                        data={this.state.gg_youtube_search_waffle} 
                                         from="2013-03-01" 
                                         to="2016-04-01"
                                         maxValue={20}/>
             
-              <AdWaffleChart data={this.state.gg_ads_waffle}
+              <AdWaffleChart key={23}
+                              data={this.state.gg_ads_waffle}
                               from="2018-03-01" 
                               to="2020-04-01"
                               maxValue={20}/>
             
-              <ChannelPieChart data={this.state.gg_youtube_piechart}/>
+              <ChannelPieChart key={24} data={this.state.gg_youtube_piechart}/>
             </div>
           </div>
         </div>

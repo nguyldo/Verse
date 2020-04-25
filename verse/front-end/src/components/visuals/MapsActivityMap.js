@@ -35,7 +35,11 @@ const imgStyle = {
     height: '30px'
 };
 
-class IPMap extends React.Component {
+function decode(encoded) {
+    return (decodeURIComponent(encoded.replace(/\+/g, " ")));
+}
+
+class MapsActivityMap extends React.Component {
 
     state = {
         viewport: {
@@ -60,19 +64,56 @@ class IPMap extends React.Component {
         });
     };
 
-    loadMarkers = () => {
-        return this.props.data.map(spot => {
+    loadSearchesMarkers = () => {
+        return this.props.data.searches.map(spot => {
+            if (spot[2] !== undefined && spot[2][0] !== undefined && spot[2][1] !== undefined) {
+                return (
+                    <div>
+                        <Marker
+                            latitude={parseFloat(spot[2][0])}
+                            longitude={parseFloat(spot[2][1])}
+                        >
+                            <img
+                                onClick={() => {
+                                    this.setSelectedHotspot(spot);
+                                }}
+                                alt=""
+                                style={imgStyle}
+                                className="mapmarker"
+                                src="mapmarker.svg"
+                            />
+                        </Marker>
+                        {
+                            this.state.selectedHotspot !== null ? (
+                                <Popup
+                                    latitude={parseFloat(this.state.selectedHotspot[2][0])}
+                                    longitude={parseFloat(this.state.selectedHotspot[2][1])}
+                                    onClose={this.closePopup}
+                                >
+                                    <p><b>Query: </b>{decode(this.state.selectedHotspot[1])}</p>
+                                </Popup>
+                            ) : null
+                        }
+                    </div>
+                );
+            }
+            
+        });
+    };
+
+    loadViewsMarkers = () => {
+        return this.props.data.views.map(spot => {
             return (
                 <div>
                     <Marker
-                        latitude={parseFloat(spot[2]["Latitude"])}
-                        longitude={parseFloat(spot[2]["Longitude"])}
+                        latitude={parseFloat(spot[2][0])}
+                        longitude={parseFloat(spot[2][1])}
                     >
                         <img
                             onClick={() => {
                                 this.setSelectedHotspot(spot);
                             }}
-                            alt="spot.length=3"
+                            alt=""
                             style={imgStyle}
                             className="mapmarker"
                             src="mapmarker.svg"
@@ -81,11 +122,11 @@ class IPMap extends React.Component {
                     {
                         this.state.selectedHotspot !== null ? (
                             <Popup
-                                latitude={parseFloat(this.state.selectedHotspot[2]["Latitude"])}
-                                longitude={parseFloat(this.state.selectedHotspot[2]["Longitude"])}
+                                latitude={parseFloat(this.state.selectedHotspot[2][0])}
+                                longitude={parseFloat(this.state.selectedHotspot[2][1])}
                                 onClose={this.closePopup}
                             >
-                                <p>HotSpot Information</p>
+                                <p><b>Query: </b>{decode(this.state.selectedHotspot[1])}</p>
                             </Popup>
                         ) : null
                     }
@@ -107,18 +148,12 @@ class IPMap extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Saved Places"
+                        title="Search History"
                         subheader="on Google Maps"
                     />
                     <CardContent>
                         <ReactMapGL {...this.state.viewport} onViewportChange={(viewport => this.setState({ viewport }))} mapboxApiAccessToken={mapboxToken} >
-                            <Marker
-                                latitude={40.4237}
-                                longitude={-86.9212}
-                            >
-                                <img alt="Purdue" style={imgStyle} className="mapmarker" src="mapmarker.svg" />
-                            </Marker>
-                            {this.loadMarkers()}
+                            {this.loadSearchesMarkers()}
                         </ReactMapGL>
                     </CardContent>
                 </Card>
@@ -127,4 +162,4 @@ class IPMap extends React.Component {
     }
 }
 
-export default withStyles(styles)(IPMap);
+export default withStyles(styles)(MapsActivityMap);
