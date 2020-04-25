@@ -803,21 +803,16 @@ export default class Results extends Component {
       prof = this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
       var savedPlace = " \n";
       for (var g in this.state.gg_saved_places_map) {
-        savedPlace = savedPlace + this.state.gg_saved_places_map[g]["label"];
+        savedPlace = savedPlace + this.state.gg_saved_places_map[0];
       }
-      savedPlace = savedPlace.substr(0, savedPlace.length - 1);
-      var adList = " \n";
-      for (var g in this.state.gg_ads_list) {
-        adList = adList + this.state.gg_ads_list[g]["label"];
-      }
-      adList = adList.substr(0, adList.length - 1);
+      savedPlace = savedPlace + JSON.stringify(this.state.gg_saved_places_map);
+      // savedPlace = savedPlace.substr(0, savedPlace.length - 1);
         
       var googleString = "Total Size of Data Dump: " + totalSizeGG + ' GB\n\n' + 
                         prof + '\n\n' +
                         "Number of Bookmarks: " + bookmarksCount + '\n\n' + 
                         "Saved Places on Your Map:" + savedPlace + '\n\n' + 
                         "Number of Advertisers Served by Google: " + advertisersCountGG + '\n\n' + 
-                        "List of Advertisers Served by Google:" + adList + '\n\n' +
                         "Number of Routes Input Into Google Maps: " + routeCount + '\n\n' + 
                         "Number of Searches You've Made on Google: " + searchCount + 
                         '\n\n';
