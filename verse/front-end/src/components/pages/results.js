@@ -311,310 +311,9 @@ export default class Results extends Component {
 
   //npm install jspdf --save
   genPDF() {
-	
     var docPdf = new jsPDF();
-    
-    // if ("netflix" in this.state.compiledRequest) {
-    
-      // Netflix:
-
-      // Not used in pdf:
-      // this.state.shows_generalchart
-      // this.state.shows_ganttchart
-
-      // Used in pdf:
-      /*
-        watch count
-        shows
-        movies
-      */
-
-      docPdf.setDrawColor("#E50A15");
-      docPdf.setLineWidth(1.5);
-      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
-      docPdf.text('Your Data Dump Summary', 70, 20);
-      docPdf.text('Netflix Summary', 85, 30);
-      docPdf.setFontSize(12);
-
-
-      var watchCount;
-      if (this.state.nf_watch_count == -1) {
-        watchCount = "N/A";
-      } else {
-        watchCount = JSON.stringify(this.state.nf_watch_count);
-      }
-      var showList = " ";
-      for (var g in this.state.nf_shows) {
-        showList = showList + this.state.nf_shows[g]["label"] + ", "
-      }
-      showList = showList.substr(0, showList.length - 1);
-      var movieList = " ";
-      for (var g in this.state.nf_movies) {
-        movieList = movieList + this.state.nf_movies[g]["label"] + ", "
-      }
-      movieList = movieList.substr(0, movieList.length - 1);
-
-      var netflixString = "Watch Count: " + watchCount + '\n\n' + 
-                          "Shows:\n" + showList + '\n\n' +
-                          "Movies:\n" + movieList + 
-                          '\n\n';
-                      
-      var netflixAddString;
-      if (netflixString.length > 2000) {
-        var l = 0;
-        var r = netflixString.length;
-        var m = r/2 - l;
-        if (m > 2000) {
-          m = 2000;
-        }
-        do {
-          var index = m;
-          var nfString = netflixString.substr(l, m - l);
-          while (index > l) {
-            if (nfString[index] == "," || nfString[index] == "\n") {
-              index++;
-              break;
-            } else {
-              index--;
-            }
-          }
-          // var pastM = m;
-          if (index > l) {
-            m = index;
-          } else {
-            m = m - l;
-          }
-          nfString = netflixString.substr(l, m);
-          netflixAddString = docPdf.splitTextToSize(nfString, 150);
-          docPdf.text(netflixAddString, 20, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-          if (l + m < r) {
-            docPdf.addPage();
-            docPdf.setDrawColor("#E50A15");
-            docPdf.setLineWidth(1.5);
-            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
-            docPdf.setFontSize(16);
-            docPdf.text('Your Data Dump Summary', 70, 20);
-            docPdf.text('Netflix Summary', 85, 30);
-            docPdf.setFontSize(12);
-          }
-          l += m;
-          m = l;
-          if (r - m > 2750) {
-            m = m + 2750;
-          } else if (r - m > 0) {
-            m = r;
-          } else {
-            m = r + 1;
-          }
-        } while (m <= r);
-        
-      } else {
-        netflixAddString = docPdf.splitTextToSize(netflixString, 150);
-        docPdf.text(netflixAddString, 20, 40);
-      }
-
-
-    // }
-
-    // if ("applegeneral" in this.state.compiledRequest) {
-
+    if ("facebook" in this.state.compiledRequest) {
       docPdf.addPage();
-      
-
-      // Apple:
-
-      // Not used in pdf:
-      // this.state.genres_pie = [];
-      // this.state.artists_bar = [];
-      // this.state.tracks_bar = [];
-      // this.state.library_gantt = [];
-
-      // Used in pdf:
-      /*
-        total size
-        listen time
-        date range
-        genres list
-        artists list
-        tracks list
-      */
-      
-      docPdf.setDrawColor("#F0A3A3");
-      docPdf.setLineWidth(1.5);
-      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
-      docPdf.setFontSize(16);
-      docPdf.text('Your Data Dump Summary', 70, 20);
-      docPdf.text('Apple Summary', 85, 30);
-      docPdf.setFontSize(12);
-
-
-      var totalSize;
-      if (this.state.ap_total_size_GB == -1) {
-        totalSize = "N/A";
-      } else {
-        totalSize = JSON.stringify(this.state.ap_total_size_GB) + " GB";
-      }
-
-      var listen;
-      
-      var hour = Math.round(this.state.ap_listen_time['hours']);
-      var minute = Math.round(this.state.ap_listen_time['minutes']);
-      var second = Math.round(this.state.ap_listen_time['seconds']);
-      listen = hour + " hours, " + 
-               minute + " minutes, " + 
-               second + " seconds ";
-      if (this.state.ap_listen_time['hours'] == -1) {
-        listen = " N/A";
-      }
-
-      var rang = " ";
-      // this.state.ap_date_range = [[1999,2,31],[2020,5,6]];
-      var months = {1: {'month': 'January'}, 2: {'month': 'February'}, 3: {'month': 'March'},
-                4: {'month': 'April'}, 5: {'month': 'May'}, 6: {'month': 'June'}, 
-                7: {'month': 'July'}, 8: {'month': 'August'}, 9: {'month': 'September'}, 
-                10: {'month': 'October'}, 11: {'month': 'November'}, 12: {'month': 'December'}};
-      
-      var ind = 0;
-      if (this.state.ap_date_range[0][0] != -1) {
-
-        while (ind < 2) {
-          
-          rang = rang + months[this.state.ap_date_range[ind][1]]['month'] + " " +
-                        this.state.ap_date_range[ind][2];
-
-          var day = this.state.ap_date_range[ind][2];
-          var addToDay = "st";
-
-          if (day == 2) {
-            addToDay = "nd";
-          } else if (day == 3) {
-            addToDay = "rd";
-          } else if (day > 3 && day < 31) {
-            addToDay = "th";
-          }
-                        
-          rang = rang + addToDay + ", " + this.state.ap_date_range[ind][0];
-
-          if (ind == 0) {
-            rang = rang + "  -  ";
-          }
-          
-          ind++;
-        }
-      } else {
-        rang = " N/A";
-      }
-      
-      var gen_list = " \n\n\t";
-      for (var g in this.state.ap_genres_list) {
-        gen_list = gen_list + this.state.ap_genres_list[g]["id"] + ") " + 
-                              this.state.ap_genres_list[g]["label"] + ": " + 
-                              this.state.ap_genres_list[g]["value"] + "\n\t";
-      }
-      var art_list = " \n\n\t";
-      for (var g in this.state.ap_artists_list) {
-        art_list = art_list + this.state.ap_artists_list[g]["id"] + ") " + 
-                              this.state.ap_artists_list[g]["label"] + ": " + 
-                              this.state.ap_artists_list[g]["value"] + "\n\t";
-      }
-      var track_list = " \n\n    ";
-      for (var g in this.state.ap_tracks_list) {
-        track_list = track_list + this.state.ap_tracks_list[g]["id"] + ") " + 
-                                  this.state.ap_tracks_list[g]["label"] + ": " + 
-                                  this.state.ap_tracks_list[g]["value"] + "\n    ";
-      }
-
-      var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
-                        "Total Listen Time: " + listen + '\n\n' +
-                        "Date Range of All Activity:" + rang + '\n\n' + 
-                        "Top Ten Genres Listened To:" + gen_list + '\n\n' + 
-                        "Top Ten Artists Listened To:" + art_list + '\n\n' +
-                        "Top Ten Tracks Listened To:" + track_list + 
-                        '\n\n';
-
-
-      var appleAddString;
-      if (appleString.length > 2000) {
-        var l = 0;
-        var r = appleString.length;
-        var m = r/2 - l;
-        if (m > 2000) {
-          m = 2000;
-        }
-        do {
-          var index = m;
-          var apString = appleString.substr(l, m - l);
-          while (index > l) {
-            if (apString[index] == "," || apString[index] == "\n") {
-              index++;
-              break;
-            } else {
-              index--;
-            }
-          }
-          // var pastM = m;
-          if (index > l) {
-            m = index;
-          } else {
-            m = m - l;
-          }
-          apString = appleString.substr(l, m);
-          appleAddString = docPdf.splitTextToSize(apString, 150);
-          docPdf.text(appleAddString, 20, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-          if (l + m < r) {
-            docPdf.addPage();
-            docPdf.setDrawColor("#F0A3A3");
-            docPdf.setLineWidth(1.5);
-            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
-            docPdf.setFontSize(16);
-            docPdf.text('Your Data Dump Summary', 70, 20);
-            docPdf.text('Apple Summary', 85, 30);
-            docPdf.setFontSize(12);
-          }
-          l += m;
-          m = l;
-          if (r - m > 2750) {
-            m = m + 2750;
-          } else if (r - m > 0) {
-            m = r;
-          } else {
-            m = r + 1;
-          }
-        } while (m <= r);
-        
-      } else {
-        appleAddString = docPdf.splitTextToSize(appleString, 150);
-        docPdf.text(appleAddString, 20, 40);
-      }
-
-
-    // }
-
-    // if ("facebook" in this.state.compiledRequest) {
-
-      docPdf.addPage();
-
-      // Facebook:
-
-      // Not used in pdf:
-      // this.state.locations_bar
-      // this.state.posts_pie
-      // this.state.reactions_bar
-
-      // Used in pdf:
-      /*
-        facebook name
-        category
-        sites
-        sites count
-        off facebook app activities
-        off facebook app activities count
-        facebook advertisers
-        facebook advertisers count
-      */
-
       docPdf.setDrawColor("#3B5998");
       docPdf.setLineWidth(1.5);
       docPdf.roundedRect(10, 10, 190, 277, 3, 3);
@@ -622,8 +321,6 @@ export default class Results extends Component {
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Facebook Summary', 80, 30);
       docPdf.setFontSize(12);
-
-
       var sitesCount;
       if (this.state.fb_sites_ct == -1) {
         sitesCount = "N/A";
@@ -646,17 +343,17 @@ export default class Results extends Component {
       for (var g in this.state.fb_sites) {
         siteList = siteList + this.state.fb_sites[g]["name"] + ", ";
       }
-      siteList = siteList.substr(0, siteList.length - 1);
+      siteList = siteList.substr(0, siteList.length - 2);
       var off_list = " \n";
       for (var g in this.state.fb_off) {
         off_list = off_list + this.state.fb_off[g] + ", "
       }
-      off_list = off_list.substr(0, off_list.length - 1);
+      off_list = off_list.substr(0, off_list.length - 2);
       var advList = " \n";
       for (var g in this.state.fb_advs) {
         advList = advList + this.state.fb_advs[g] + ", ";
       }
-      advList = advList.substr(0, advList.length - 1);
+      advList = advList.substr(0, advList.length - 2);
 
       var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
                           "Category: " + this.state.fb_category + '\n\n' +
@@ -687,7 +384,6 @@ export default class Results extends Component {
               index--;
             }
           }
-          // var pastM = m;
           if (index > l) {
             m = index;
           } else {
@@ -696,7 +392,6 @@ export default class Results extends Component {
           fbString = facebookString.substr(l, m);
           facebookAddString = docPdf.splitTextToSize(fbString, 150);
           docPdf.text(facebookAddString, 20, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
           if (l + m < r) {
             docPdf.addPage();
             docPdf.setDrawColor("#3B5998");
@@ -717,39 +412,236 @@ export default class Results extends Component {
             m = r + 1;
           }
         } while (m <= r);
-        
       } else {
         facebookAddString = docPdf.splitTextToSize(facebookString, 150);
         docPdf.text(facebookAddString, 20, 40);
       }
+    }
+    
+    if ("applegeneral" in this.state.compiledRequest) {
+      docPdf.addPage();
+      docPdf.setDrawColor("#F0A3A3");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+      docPdf.setFontSize(16);
+      docPdf.text('Your Data Dump Summary', 70, 20);
+      docPdf.text('Apple Summary', 85, 30);
+      docPdf.setFontSize(12);
 
+      var totalSize;
+      if (this.state.ap_total_size_GB == -1) {
+        totalSize = "N/A";
+      } else {
+        totalSize = JSON.stringify(this.state.ap_total_size_GB) + " GB";
+      }
 
-    // }
+      var listen;
+      var hour = Math.round(this.state.ap_listen_time['hours']);
+      var minute = Math.round(this.state.ap_listen_time['minutes']);
+      var second = Math.round(this.state.ap_listen_time['seconds']);
+      listen = hour + " hours, " + 
+               minute + " minutes, " + 
+               second + " seconds ";
+      if (this.state.ap_listen_time['hours'] == -1) {
+        listen = " N/A";
+      }
+
+      var rang = " ";
+      var months = {1: {'month': 'January'}, 2: {'month': 'February'}, 3: {'month': 'March'},
+                4: {'month': 'April'}, 5: {'month': 'May'}, 6: {'month': 'June'}, 
+                7: {'month': 'July'}, 8: {'month': 'August'}, 9: {'month': 'September'}, 
+                10: {'month': 'October'}, 11: {'month': 'November'}, 12: {'month': 'December'}};
+      
+      var ind = 0;
+      if (this.state.ap_date_range[0][0] != -1) {
+        while (ind < 2) {
+          rang = rang + months[this.state.ap_date_range[ind][1]]['month'] + " " +
+                        this.state.ap_date_range[ind][2];
+          var day = this.state.ap_date_range[ind][2];
+          var addToDay = "st";
+          if (day == 2) {
+            addToDay = "nd";
+          } else if (day == 3) {
+            addToDay = "rd";
+          } else if (day > 3 && day < 31) {
+            addToDay = "th";
+          }
+          rang = rang + addToDay + ", " + this.state.ap_date_range[ind][0];
+          if (ind == 0) {
+            rang = rang + "  -  ";
+          }
+          ind++;
+        }
+      } else {
+        rang = " N/A";
+      }
+      var gen_list = " \n\n\t";
+      for (var g in this.state.ap_genres_list) {
+        gen_list = gen_list + this.state.ap_genres_list[g]["id"] + ") " + 
+                              this.state.ap_genres_list[g]["label"] + ": " + 
+                              this.state.ap_genres_list[g]["value"] + "\n\t";
+      }
+      var art_list = " \n\n\t";
+      for (var g in this.state.ap_artists_list) {
+        art_list = art_list + this.state.ap_artists_list[g]["id"] + ") " + 
+                              this.state.ap_artists_list[g]["label"] + ": " + 
+                              this.state.ap_artists_list[g]["value"] + "\n\t";
+                            }
+      var track_list = " \n\n    ";
+      for (var g in this.state.ap_tracks_list) {
+        track_list = track_list + this.state.ap_tracks_list[g]["id"] + ") " + 
+                                  this.state.ap_tracks_list[g]["label"] + ": " + 
+                                  this.state.ap_tracks_list[g]["value"] + "\n    ";
+      }
+      var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
+      "Total Listen Time: " + listen + '\n\n' +
+                        "Date Range of All Activity:" + rang + '\n\n' + 
+                        "Top Ten Genres Listened To:" + gen_list + '\n\n' + 
+                        "Top Ten Artists Listened To:" + art_list + '\n\n' +
+                        "Top Ten Tracks Listened To:" + track_list + 
+                        '\n\n';
+      var appleAddString;
+      if (appleString.length > 1700) {
+        var l = 0;
+        var r = appleString.length;
+        var m = r/2 - l;
+        if (m > 1700) {
+          m = 1700;
+        }
+        do {
+          var index = m;
+          var apString = appleString.substr(l, m - l);
+          while (index > l) {
+            if (apString[index] == "," || apString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          apString = appleString.substr(l, m);
+          appleAddString = docPdf.splitTextToSize(apString, 150);
+          docPdf.text(appleAddString, 20, 40);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setDrawColor("#F0A3A3");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Apple Summary', 85, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 1700) {
+            m = m + 1700;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+      } else {
+        appleAddString = docPdf.splitTextToSize(appleString, 150);
+        docPdf.text(appleAddString, 20, 40);
+      }
+    }
+    
+    if ("netflix" in this.state.compiledRequest) {
+      // Netflix:
+
+      docPdf.setDrawColor("#E50A15");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+      docPdf.text('Your Data Dump Summary', 70, 20);
+      docPdf.text('Netflix Summary', 85, 30);
+      docPdf.setFontSize(12);
+
+      var watchCount;
+      if (this.state.nf_watch_count == -1) {
+        watchCount = "N/A";
+      } else {
+        watchCount = JSON.stringify(this.state.nf_watch_count);
+      }
+      var showList = " ";
+      for (var g in this.state.nf_shows) {
+        showList = showList + this.state.nf_shows[g]["label"] + ", "
+      }
+      showList = showList.substr(0, showList.length - 2);
+      var movieList = " ";
+      for (var g in this.state.nf_movies) {
+        movieList = movieList + this.state.nf_movies[g]["label"] + ", "
+      }
+      movieList = movieList.substr(0, movieList.length - 2);
+
+      var netflixString = "Watch Count: " + watchCount + '\n\n' + 
+                          "Shows:\n" + showList + '\n\n' +
+                          "Movies:\n" + movieList + 
+                          '\n\n';
+                      
+      var netflixAddString;
+      if (netflixString.length > 2000) {
+        var l = 0;
+        var r = netflixString.length;
+        var m = r/2 - l;
+        if (m > 2000) {
+          m = 2000;
+        }
+        do {
+          var index = m;
+          var nfString = netflixString.substr(l, m - l);
+          while (index > l) {
+            if (nfString[index] == "," || nfString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          nfString = netflixString.substr(l, m);
+          netflixAddString = docPdf.splitTextToSize(nfString, 150);
+          docPdf.text(netflixAddString, 20, 40);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setDrawColor("#E50A15");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Netflix Summary', 85, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 2000) {
+            m = m + 2000;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+        
+      } else {
+        netflixAddString = docPdf.splitTextToSize(netflixString, 150);
+        docPdf.text(netflixAddString, 20, 40);
+      }
+    }
 
 
     if ("google" in this.state.compiledRequest) {
-
       docPdf.addPage();
-      
-      //Google
-      
-      // Not used in pdf:
-      // this.state.gg_ads_waffle
-      // this.state.gg_maps_activity
-      // this.state.gg_search_waffle
-      // this.state.gg_youtube_piechart
-      // this.state.gg_youtube_search_waffle
-      
-      /*
-      total size
-      profile info
-      bookmarks count
-      saved places on your map
-      ads count
-      ads
-      map routes count
-      search count
-      */
       docPdf.setDrawColor("#F4B400");
       docPdf.setLineWidth(1.5);
       docPdf.roundedRect(10, 10, 190, 277, 3, 3);
@@ -757,7 +649,6 @@ export default class Results extends Component {
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Google Summary', 84, 30);
       docPdf.setFontSize(12);
-      
       
       var totalSizeGG;
       if (this.state.gg_total_size_GB == 0) {
@@ -800,66 +691,10 @@ export default class Results extends Component {
                         "Number of Searches You've Made on Google: " + searchCount + 
                         '\n\n';
         
-      var googleAddString;
-      if (googleString.length > 2000) {
-        var l = 0;
-        var r = googleString.length;
-        var m = r/2 - l;
-        if (m > 2000) {
-          m = 2000;
-        }
-        do {
-          var index = m;
-          var ggString = googleString.substr(l, m - l);
-          while (index > l) {
-            if (ggString[index] == "," || ggString[index] == "\n") {
-              index++;
-              break;
-            } else {
-              index--;
-            }
-          }
-          // var pastM = m;
-          if (index > l) {
-            m = index;
-          } else {
-            m = m - l;
-          }
-          ggString = googleString.substr(l, m);
-          googleAddString = docPdf.splitTextToSize(ggString, 150);
-          docPdf.text(googleAddString, 20, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-          if (l + m < r) {
-            docPdf.addPage();
-            docPdf.setDrawColor("#F4B400");
-            docPdf.setLineWidth(1.5);
-            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
-            docPdf.setFontSize(16);
-            docPdf.text('Your Data Dump Summary', 70, 20);
-            docPdf.text('Google Summary', 84, 30);
-            docPdf.setFontSize(12);
-          }
-          l += m;
-          m = l;
-          if (r - m > 2750) {
-            m = m + 2750;
-          } else if (r - m > 0) {
-            m = r;
-          } else {
-            m = r + 1;
-          }
-        } while (m <= r);
-        
-      } else {
-        googleAddString = docPdf.splitTextToSize(googleString, 150);
-        docPdf.text(googleAddString, 20, 40);
-      }
-        
-        
+      var googleAddString = docPdf.splitTextToSize(googleString, 150);
+      docPdf.text(googleAddString, 20, 40);
     }
-
-    docPdf.save('Test.pdf');
-      
+    docPdf.save('Data Dump Summary.pdf');
   }
 
   render() {
