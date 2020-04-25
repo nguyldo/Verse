@@ -61,8 +61,8 @@ class DevicesList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(device => (
-                                <ListItem dense>
+                            {this.props.data.map((device, i) => (
+                                <ListItem dense key={i}>
                                     <br />
                                     <ListItemText 
                                         primary={device["Device Name"]}

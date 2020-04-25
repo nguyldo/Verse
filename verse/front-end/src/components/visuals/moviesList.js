@@ -62,8 +62,8 @@ class MoviesList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(movie => (
-                                <ListItem dense>
+                            {this.props.data.map((movie, i) => (
+                                <ListItem dense key={i}>
                                     <h3>{movie.id + 1}</h3>
                                     <br />
                                     <ListItemText inset

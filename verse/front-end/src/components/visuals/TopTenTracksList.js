@@ -62,7 +62,7 @@ class TopTenTracksList extends React.Component {
                         <Divider />
                         <List component="nav" className={classes.list}>
                             {this.props.data.map(track => (
-                                <ListItem dense>
+                                <ListItem dense key={track.id}>
                                     <h3>{track.id}</h3>
                                     <br />
                                     <ListItemText inset

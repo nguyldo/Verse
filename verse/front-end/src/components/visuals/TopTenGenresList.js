@@ -62,7 +62,7 @@ class TopTenGenresList extends React.Component {
                         <Divider />
                         <List component="nav" className={classes.list}>
                             {this.props.data.map(genre => (
-                                <ListItem dense>
+                                <ListItem dense key={genre.id}>
                                     <h3>{genre.id}</h3>
                                     <br/>
                                     <ListItemText inset 

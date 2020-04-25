@@ -33,6 +33,11 @@ class YoutubePlaylistsBigNum extends React.Component {
 
         const { classes } = this.props;
 
+        var count = 0;
+        if (this.props.data !== undefined) {
+            count = this.props.data
+        }
+
         return (
             <React.Fragment>
                 <Card className={classes.card} elevation={0}>
@@ -45,7 +50,7 @@ class YoutubePlaylistsBigNum extends React.Component {
                         subheader="on Youtube"
                     />
                     <CardContent>
-                        <h1>{this.props.data}</h1>
+                        <h1>{count}</h1>
                     </CardContent>
                 </Card>
             </React.Fragment>

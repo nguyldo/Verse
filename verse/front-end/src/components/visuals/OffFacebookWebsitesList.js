@@ -4,7 +4,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core';
 
@@ -58,8 +57,8 @@ class OffFacebookWebsitesList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(sites => (
-                                <ListItem dense>
+                            {this.props.data.map((sites, i) => (
+                                <ListItem dense key={i}>
                                     <h3>{sites}</h3>
                                 </ListItem>
                             ))}
