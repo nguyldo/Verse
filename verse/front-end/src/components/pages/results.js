@@ -469,8 +469,8 @@ export default class Results extends Component {
       }
 
       var rang = " ";
-      // this.state.ap_date_range = [[1,2,3],[4,5,6]];
-      months = {1: {'month': 'January'}, 2: {'month': 'February'}, 3: {'month': 'March'},
+      // this.state.ap_date_range = [[1999,2,31],[2020,5,6]];
+      var months = {1: {'month': 'January'}, 2: {'month': 'February'}, 3: {'month': 'March'},
                 4: {'month': 'April'}, 5: {'month': 'May'}, 6: {'month': 'June'}, 
                 7: {'month': 'July'}, 8: {'month': 'August'}, 9: {'month': 'September'}, 
                 10: {'month': 'October'}, 11: {'month': 'November'}, 12: {'month': 'December'}};
@@ -481,9 +481,21 @@ export default class Results extends Component {
         while (ind < 2) {
           
           rang = rang + months[this.state.ap_date_range[ind][1]]['month'] + " " +
-                        this.state.ap_date_range[ind][2] + ", " + 
-                        this.state.ap_date_range[ind][0];
+                        this.state.ap_date_range[ind][2];
+
+          var day = this.state.ap_date_range[ind][2];
+          var addToDay = "st";
+
+          if (day == 2) {
+            addToDay = "nd";
+          } else if (day == 3) {
+            addToDay = "rd";
+          } else if (day > 3 && day < 31) {
+            addToDay = "th";
+          }
                         
+          rang = rang + addToDay + ", " + this.state.ap_date_range[ind][0];
+
           if (ind == 0) {
             rang = rang + "  -  ";
           }
@@ -494,7 +506,6 @@ export default class Results extends Component {
         rang = " N/A";
       }
       
-      // this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
       var gen_list = " \n\n\t";
       for (var g in this.state.ap_genres_list) {
         gen_list = gen_list + this.state.ap_genres_list[g]["id"] + ") " + 
