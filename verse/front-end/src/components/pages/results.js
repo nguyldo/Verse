@@ -53,6 +53,7 @@ import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
 import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
 import MapsActivityMap from "../visuals/MapsActivityMap.js";
 import AppsMap from "../visuals/AppsMap.js";
+import LoginLogoutMap from "../visuals/LoginLogoutMap.js";
 
 export default class Results extends Component {
   
@@ -873,6 +874,8 @@ export default class Results extends Component {
                 </Grid>
 
               </Grid>
+
+              <LoginLogoutMap data={this.state.fb_login_logout_map} />
             </div>
 
             <div class="visualssection" id="applevisuals">

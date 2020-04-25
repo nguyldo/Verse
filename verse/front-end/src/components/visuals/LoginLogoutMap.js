@@ -92,10 +92,10 @@ class LoginLogoutMap extends React.Component {
                                     onClose={this.closePopup}
                                 >
                                     <p>
-                                        <b>Action: </b> {this.state.selectedHotspot.action}
-                                        <b>Timestamp: </b> {this.state.selectedHotspot.timestamp}
-                                        <b>Location: </b> {this.state.selectedHotspot.location[1] + ", " + this.state.selectedHotspot.location[2]}
-                                        <b>IP Address: </b> {this.state.selectedHotspot.ip_address}
+                                        <b>Action: </b> {this.state.selectedHotspot.action} <br/>
+                                        <b>Timestamp: </b> {this.state.selectedHotspot.timestamp} <br/>
+                                        <b>Location: </b> {this.state.selectedHotspot.location[1] + ", " + this.state.selectedHotspot.location[2]} <br/>
+                                        <b>IP Address: </b> {this.state.selectedHotspot.ip_address} <br/>
                                     </p>
                                 </Popup>
                             ) : null
@@ -119,8 +119,8 @@ class LoginLogoutMap extends React.Component {
                             title: classes.title,
                             subheader: classes.subheader
                         }}
-                        title="Saved Places"
-                        subheader="on Google Maps"
+                        title="Login and Logouts"
+                        subheader="and where you were"
                     />
                     <CardContent>
                         <ReactMapGL {...this.state.viewport} onViewportChange={(viewport => this.setState({ viewport }))} mapboxApiAccessToken={mapboxToken} >
