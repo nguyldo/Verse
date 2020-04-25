@@ -5,7 +5,6 @@ import CardHeader from "@material-ui/core/CardHeader";
 import { withStyles } from "@material-ui/core/styles";
 
 import ScrollableBarChart from "./atomicGraphs/ScrollableBarChart"
-import tracksData from "./data/tracksData"
 
 const styles = theme => ({
     card: {
@@ -43,11 +42,11 @@ class TracksBarChart extends React.Component {
                             subheader: classes.subheader
                         }}
                         title="Apple Music Play Activity - Tracks"
-                        subheader="Number of times you've listened to each track."
+                        subheader="Number of times you've listened to each track. (Max 100)"
                     />
                     <CardContent>
                         <div style={{ height: 200 }}>
-                            <ScrollableBarChart data={tracksData} />
+                            <ScrollableBarChart data={this.props.data.slice(0, 100)} />
                         </div>
                     </CardContent>
                 </Card>

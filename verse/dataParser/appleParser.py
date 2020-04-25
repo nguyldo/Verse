@@ -5,187 +5,210 @@ import string
 import json
 import zipfile
 
-#TODO: uncomment first if running through django and second if through python
 from dataParser import genericParser
-#import genericParser
 
 def parseAppleData(appleDataDumpName):
     # Define dictionary to map json data to
     Dict = {}
 
     # Parse through apple media root directory
-    #TODO: uncomment first if running through django and second if through python
     rootPathName = "./media/unzippedFiles/apple/" + appleDataDumpName
-    #rootPathName = "../media/unzippedFiles/apple/" + appleDataDumpName
 
     if os.path.exists(rootPathName):
 
         # Get total size
-        Dict["totalSizeInGB"] = genericParser.getDirSizeInGB(rootPathName)
+        Dict["total_size_GB"] = genericParser.getDirSizeInGB(rootPathName)
         #TODO: double check, this number doesn't make sense
 
-        #Extract data
-        genDirPath = rootPathName + "/Apple ID account and device information"
-        musicDirPath = rootPathName + "/Apple Media Services information"
-        gameDirPath = rootPathName + "/Game Center"
-
         # ---------- General Data ----------
-        if os.path.exists(genDirPath):
-            # -----  -----
-            file_account_info = "Apple ID Account Information.csv"
+        genDirPath = rootPathName + "/Apple ID account and device information"
+
+        # -----  -----
+        file_account_info = genDirPath + "/Apple ID Account Information.csv"
+        if os.path.exists(file_account_info):
+
             fieldNames = ("Apple ID Number", "First Name", "Last Name", "Official Address")
-            data_account_info = genericParser.csvToDict(genDirPath + "/" + file_account_info, fieldNames)
+            data_account_info = genericParser.csvToDict(file_account_info, fieldNames)
             
+            apple_id = data_account_info[0]["Apple ID Number"]
+            name = data_account_info[0]["First Name"] + " " + data_account_info[0]["Last Name"]
+            address = data_account_info[0]["Official Address"]
 
-            key_apple_id = "apple_id_number"
-            val_apple_id = data_account_info[0]["Apple ID Number"]
-            Dict[key_apple_id] = val_apple_id
+            Dict["account_info_header"] = [apple_id, name, address]
+        else: 
+            print("/Apple ID account and device information/Apple ID Account Information.csv not found") 
 
-            key_name = "name"
-            val_name = data_account_info[0]["First Name"] + " " + data_account_info[0]["Last Name"]
-            Dict[key_name] = val_name
-
-            key_address = "address"
-            val_address = data_account_info[0]["Official Address"]
-            Dict[key_address] = val_address
-
-            # -----  -----
-            file_devices = "Apple ID Device Information.csv"
+        # -----  -----
+        file_devices = genDirPath + "/Apple ID Device Information.csv"
+        if os.path.exists(file_devices):
+            
             fieldNames = ("Device Name", "Device Added Date", "Device Serial Number", "Device Last Heartbeat IP")
-            data_devices = genericParser.csvToDict(genDirPath + "/" + file_devices, fieldNames)
+            data_devices = genericParser.csvToDict(file_devices, fieldNames)
 
-
-            key_devices = "devices"
-            val_devices = data_devices
-            Dict[key_devices] = val_devices
+            Dict["devices_list"] = data_devices
         
         else: 
-            print("general dir path not found") 
-
-        #write parsed general data dictionary to json file
-        genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedGeneralAppleData.json')
-
+            print("/Apple ID account and device information/Apple ID Device Information.csv not found") 
         
         # ---------- Music Data ----------
+        musicDirPath = rootPathName + "/Apple Media Services information"
+
         if os.path.exists(musicDirPath):
             zipPath = musicDirPath + "/Apple_Media_Services.zip"
             with zipfile.ZipFile(zipPath, "r") as zip_ref:
                 zip_ref.extractall(musicDirPath)
-            
-            # -----  -----
-            file_recent_tracks = "Apple_Media_Services/Apple Music Activity/Apple Music - Recently Played Tracks.csv"
-            fieldNames = ("Last Modified", "Track Description")
-            data_recent_tracks = genericParser.csvToDict(musicDirPath + "/" + file_recent_tracks, fieldNames)
 
+            zipPath1 = musicDirPath + "/Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json.zip"
+            with zipfile.ZipFile(zipPath1, "r") as zip_ref1:
+                zip_ref1.extractall(musicDirPath + "/Apple_Media_Services/Apple Music Activity")
+ 
+        # ===== PLAY ACTIVITY =====
+        file_play_activity = musicDirPath + "/Apple_Media_Services/Apple Music Activity/Apple Music Play Activity.csv"
+        if os.path.exists(file_play_activity):
 
-            key_recently_played = "apple_music_recently_played"
-            for item in data_recent_tracks:
-                artist = item["Track Description"].split(" - ")[0]
-                song = item["Track Description"].split(" - ")[1]
-
-                item.update({"Artist" : artist})
-                item.update({"Track" : song})
-                item.pop("Track Description")
-            val_recently_played = data_recent_tracks
-            Dict[key_recently_played] = val_recently_played
-            
-            #-----  -----
-            file_likes_dislikes = "Apple_Media_Services/Apple Music Activity/Apple Music Likes and Dislikes.csv"
-            fieldNames = ("Item Description", "Preference", "Created")
-            data_likes_dislikes = genericParser.csvToDict(musicDirPath + "/" + file_likes_dislikes, fieldNames) 
-
-
-            key_preferences = "apple_music_preferences"
-            likes = []
-            dislikes = []
-            others = []
-            for item in data_likes_dislikes:
-                artist = item["Item Description"].split(" - ")[0]
-                song = item["Item Description"].split(" - ")[1]
-
-                item.update({"Artist" : artist})
-                item.update({ "Track" : song})
-                item.pop("Item Description")
-
-                if item["Preference"] == "LOVE":
-                    item.pop("Preference")
-                    likes.append(item)
-                elif item["Preference"] == "DISLIKE":
-                    item.pop("Preference")
-                    dislikes.append(item)
-                else:
-                    item.pop("Preference")
-                    others.append(item)
-            val_preferences = { "likes" : likes, "dislikes" : dislikes, "others" : others}
-            Dict[key_preferences] = val_preferences
-
-            #-----  -----
-            file_play_activity = "Apple_Media_Services/Apple Music Activity/Apple Music Play Activity.csv"
             fieldNames = ("Artist Name", "Content Name", "Client IP Address", "End Reason Type", 
-                        "Genre", "Milliseconds Since Play", "Play Duration Milliseconds")
-            data_play_activity = genericParser.csvToDict(musicDirPath + "/" + file_play_activity, fieldNames)
-
-
-            key_play_activity = "apple_music_play_activity"
-            val_play_activity = data_play_activity
-            Dict[key_play_activity] = val_play_activity
+                        "Genre", "Milliseconds Since Play", "Play Duration Milliseconds", "Event Received Timestamp")
+            data_play_activity = genericParser.csvToDict(file_play_activity, fieldNames)
 
             #-----  -----
-            zipPath = musicDirPath + "/Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json.zip"
-            with zipfile.ZipFile(zipPath, "r") as zip_ref:
-                zip_ref.extractall(musicDirPath + "/Apple_Media_Services/Apple Music Activity")
+            dates = genericParser.filterByField(data_play_activity, ("Event Received Timestamp",) )
+            dateBounds = genericParser.getDateBounds(dates)
+            Dict["activity_date_range"] = dateBounds
 
-            file_library_tracks = "Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json"
+            # -----   -----
+            play_ms = genericParser.filterByField(data_play_activity, ("Milliseconds Since Play", "Play Duration Milliseconds"))
+            msSincePlay = [s["Milliseconds Since Play"] for s in play_ms]
+            msPlayDuration = [d["Play Duration Milliseconds"] for d in play_ms]
+
+            for i in range(0, len(msPlayDuration)):
+                if not isinstance(msPlayDuration[i], float) and not isinstance(msPlayDuration[i], int):
+                    msPlayDuration[i] = 0
+
+                if msPlayDuration[i] < 0:
+                    msPlayDuration[i] = -msPlayDuration[i]
+
+            totalListenTime = sum(msPlayDuration)
+            totalListenTime = genericParser.convertMillis(totalListenTime)
+
+            Dict["listen_time"] = { "hours" : totalListenTime[0], "minutes" : totalListenTime[1], "seconds" : totalListenTime[2]}
+
+            # -----   -----
+            genres = genericParser.filterByField(data_play_activity, ("Genre",) )
+            dictGenreFreq = genericParser.countFrequencies(genres, "Genre")
+            dictTopGenres = genericParser.countTopTen(dictGenreFreq)
+
+            dictGenreFreq = genericParser.formatDictionary(dictGenreFreq)
+            dictTopGenres = genericParser.formatDictionary(dictTopGenres)
+
+            Dict["genres_piechart"] = dictGenreFreq
+            Dict["top_ten_genres_list"] = dictTopGenres
+
+            # -----   -----
+            artists = genericParser.filterByField(data_play_activity, ("Artist Name",) )
+            dictArtistFreq = genericParser.countFrequencies(artists, "Artist Name")
+            dictTopArtists = genericParser.countTopTen(dictArtistFreq)
+            
+            dictArtistFreq = genericParser.formatDictionary(dictArtistFreq)
+            dictTopArtists = genericParser.formatDictionary(dictTopArtists)
+
+            Dict["artists_barchart"] = dictArtistFreq
+            Dict["top_ten_artists_list"] = dictTopArtists
+
+            # -----   -----
+            tracks = genericParser.filterByField(data_play_activity, ("Content Name", "Artist Name") )
+            dictTrackFreq = genericParser.countFrequencies(tracks, "Content Name")
+            
+            dictTrackArtist = {}
+            for d in tracks:
+                dictTrackArtist[d["Content Name"]] = d["Artist Name"]
+
+            #replace track name with track + artist name in key
+            dictTrackArtistFreq = {}
+            for track in dictTrackFreq:
+                if track in dictTrackArtist:
+                    dictTrackArtistFreq[track + " - " + dictTrackArtist[track]] = dictTrackFreq[track]
+                    
+            dictTopTracks = genericParser.countTopTen(dictTrackArtistFreq)
+
+            dictTrackArtistFreq = genericParser.formatDictionary(dictTrackArtistFreq)
+            dictTopTracks = genericParser.formatDictionary(dictTopTracks)
+
+            Dict["tracks_barchart"] = dictTrackArtistFreq
+            Dict["top_ten_tracks_list"] = dictTopTracks
+
+            # -----   -----
+            trackIP = genericParser.filterByField(data_play_activity, ("Content Name", "Artist Name", "Client IP Address"))
+            Dict["play_activity_map"] = trackIP
+
+            # -----   -----
+            artist_song_endtype = genericParser.filterByField(data_play_activity, 
+            ("Artist Name", "Content Name", "End Reason Type", "Milliseconds Since Play") )
+
+            #TODO: infer actual favorite songs that had natural end of track rather than skip
+
+        else: print("/Apple_Media_Services/Apple Music Activity/Apple Music Play Activity.csv not found")
+               
+        # ===== LIBRARY TRACKS ======
+        file_library_tracks = musicDirPath + "/Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json"
+        if os.path.exists(file_library_tracks):
+            
             fieldNames = ("Title", "Artist", "Album", "Album Artist", "Genre", "Track Year", 
                           "Date Added To Library", "Last Played Date", 
                           "Skip Count", "Date of Last Skip", "Release Date")
-            data_library_tracks = genericParser.jsonToDict(musicDirPath + "/" + file_library_tracks, fieldNames)
+            data_library_tracks = genericParser.jsonToDict(file_library_tracks, fieldNames)
 
-            key_library_tracks = "apple_music_library_tracks"
-            val_library_tracks = data_library_tracks
-            Dict[key_library_tracks] = val_library_tracks
+            # -----   -----
+            totalNumTracks = len(data_library_tracks)
+            Dict["library_track_count"] = totalNumTracks
+
+            # -----   -----
+            titleArtistDates = genericParser.filterByField(data_library_tracks, ("Title", "Artist", "Genre",
+            "Date Added To Library", "Last Played Date", "Release Date"))
+            titleArtistDatesList = genericParser.formatGanttData(titleArtistDates)
+            Dict["library_song_ganttchart"] = titleArtistDatesList
+
+            # -----   -----
+            genre_dates = genericParser.filterByField(data_library_tracks, ("Genre", "Last Played Date"))
+            Dict["genre_timeline"] = genre_dates
 
         else: 
-            print("music category not found") 
+            print("/Apple_Media_Services/Apple Music Activity/Apple Music Library Tracks.json not found") 
 
-        #write parsed music data dictionary to json file
-        genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedMusicAppleData.json')
-
-        
         # ---------- Apps/Games Data ----------
-        if os.path.exists(musicDirPath):
+        file_apps = musicDirPath + "/Update and Redownload History/iTunes and App-Book Re-download and Update History.csv"
+        if os.path.exists(file_apps):
             #-----  -----
-            file_apps = "Update and Redownload History/iTunes and App-Book Re-download and Update History.csv"
             fieldNames = ("Activity Date", "Item Description", "Device IP Address")
-            data_apps = genericParser.csvToDict(musicDirPath + "/" + file_apps, fieldNames)
+            data_apps = genericParser.csvToDict(file_apps, fieldNames)
 
-            key_apps = "apps"
-            val_apps = data_apps
-            Dict[key_apps] = val_apps
-            
+            # -----   -----
+            app_date = genericParser.filterByField(data_apps, ("Activity Date", "Item Description"))
+            Dict["apps_timeline"] = app_date
+
+            # -----   -----
+            app_ip = genericParser.filterByField(data_apps, ("Device IP Address", "Item Description"))
+            Dict["apps_map"] = app_ip
+
         else: 
-            print("app category not found") 
+            print("/Update and Redownload History/iTunes and App-Book Re-download and Update History.csv not found") 
 
-        if os.path.exists(gameDirPath):
+        file_game_center = rootPathName + "/Game Center/Game Center Data.json"
+        if os.path.exists(file_game_center):
             # -----  -----
-            file_game_center = "Game Center Data.json"
             fieldNames = ("game_name", "last_played_utc")
-            data_game_center = genericParser.jsonToDict(gameDirPath + "/" + file_game_center, fieldNames)
-
+            data_game_center = genericParser.jsonToDict(file_game_center, fieldNames)
 
             key_games = "games"
             val_games = data_game_center
             Dict[key_games] = val_games
         else: 
-            print("app category not found") 
+            print("/Game Center/Game Center Data.json not found") 
 
-        #write parsed apps/games data dictionary to json file
-        genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedAppsGamesAppleData.json')
 
-    
     else: print("given root path does not exist")
 
-    #genericParser.deleteData(rootPathName)
+    #write parsed data dictionary to json file
+    genericParser.writeToJsonFile(Dict, './media/processedData/apple/' + appleDataDumpName + '/parsedAppleData.json')
 
 """
 def main():
