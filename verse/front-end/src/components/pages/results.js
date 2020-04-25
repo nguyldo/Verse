@@ -470,41 +470,20 @@ export default class Results extends Component {
 
       var rang = " ";
       // this.state.ap_date_range = [[1,2,3],[4,5,6]];
+      months = {1: {'month': 'January'}, 2: {'month': 'February'}, 3: {'month': 'March'},
+                4: {'month': 'April'}, 5: {'month': 'May'}, 6: {'month': 'June'}, 
+                7: {'month': 'July'}, 8: {'month': 'August'}, 9: {'month': 'September'}, 
+                10: {'month': 'October'}, 11: {'month': 'November'}, 12: {'month': 'December'}};
+      
       var ind = 0;
       if (this.state.ap_date_range[0][0] != -1) {
 
         while (ind < 2) {
           
-          rang = rang + this.state.ap_date_range[ind][0] + ", " ;
-          var m = this.state.ap_date_range[ind][1];
-          if (m == 1) {
-            rang = rang + "January ";
-          } else if (m == 2) {
-            rang = rang + "February ";
-          } else if (m == 3) {
-            rang = rang + "March ";
-          } else if (m == 4) {
-            rang = rang + "April ";
-          } else if (m == 5) {
-            rang = rang + "May ";
-          } else if (m == 6) {
-            rang = rang + "June ";
-          } else if (m == 7) {
-            rang = rang + "July ";
-          } else if (m == 8) {
-            rang = rang + "August ";
-          } else if (m == 9) {
-            rang = rang + "September ";
-          } else if (m == 10) {
-            rang = rang + "October ";
-          } else if (m == 11) {
-            rang = rang + "November ";
-          } else if (m == 12) {
-            rang = rang + "December ";
-          } else {
-            rang = rang + "Unknown month ";
-          }
-          rang = rang + this.state.ap_date_range[ind][2];
+          rang = rang + months[this.state.ap_date_range[ind][1]]['month'] + " " +
+                        this.state.ap_date_range[ind][2] + ", " + 
+                        this.state.ap_date_range[ind][0];
+                        
           if (ind == 0) {
             rang = rang + "  -  ";
           }
@@ -801,17 +780,10 @@ export default class Results extends Component {
       }
       var prof = "Name ";
       prof = this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
-      var savedPlace = " \n";
-      for (var g in this.state.gg_saved_places_map) {
-        savedPlace = savedPlace + this.state.gg_saved_places_map[0];
-      }
-      savedPlace = savedPlace + JSON.stringify(this.state.gg_saved_places_map);
-      // savedPlace = savedPlace.substr(0, savedPlace.length - 1);
         
       var googleString = "Total Size of Data Dump: " + totalSizeGG + ' GB\n\n' + 
                         prof + '\n\n' +
                         "Number of Bookmarks: " + bookmarksCount + '\n\n' + 
-                        "Saved Places on Your Map:" + savedPlace + '\n\n' + 
                         "Number of Advertisers Served by Google: " + advertisersCountGG + '\n\n' + 
                         "Number of Routes Input Into Google Maps: " + routeCount + '\n\n' + 
                         "Number of Searches You've Made on Google: " + searchCount + 
