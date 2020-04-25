@@ -51,6 +51,21 @@ import BookmarksBigNum from "../visuals/BookmarksBigNum.js";
 import AdsBigNum from "../visuals/AdsBigNum.js";
 import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
 import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
+
+// import jsPDF from "../visuals/jspdf.min.js";
+import jsPDF from 'jspdf';
+import { json } from "d3";
+
+function MapWrapper(data) {
+  const [content, setContent] = useState("");
+  return (
+    <div>
+      <Map setTooltipContent={setContent, data} />
+      <ReactTooltip>{content}</ReactTooltip>
+    </div>
+  );
+}
+
 import MapsActivityMap from "../visuals/MapsActivityMap.js";
 import AppsMap from "../visuals/AppsMap.js";
 
@@ -165,7 +180,7 @@ export default class Results extends Component {
       this.state.gg_youtube_search_waffle = this.state.compiledRequest.google.youtube_search_waffle;
     } else {
       console.log("cwm: google data was NOT loaded");
-      this.state.gg_size = -1;
+      this.state.gg_total_size_GB = -1;
       this.state.gg_profile_info_header = {"name": "", "email": ""};
       this.state.gg_bookmarks_count = [];
       this.state.gg_saved_places_map = [["", "", {"Latitude": "", "Longitude": ""}]];
@@ -295,46 +310,277 @@ export default class Results extends Component {
 
   //npm install jspdf --save
   genPDF() {
-	
     var docPdf = new jsPDF();
+    if ("facebook" in this.state.compiledRequest) {
+      docPdf.setDrawColor("#3B5998");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+      docPdf.setFontSize(16);
+      docPdf.text('Your Data Dump Summary', 70, 20);
+      docPdf.text('Facebook Summary', 80, 30);
+      docPdf.setFontSize(12);
+      
+      var sitesCount;
+      if (this.state.fb_sites_ct == -1) {
+        sitesCount = "N/A";
+      } else {
+        sitesCount = JSON.stringify(this.state.fb_sites_ct);
+      }
+      var activitiesCount;
+      if (this.state.fb_off_ct == -1) {
+        activitiesCount = "N/A";
+      } else {
+        activitiesCount = JSON.stringify(this.state.fb_off_ct);
+      }
+      var advertisersCount;
+      if (this.state.fb_advs_ct == -1) {
+        advertisersCount = "N/A";
+      } else {
+        advertisersCount = JSON.stringify(this.state.fb_advs_ct);
+      }
+      var siteList = " \n";
+      for (var g in this.state.fb_sites) {
+        siteList = siteList + this.state.fb_sites[g]["name"] + ", ";
+      }
+      siteList = siteList.substr(0, siteList.length - 2);
+      var off_list = " \n";
+      for (var g in this.state.fb_off) {
+        off_list = off_list + this.state.fb_off[g] + ", "
+      }
+      off_list = off_list.substr(0, off_list.length - 2);
+      var advList = " \n";
+      for (var g in this.state.fb_advs) {
+        advList = advList + this.state.fb_advs[g] + ", ";
+      }
+      advList = advList.substr(0, advList.length - 2);
+
+      var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
+                          "Category: " + this.state.fb_category + '\n\n' +
+                          "Number of websites logged into with Facebook: " + sitesCount + '\n\n' + 
+                          "List of websites logged into with Facebook:" + siteList + '\n\n' + 
+                          "Number of off facebook app activities: " + activitiesCount + '\n\n' + 
+                          "List of off facebook app activities:" + off_list + '\n\n' +
+                          "Number of advertisers who have accessed your data: " + advertisersCount + '\n\n' + 
+                          "List of advertisers who have accessed your data:" + advList + 
+                          '\n\n';
+
+      var facebookAddString;
+      if (facebookString.length > 2750) {
+        var l = 0;
+        var r = facebookString.length;
+        var m = r/2 - l;
+        if (m > 2750) {
+          m = 2750;
+        }
+        do {
+          var index = m;
+          var fbString = facebookString.substr(l, m - l);
+          while (index > l) {
+            if (fbString[index] == "," || fbString[index] == "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          fbString = facebookString.substr(l, m);
+          facebookAddString = docPdf.splitTextToSize(fbString, 150);
+          docPdf.text(facebookAddString, 20, 40);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setDrawColor("#3B5998");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Facebook Summary', 80, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 2750) {
+            m = m + 2750;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+      } else {
+        facebookAddString = docPdf.splitTextToSize(facebookString, 150);
+        docPdf.text(facebookAddString, 20, 40);
+      }
+    }
     
-    // if ("netflix" in this.state.compiledRequest) {
+    if ("apple" in this.state.compiledRequest) {
+      docPdf.addPage();
+      docPdf.setDrawColor("#F0A3A3");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+      docPdf.setFontSize(16);
+      docPdf.text('Your Data Dump Summary', 70, 20);
+      docPdf.text('Apple Summary', 85, 30);
+      docPdf.setFontSize(12);
+
+      var totalSize;
+      if (this.state.ap_total_size_GB == -1) {
+        totalSize = "N/A";
+      } else {
+        totalSize = JSON.stringify(this.state.ap_total_size_GB) + " GB";
+      }
+
+      var listen;
+      var hour = Math.round(this.state.ap_listen_time['hours']);
+      var minute = Math.round(this.state.ap_listen_time['minutes']);
+      var second = Math.round(this.state.ap_listen_time['seconds']);
+      listen = hour + " hours, " + 
+               minute + " minutes, " + 
+               second + " seconds ";
+      if (this.state.ap_listen_time['hours'] == -1) {
+        listen = " N/A";
+      }
+
+      var rang = " ";
+      var months = {1: {'month': 'January'}, 2: {'month': 'February'}, 3: {'month': 'March'},
+                4: {'month': 'April'}, 5: {'month': 'May'}, 6: {'month': 'June'}, 
+                7: {'month': 'July'}, 8: {'month': 'August'}, 9: {'month': 'September'}, 
+                10: {'month': 'October'}, 11: {'month': 'November'}, 12: {'month': 'December'}};
+      
+      var ind = 0;
+      if (this.state.ap_date_range[0][0] != -1) {
+        while (ind < 2) {
+          rang = rang + months[this.state.ap_date_range[ind][1]]['month'] + " " +
+                        this.state.ap_date_range[ind][2];
+          var day = this.state.ap_date_range[ind][2];
+          var addToDay = "st";
+          if (day == 2) {
+            addToDay = "nd";
+          } else if (day == 3) {
+            addToDay = "rd";
+          } else if (day > 3 && day < 31) {
+            addToDay = "th";
+          }
+          rang = rang + addToDay + ", " + this.state.ap_date_range[ind][0];
+          if (ind == 0) {
+            rang = rang + "  -  ";
+          }
+          ind++;
+        }
+      } else {
+        rang = " N/A";
+      }
+      var gen_list = " \n\n\t";
+      for (var g in this.state.ap_genres_list) {
+        gen_list = gen_list + this.state.ap_genres_list[g]["id"] + ") " + 
+                              this.state.ap_genres_list[g]["label"] + ": " + 
+                              this.state.ap_genres_list[g]["value"] + "\n\t";
+      }
+      var art_list = " \n\n\t";
+      for (var g in this.state.ap_artists_list) {
+        art_list = art_list + this.state.ap_artists_list[g]["id"] + ") " + 
+                              this.state.ap_artists_list[g]["label"] + ": " + 
+                              this.state.ap_artists_list[g]["value"] + "\n\t";
+                            }
+      var track_list = " \n\n    ";
+      for (var g in this.state.ap_tracks_list) {
+        track_list = track_list + this.state.ap_tracks_list[g]["id"] + ") " + 
+                                  this.state.ap_tracks_list[g]["label"] + ": " + 
+                                  this.state.ap_tracks_list[g]["value"] + "\n    ";
+      }
+      var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
+      "Total Listen Time: " + listen + '\n\n' +
+                        "Date Range of All Activity:" + rang + '\n\n' + 
+                        "Top Ten Genres Listened To:" + gen_list + '\n\n' + 
+                        "Top Ten Artists Listened To:" + art_list + '\n\n' +
+                        "Top Ten Tracks Listened To:" + track_list + 
+                        '\n\n';
+      var appleAddString;
+      if (appleString.length > 1700) {
+        var l = 0;
+        var r = appleString.length;
+        var m = r/2 - l;
+        if (m > 1700) {
+          m = 1700;
+        }
+        do {
+          var index = m;
+          var apString = appleString.substr(l, m - l);
+          while (index > l) {
+            if (apString[index] === "," || apString[index] === "\n") {
+              index++;
+              break;
+            } else {
+              index--;
+            }
+          }
+          if (index > l) {
+            m = index;
+          } else {
+            m = m - l;
+          }
+          apString = appleString.substr(l, m);
+          appleAddString = docPdf.splitTextToSize(apString, 150);
+          docPdf.text(appleAddString, 20, 40);
+          if (l + m < r) {
+            docPdf.addPage();
+            docPdf.setDrawColor("#F0A3A3");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
+            docPdf.setFontSize(16);
+            docPdf.text('Your Data Dump Summary', 70, 20);
+            docPdf.text('Apple Summary', 85, 30);
+            docPdf.setFontSize(12);
+          }
+          l += m;
+          m = l;
+          if (r - m > 1700) {
+            m = m + 1700;
+          } else if (r - m > 0) {
+            m = r;
+          } else {
+            m = r + 1;
+          }
+        } while (m <= r);
+      } else {
+        appleAddString = docPdf.splitTextToSize(appleString, 150);
+        docPdf.text(appleAddString, 20, 40);
+      }
+    }
     
-      // Netflix:
-
-      // Not used in pdf:
-      // this.state.shows_generalchart
-      // this.state.shows_ganttchart
-
-      // Used in pdf:
-      /*
-        watch count
-        shows
-        movies
-      */
-
+    if ("netflix" in this.state.compiledRequest) {
+      docPdf.addPage();
+      docPdf.setDrawColor("#E50A15");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
       docPdf.text('Your Data Dump Summary', 70, 20);
       docPdf.text('Netflix Summary', 85, 30);
       docPdf.setFontSize(12);
 
-
       var watchCount;
-      if (this.state.watch_count === 0) {
-        watchCount = "0";
+      if (this.state.nf_watch_count == -1) {
+        watchCount = "N/A";
       } else {
-        watchCount = JSON.stringify(this.state.watch_count);
+        watchCount = JSON.stringify(this.state.nf_watch_count);
       }
-      var showList;
-      for (var g in this.state.shows) {
-        showList = showList + this.state.shows[g] + ", "
+      var showList = " ";
+      for (var g in this.state.nf_shows) {
+        showList = showList + this.state.nf_shows[g]["label"] + ", "
       }
-      var movieList;
-      for (var g in this.state.movies) {
-        movieList = movieList + this.state.movies[g] + ", "
+      showList = showList.substr(0, showList.length - 2);
+      var movieList = " ";
+      for (var g in this.state.nf_movies) {
+        movieList = movieList + this.state.nf_movies[g]["label"] + ", "
       }
+      movieList = movieList.substr(0, movieList.length - 2);
+
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
-                          "Shows: " + showList + '\n\n' +
-                          "Movies: " + movieList + 
+                          "Shows:\n" + showList + '\n\n' +
+                          "Movies:\n" + movieList + 
                           '\n\n';
                       
       var netflixAddString;
@@ -349,14 +595,13 @@ export default class Results extends Component {
           var index = m;
           var nfString = netflixString.substr(l, m - l);
           while (index > l) {
-            if (nfString[index] === "," || nfString[index] === "\n") {
+            if (nfString[index] == "," || nfString[index] == "\n") {
               index++;
               break;
             } else {
               index--;
             }
           }
-          // var pastM = m;
           if (index > l) {
             m = index;
           } else {
@@ -364,10 +609,12 @@ export default class Results extends Component {
           }
           nfString = netflixString.substr(l, m);
           netflixAddString = docPdf.splitTextToSize(nfString, 150);
-          docPdf.text(netflixAddString, 30, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
+          docPdf.text(netflixAddString, 20, 40);
           if (l + m < r) {
             docPdf.addPage();
+            docPdf.setDrawColor("#E50A15");
+            docPdf.setLineWidth(1.5);
+            docPdf.roundedRect(10, 10, 190, 277, 3, 3);
             docPdf.setFontSize(16);
             docPdf.text('Your Data Dump Summary', 70, 20);
             docPdf.text('Netflix Summary', 85, 30);
@@ -375,8 +622,8 @@ export default class Results extends Component {
           }
           l += m;
           m = l;
-          if (r - m > 2750) {
-            m = m + 2750;
+          if (r - m > 2000) {
+            m = m + 2000;
           } else if (r - m > 0) {
             m = r;
           } else {
@@ -386,444 +633,66 @@ export default class Results extends Component {
         
       } else {
         netflixAddString = docPdf.splitTextToSize(netflixString, 150);
-        docPdf.text(netflixAddString, 30, 40);
+        docPdf.text(netflixAddString, 20, 40);
       }
+    }
 
 
-    // }
-
-    // if ("applegeneral" in this.state.compiledRequest) {
-
+    if ("google" in this.state.compiledRequest) {
       docPdf.addPage();
-      
-
-      // Apple:
-
-      // Not used in pdf:
-      // this.state.genres_pie = [];
-      // this.state.artists_bar = [];
-      // this.state.tracks_bar = [];
-      // this.state.library_gantt = [];
-
-      // Used in pdf:
-      /*
-        total size
-        listen time
-        date range
-        genres list
-        artists list
-        tracks list
-      */
-      
+      docPdf.setDrawColor("#F4B400");
+      docPdf.setLineWidth(1.5);
+      docPdf.roundedRect(10, 10, 190, 277, 3, 3);
       docPdf.setFontSize(16);
       docPdf.text('Your Data Dump Summary', 70, 20);
-      docPdf.text('Apple Summary', 85, 30);
+      docPdf.text('Google Summary', 84, 30);
       docPdf.setFontSize(12);
 
-
-      var totalSize;
-      if (this.state.total_size === 0) {
-        totalSize = "0";
+      var totalSizeGG;
+      if (this.state.gg_total_size_GB == 0) {
+        totalSizeGG = "0";
       } else {
-        totalSize = JSON.stringify(this.state.total_size);
+        totalSizeGG = JSON.stringify(this.state.gg_total_size_GB);
       }
-      var listen;
-      listen = this.state.listen_time['hours'] + " hours, " + 
-               this.state.listen_time['minutes'] + " minutes, " + 
-               this.state.listen_time['seconds'] + " seconds ";
-
-      var rang = " ";
-      var sdl = 1;
-      for (var jlk in this.state.date_range) {
-        if (sdl === 1) {
-          rang = rang + jlk + ", ";
-        } else if (sdl === 2) {
-          if (jlk === 1) {
-            rang = rang + "January ";
-          } else if (jlk === 2) {
-            rang = rang + "February ";
-          } else if (jlk === 3) {
-            rang = rang + "March ";
-          } else if (jlk === 4) {
-            rang = rang + "April ";
-          } else if (jlk === 5) {
-            rang = rang + "May ";
-          } else if (jlk === 6) {
-            rang = rang + "June ";
-          } else if (jlk === 7) {
-            rang = rang + "July ";
-          } else if (jlk === 8) {
-            rang = rang + "August ";
-          } else if (jlk === 9) {
-            rang = rang + "September ";
-          } else if (jlk === 10) {
-            rang = rang + "October ";
-          } else if (jlk === 11) {
-            rang = rang + "November ";
-          } else if (jlk === 12) {
-            rang = rang + "December ";
-          } else {
-            rang = rang + "Unknown month "
-          }
-        } else {
-          rang = rang + jlk + "  -  ";
-        }
-        sdl++;
-      }
-      var mon;
-      if (this.state.date_range[1] === 1) {
-        mon = "January ";
-      } else if (this.state.date_range[1] === 2) {
-        mon = "February ";
-      } else if (this.state.date_range[1] === 3) {
-        mon = "March ";
-      } else if (this.state.date_range[1] === 4) {
-        mon = "April ";
-      } else if (this.state.date_range[1] === 5) {
-        mon = "May ";
-      } else if (this.state.date_range[1] === 6) {
-        mon = "June ";
-      } else if (this.state.date_range[1] === 7) {
-        mon = "July ";
-      } else if (this.state.date_range[1] === 8) {
-        mon = "August ";
-      } else if (this.state.date_range[1] === 9) {
-        mon = "September ";
-      } else if (this.state.date_range[1] === 10) {
-        mon = "October ";
-      } else if (this.state.date_range[1] === 11) {
-        mon = "November ";
-      } else if (this.state.date_range[1] === 12) {
-        mon = "December ";
+      var bookmarksCount;
+      if (this.state.gg_bookmarks_count == 0) {
+        bookmarksCount = "0";
       } else {
-        mon = "Unknown month "
+        bookmarksCount = JSON.stringify(this.state.gg_bookmarks_count);
       }
-      rang = rang + this.state.date_range[0] + ", " + mon + this.state.date_range[2];
-
-      var gen_list;
-      for (var g in this.state.genres_list) {
-        gen_list = gen_list + JSON.stringify(g) + ", "
+      var advertisersCountGG;
+      if (this.state.gg_ads_count == 0) {
+        advertisersCountGG = "0";
+      } else {
+        advertisersCountGG = JSON.stringify(this.state.gg_ads_count);
       }
-
-
-      var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
-                        "Total Listen Time: " + listen + '\n\n' +
-                        "Date Range of All Activity:" + rang + '\n\n' + 
-                        "Genres List: " + gen_list + '\n\n' + 
-                        "Artists List: " + this.state.artists_list + '\n\n' +
-                        "Tracks List: " + this.state.tracks_list + 
+      var routeCount;
+      if (this.state.gg_maps_routes_count == 0) {
+        routeCount = "0";
+      } else {
+        routeCount = JSON.stringify(this.state.gg_maps_routes_count);
+      }
+      var searchCount;
+      if (this.state.gg_search_count == 0) {
+        searchCount = "0";
+      } else {
+        searchCount = JSON.stringify(this.state.gg_search_count);
+      }
+      var prof = "Name ";
+      prof = this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
+        
+      var googleString = "Total Size of Data Dump: " + totalSizeGG + ' GB\n\n' + 
+                        prof + '\n\n' +
+                        "Number of Bookmarks: " + bookmarksCount + '\n\n' + 
+                        "Number of Advertisers Served by Google: " + advertisersCountGG + '\n\n' + 
+                        "Number of Routes Input Into Google Maps: " + routeCount + '\n\n' + 
+                        "Number of Searches You've Made on Google: " + searchCount + 
                         '\n\n';
-
-
-      var appleAddString;
-      if (appleString.length > 2000) {
-        var l = 0;
-        var r = appleString.length;
-        var m = r/2 - l;
-        if (m > 2000) {
-          m = 2000;
-        }
-        do {
-          var index = m;
-          var apString = appleString.substr(l, m - l);
-          while (index > l) {
-            if (apString[index] === "," || apString[index] === "\n") {
-              index++;
-              break;
-            } else {
-              index--;
-            }
-          }
-          // var pastM = m;
-          if (index > l) {
-            m = index;
-          } else {
-            m = m - l;
-          }
-          apString = appleString.substr(l, m);
-          appleAddString = docPdf.splitTextToSize(apString, 150);
-          docPdf.text(appleAddString, 30, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-          if (l + m < r) {
-            docPdf.addPage();
-            docPdf.setFontSize(16);
-            docPdf.text('Your Data Dump Summary', 70, 20);
-            docPdf.text('Apple Summary', 85, 30);
-            docPdf.setFontSize(12);
-          }
-          l += m;
-          m = l;
-          if (r - m > 2750) {
-            m = m + 2750;
-          } else if (r - m > 0) {
-            m = r;
-          } else {
-            m = r + 1;
-          }
-        } while (m <= r);
         
-      } else {
-        appleAddString = docPdf.splitTextToSize(appleString, 150);
-        docPdf.text(appleAddString, 30, 40);
-      }
-
-
-    // }
-
-    // if ("facebook" in this.state.compiledRequest) {
-
-      docPdf.addPage();
-
-      // Facebook:
-
-      // Not used in pdf:
-      // this.state.locations_bar
-      // this.state.posts_pie
-      // this.state.reactions_bar
-
-      // Used in pdf:
-      /*
-        facebook name
-        category
-        sites
-        sites count
-        off facebook app activities
-        off facebook app activities count
-        facebook advertisers
-        facebook advertisers count
-      */
-
-      docPdf.setFontSize(16);
-      docPdf.text('Your Data Dump Summary', 70, 20);
-      docPdf.text('Facebook Summary', 80, 30);
-      docPdf.setFontSize(12);
-
-
-      var sitesCount;
-      if (this.state.sites_ct === 0) {
-        sitesCount = "0";
-      } else {
-        sitesCount = JSON.stringify(this.state.sites_ct);
-      }
-      var activitiesCount;
-      if (this.state.off_ct === 0) {
-        activitiesCount = "0";
-      } else {
-        activitiesCount = JSON.stringify(this.state.off_ct);
-      }
-      var advertisersCount;
-      if (this.state.advs_ct === 0) {
-        advertisersCount = "0";
-      } else {
-        advertisersCount = toString(this.state.advs_ct);
-      }
-      var siteList = " ";
-      for (var g in this.state.site_list) {
-        siteList = siteList + this.state.site_list[g] + ", ";
-      }
-      var off_list = " ";
-      for (var g in this.state.off) {
-        off_list = off_list + g + ", "
-      }
-      var advList = " ";
-      for (var g in this.state.advs) {
-        advList = advList + this.state.advs[g] + ", ";
-      }
-
-      var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
-                          "Category: " + this.state.category + '\n\n' +
-                          "Number of websites logged into with Facebook: " + sitesCount + '\n\n' + 
-                          "List of websites logged into with Facebook:" + siteList + '\n\n' + 
-                          "Number of off facebook app activities: " + activitiesCount + '\n\n' + 
-                          "List of off facebook app activities:" + off_list + '\n\n' +
-                          "Number of advertisers who have accessed your data: " + advertisersCount + '\n\n' + 
-                          "List of advertisers who have accessed your data:" + advList + 
-                          '\n\n';
-
-      var facebookAddString;
-      if (facebookString.length > 2250) {
-        var l = 0;
-        var r = facebookString.length;
-        var m = r/2 - l;
-        if (m > 2250) {
-          m = 2250;
-        }
-        do {
-          var index = m;
-          var fbString = facebookString.substr(l, m - l);
-          while (index > l) {
-            if (fbString[index] === "," || fbString[index] === "\n") {
-              index++;
-              break;
-            } else {
-              index--;
-            }
-          }
-          // var pastM = m;
-          if (index > l) {
-            m = index;
-          } else {
-            m = m - l;
-          }
-          fbString = facebookString.substr(l, m);
-          facebookAddString = docPdf.splitTextToSize(fbString, 150);
-          docPdf.text(facebookAddString, 30, 40);
-          // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-          if (l + m < r) {
-            docPdf.addPage();
-            docPdf.setFontSize(16);
-            docPdf.text('Your Data Dump Summary', 70, 20);
-            docPdf.text('Facebook Summary', 80, 30);
-            docPdf.setFontSize(12);
-          }
-          l += m;
-          m = l;
-          if (r - m > 2400) {
-            m = m + 2400;
-          } else if (r - m > 0) {
-            m = r;
-          } else {
-            m = r + 1;
-          }
-        } while (m <= r);
-        
-      } else {
-        facebookAddString = docPdf.splitTextToSize(facebookString, 150);
-        docPdf.text(facebookAddString, 30, 40);
-      }
-
-
-    // }
-
-
-    // if ("google" in this.state.compiledRequest) {
-
-    //   docPdf.addPage();
-      
-    //   //Google
-      
-    //   // Not used in pdf:
-    //   // this.state.gg_ads_waffle
-    //   // this.state.gg_maps_activity
-    //   // this.state.gg_search_waffle
-    //   // this.state.gg_youtube_piechart
-    //   // this.state.gg_youtube_search_waffle
-      
-    //   /*
-    //   total size
-    //   profile info
-    //   bookmarks count
-    //   saved places on your map
-    //   ads count
-    //   ads
-    //   map routes count
-    //   search count
-    //   */
-    
-    // docPdf.setFontSize(16);
-    // docPdf.text('Your Data Dump Summary', 70, 20);
-    // docPdf.text('Google Summary', 84, 30);
-    // docPdf.setFontSize(12);
-    
-    
-    // var totalSizeGG;
-    // if (this.state.gg_total_size_GB === 0) {
-    //   totalSizeGG = "0";
-    //   } else {
-    //     totalSizeGG = toString(this.state.gg_total_size_GB);
-    //   }
-    //   var bookmarksCount;
-    //   if (this.state.gg_bookmarks_count === 0) {
-    //     bookmarksCount = "0";
-    //   } else {
-    //     bookmarksCount = toString(this.state.gg_bookmarks_count);
-    //   }
-    //   var advertisersCountGG;
-    //   if (this.state.gg_ads_count === 0) {
-    //     advertisersCountGG = "0";
-    //   } else {
-    //     advertisersCountGG = toString(this.state.gg_ads_count);
-    //   }
-    //   var routeCount;
-    //   if (this.state.gg_maps_routes_count === 0) {
-    //     routeCount = "0";
-    //   } else {
-    //     routeCount = toString(this.state.gg_maps_routes_count);
-    //   }
-    //   var searchCount;
-    //   if (this.state.gg_search_count === 0) {
-    //     searchCount = "0";
-    //   } else {
-    //     searchCount = toString(this.state.gg_search_count);
-    //   }
-      
-    //   var googleString = "Total Size of Data Dump (GB): " + totalsizeGG + '\n\n' + 
-    //   "Profile: " + this.state.gg_profile_info_header + '\n\n' +
-    //   "Number of bookmarks: " + bookmarksCount + '\n\n' + 
-    //   "Saved places on your map: " + this.state.gg_saved_places_map + '\n\n' + 
-    //   "Number of advertisers who have your data: " + advertisersCountGG + '\n\n' + 
-    //   "List of advertisers who have your data: " + this.state.gg_ads_list + '\n\n' +
-    //   "Number of routes input into Google Maps: " + routeCount + '\n\n' + 
-    //   "Number of searches you've made on Google: " + searchCount + 
-    //   '\n\n';
-      
-    // var googleAddString;
-    // if (googleString.length > 2000) {
-    //   var l = 0;
-    //   var r = googleString.length;
-    //   var m = r/2 - l;
-    //   if (m > 2000) {
-    //     m = 2000;
-    //   }
-    //   do {
-    //     var index = m;
-    //     var ggString = googleString.substr(l, m - l);
-    //     while (index > l) {
-    //       if (ggString[index] === "," || ggString[index] === "\n") {
-    //         index++;
-    //         break;
-    //       } else {
-    //         index--;
-    //       }
-    //     }
-    //     // var pastM = m;
-    //     if (index > l) {
-    //       m = index;
-    //     } else {
-    //       m = m - l;
-    //     }
-    //     ggString = googleString.substr(l, m);
-    //     googleAddString = docPdf.splitTextToSize(ggString, 150);
-    //     docPdf.text(googleAddString, 30, 40);
-    //     // docPdf.text("l: " + l + ", r: " + r + ", m: " + pastM + ", index: " + index, 30, 10);
-    //     if (l + m < r) {
-    //       docPdf.addPage();
-    //       docPdf.setFontSize(16);
-    //       docPdf.text('Your Data Dump Summary', 70, 20);
-    //       docPdf.text('Google Summary', 84, 30);
-    //       docPdf.setFontSize(12);
-    //     }
-    //     l += m;
-    //     m = l;
-    //     if (r - m > 2750) {
-    //       m = m + 2750;
-    //     } else if (r - m > 0) {
-    //       m = r;
-    //     } else {
-    //       m = r + 1;
-    //     }
-    //   } while (m <= r);
-      
-    // } else {
-    //   googleAddString = docPdf.splitTextToSize(googleString, 150);
-    //   docPdf.text(googleAddString, 30, 40);
-    // }
-      
-      
-    // }
-
-    docPdf.save('Test.pdf');
-      
+      var googleAddString = docPdf.splitTextToSize(googleString, 150);
+      docPdf.text(googleAddString, 20, 40);
+    }
+    docPdf.save('Data Dump Summary.pdf');
   }
 
   render() {
