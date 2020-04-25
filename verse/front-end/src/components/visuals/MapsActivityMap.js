@@ -64,14 +64,21 @@ class MapsActivityMap extends React.Component {
         });
     };
 
-    loadSearchesMarkers = () => {
+    loadMarkers = () => {
         return this.props.data.searches.map(spot => {
-            if (spot[2] !== undefined && spot[2][0] !== undefined && spot[2][1] !== undefined) {
+
+            if (spot !== undefined &&
+                spot[2][0] !== undefined && 
+                spot[2][1] !== undefined) {
+                
+                const lat = spot[2][0];
+                const lon = spot[2][1];
+
                 return (
                     <div>
                         <Marker
-                            latitude={parseFloat(spot[2][0])}
-                            longitude={parseFloat(spot[2][1])}
+                            latitude={parseFloat(lat)}
+                            longitude={parseFloat(lon)}
                         >
                             <img
                                 onClick={() => {
@@ -101,40 +108,6 @@ class MapsActivityMap extends React.Component {
         });
     };
 
-    loadViewsMarkers = () => {
-        return this.props.data.views.map(spot => {
-            return (
-                <div>
-                    <Marker
-                        latitude={parseFloat(spot[2][0])}
-                        longitude={parseFloat(spot[2][1])}
-                    >
-                        <img
-                            onClick={() => {
-                                this.setSelectedHotspot(spot);
-                            }}
-                            alt=""
-                            style={imgStyle}
-                            className="mapmarker"
-                            src="mapmarker.svg"
-                        />
-                    </Marker>
-                    {
-                        this.state.selectedHotspot !== null ? (
-                            <Popup
-                                latitude={parseFloat(this.state.selectedHotspot[2][0])}
-                                longitude={parseFloat(this.state.selectedHotspot[2][1])}
-                                onClose={this.closePopup}
-                            >
-                                <p><b>Query: </b>{decode(this.state.selectedHotspot[1])}</p>
-                            </Popup>
-                        ) : null
-                    }
-                </div>
-            );
-        });
-    };
-
     render() {
         const { classes } = this.props;
 
@@ -153,7 +126,7 @@ class MapsActivityMap extends React.Component {
                     />
                     <CardContent>
                         <ReactMapGL {...this.state.viewport} onViewportChange={(viewport => this.setState({ viewport }))} mapboxApiAccessToken={mapboxToken} >
-                            {this.loadSearchesMarkers()}
+                            {this.loadMarkers()}
                         </ReactMapGL>
                     </CardContent>
                 </Card>

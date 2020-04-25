@@ -187,7 +187,8 @@ def parseAppleData(appleDataDumpName):
 
             # -----   -----
             app_ip = genericParser.filterByField(data_apps, ("Device IP Address", "Item Description"))
-            Dict["apps_map"] = app_ip
+            app_ip_coord = genericParser.insertCoordinatesFromIP(app_ip, "Device IP Address")
+            Dict["apps_map"] = app_ip_coord
 
         else: 
             print("/Update and Redownload History/iTunes and App-Book Re-download and Update History.csv not found") 

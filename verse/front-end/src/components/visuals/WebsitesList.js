@@ -57,8 +57,8 @@ class WebsitesList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(site => (
-                                <ListItem dense>
+                            {this.props.data.map((site, i) => (
+                                <ListItem dense key={i}>
                                     <h3>{site.name}</h3>                                    
                                 </ListItem>
                             ))}

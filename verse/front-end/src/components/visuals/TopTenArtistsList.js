@@ -62,7 +62,7 @@ class TopTenArtistsList extends React.Component {
                         <Divider />
                         <List component="nav" className={classes.list}>
                             {this.props.data.map(artist => (
-                                <ListItem dense>
+                                <ListItem dense key={artist.id}>
                                     <h3>{artist.id}</h3>
                                     <br />
                                     <ListItemText inset

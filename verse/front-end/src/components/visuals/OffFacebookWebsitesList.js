@@ -57,8 +57,8 @@ class OffFacebookWebsitesList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(sites => (
-                                <ListItem dense>
+                            {this.props.data.map((sites, i) => (
+                                <ListItem dense key={i}>
                                     <h3>{sites}</h3>
                                 </ListItem>
                             ))}

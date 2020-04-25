@@ -35,12 +35,10 @@ import MoviesList from "../visuals/moviesList.js";
 import WatchedNetflixBigNum from "../visuals/WatchedNetflixBigNum.js";
 import ShowsGanttChart from "../visuals/ShowsGanttChart.js";
 
-
 //Google Visuals
 import SavedPlacesMap from "../visuals/SavedPlacesMap.js";
 import CallList from "../visuals/CallList.js";
 import SearchesBigNum from "../visuals/SearchesBigNum.js";
-//import SearchLineChart from "../visuals/SearchLineChart.js"
 import GoogleSearchWaffleChart from "../visuals/GoogleSearchWaffleChart.js";
 import YoutubeSearchWaffleChart from "../visuals/YoutubeSearchWaffleChart.js";
 import AdWaffleChart from "../visuals/AdWaffleChart.js";
@@ -54,6 +52,7 @@ import AdsBigNum from "../visuals/AdsBigNum.js";
 import YoutubePlaylistsBigNum from "../visuals/YoutubePlaylistsBigNum.js";
 import YoutubeSubscriptionsBigNum from "../visuals/YoutubeSubscriptionsBigNum.js";
 import MapsActivityMap from "../visuals/MapsActivityMap.js";
+import AppsMap from "../visuals/AppsMap.js";
 
 export default class Results extends Component {
   
@@ -83,6 +82,7 @@ export default class Results extends Component {
       this.state.fb_off_ct = this.state.compiledRequest.facebook.off_facebook_activity_count;
       this.state.fb_advs = this.state.compiledRequest.facebook.advertisers_list;
       this.state.fb_advs_ct = this.state.compiledRequest.facebook.advertisers_count;
+      this.state.fb_login_logout_map = this.state.compiledRequest.facebook.login_logout_map;
     }
 
     else {
@@ -98,6 +98,7 @@ export default class Results extends Component {
       this.state.fb_off_ct = -1;
       this.state.fb_advs = [];
       this.state.fb_advs_ct = -1;
+      this.state.fb_login_logout_map = []
     }
 
     // Apple API Response
@@ -140,7 +141,7 @@ export default class Results extends Component {
       this.state.ap_library_gantt = [];
       this.state.ap_genre_timeline = {};
       this.state.ap_apps_timeline = {};
-      this.state.ap_apps_map = {};
+      this.state.ap_apps_map = [];
     }
 
     // Google API Response
@@ -150,9 +151,7 @@ export default class Results extends Component {
       this.state.gg_profile_info_header = this.state.compiledRequest.google.profile_info_header;
       this.state.gg_bookmarks_count = this.state.compiledRequest.google.bookmarks_count;
       this.state.gg_saved_places_map = this.state.compiledRequest.google.saved_places_map;
-      //this.state.gg_youtube_playlists = this.state.compiledRequest.google.youtube_playlists;
       this.state.gg_youtube_playlists_count = this.state.compiledRequest.google.youtubte_playlists_count;
-      //this.state.gg_youtube_subscriptions = this.state.compiledRequest.google.youtube_subscriptions;
       this.state.gg_youtube_subscriptions_count = this.state.compiledRequest.google.youtube_subscriptions_count;
       this.state.gg_ads_count = this.state.compiledRequest.google.ads_count;
       this.state.gg_ads_list = this.state.compiledRequest.google.ads_list;
@@ -169,15 +168,14 @@ export default class Results extends Component {
       this.state.gg_size = -1;
       this.state.gg_profile_info_header = {"name": "", "email": ""};
       this.state.gg_bookmarks_count = [];
-      this.state.gg_saved_places_map = [["", ["", ""]]];
-      //this.state.gg_youtube_playlists = [];
+      this.state.gg_saved_places_map = [["", "", {"Latitude": "", "Longitude": ""}]];
       this.state.gg_youtube_playlists_count = -1;
-      //this.state.gg_youtube_subscriptions = [];
       this.state.gg_youtube_subscriptions_count = -1;
       this.state.gg_ads_count = -1;
       this.state.gg_ads_list = [];
       this.state.gg_ads_waffle = [];
       this.state.gg_maps_activity = { "usages": [""], "links": ["", ""], "views": ["", ""], "searches": ["", ""], "calls": ["", ""], "directions": ["", "", "", ""]};
+      this.state.gg_maps_call_list = [["", "", ""]]
       this.state.gg_maps_routes_count = -1;
       this.state.gg_search_count = -1;
       this.state.gg_search_waffle = [];
@@ -916,6 +914,7 @@ export default class Results extends Component {
 
               </Grid>
 
+              {/*<AppsMap data={this.state.ap_apps_map} />*/}
               <GenresPieChart data={this.state.ap_genres_pie} />
               <ArtistsBarChart data={this.state.ap_artists_barchart} />
               <TracksBarChart data={this.state.ap_tracks_barchart} />
@@ -953,72 +952,69 @@ export default class Results extends Component {
               <Grid container spacing={5}>
                 <Grid item xs={12}>
 
-                  <Grid key={0}>
+                  <Grid key={12}>
                     <TotalSizeBigNum data={this.state.gg_total_size_GB} />
                   </Grid>
 
                   <Grid container justify="center" spacing={3}>
 
-                    <Grid spacing={3}>
-                      <Grid key={12}> 
+                    <Grid>
+                      <Grid key={13}> 
                         <SearchesBigNum data={this.state.gg_search_count} />
                       </Grid>
 
-                      <Grid key={13}>
+                      <Grid key={14}>
                         <DirectionsBigNum data={this.state.gg_maps_routes_count} />
                       </Grid>
                     </Grid>
                     
-                    <Grid spacing={3}>
-                      <Grid key={14}>
+                    <Grid >
+                      <Grid key={15}>
                         <AdsBigNum data={this.state.gg_ads_count} />
                       </Grid>
 
-                      <Grid key={15}>
+                      <Grid key={16}>
                         <YoutubePlaylistsBigNum data={this.state.gg_youtube_playlists_count}/>
                       </Grid>
                     </Grid>
                     
-                    <Grid spacing={3}>
-                      <Grid key={16}>
+                    <Grid >
+                      <Grid key={17}>
                         <BookmarksBigNum data={this.state.gg_bookmarks_count} />
                       </Grid>
 
-                      <Grid key={17}>
+                      <Grid key={18}>
                         <YoutubeSubscriptionsBigNum data={this.state.gg_youtube_subscriptions_count}/>
                       </Grid>
                     </Grid>
                   </Grid>
 
-                  <Grid key={18}>
-                    <CallList data={this.state.gg_maps_call_list} />
+                  <Grid key={19}>
+                    <CallList key={21} data={this.state.gg_maps_call_list} />
                   </Grid>
                 </Grid>
               </Grid>
 
-              <SavedPlacesMap key={19} data={this.state.gg_saved_places_map}/>
+              <SavedPlacesMap data={this.state.gg_saved_places_map}/>
 
-              <MapsActivityMap key={20} data={this.state.gg_maps_activity} />
+              <MapsActivityMap data={this.state.gg_maps_activity} />
 
-              <GoogleSearchWaffleChart key={21}
-                                        data={this.state.gg_search_waffle} 
+              <GoogleSearchWaffleChart data={this.state.gg_search_waffle} 
                                         from="2017-03-01" 
                                         to="2020-04-01" 
                                         maxValue={30}/>
               
-              <YoutubeSearchWaffleChart key={22}
-                                        data={this.state.gg_youtube_search_waffle} 
+              <YoutubeSearchWaffleChart data={this.state.gg_youtube_search_waffle} 
                                         from="2013-03-01" 
                                         to="2016-04-01"
                                         maxValue={20}/>
             
-              <AdWaffleChart key={23}
-                              data={this.state.gg_ads_waffle}
+              <AdWaffleChart data={this.state.gg_ads_waffle}
                               from="2018-03-01" 
                               to="2020-04-01"
                               maxValue={20}/>
             
-              <ChannelPieChart key={24} data={this.state.gg_youtube_piechart}/>
+              <ChannelPieChart data={this.state.gg_youtube_piechart}/>
             </div>
           </div>
         </div>

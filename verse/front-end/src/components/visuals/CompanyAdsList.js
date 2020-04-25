@@ -58,8 +58,8 @@ class CompanyAdsList extends React.Component {
                     <CardContent>
                         <Divider />
                         <List component="nav" className={classes.list}>
-                            {this.props.data.map(company => (
-                                <ListItem dense>
+                            {this.props.data.map((company, i) => (
+                                <ListItem dense key={i}>
                                     <h3>{company}</h3>
                                 </ListItem>
                             ))}

@@ -38,6 +38,18 @@ def analyzeFacebookData(facebookUserFileName):
         
         Dict["locations_barchart"] = locationsArray 
 
+        # ip address map
+        List = []
+        for action in data["logins_and_logouts"]:
+            loginLogoutMap = {}
+            loginLogoutMap["action"] = action["action"]
+            loginLogoutMap["timestamp"] = genericParser.getDatetimeFromEpoch(action["timestamp"])
+            loginLogoutMap["ip_address"] = action["ip_address"]
+            loginLogoutMap["location"] = genericParser.getLocation(action["ip_address"])
+            List.append(loginLogoutMap)
+            
+        Dict["login_logout_map"] = List
+
     # ----- US 6.3 -----
     if "your_posts" in data.keys() and "other_people's_posts_to_your_timeline" in data.keys():
         Dict["posts_linegraph"] = [data["your_posts"], data["other_people's_posts_to_your_timeline"]]
