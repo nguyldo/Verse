@@ -347,15 +347,16 @@ export default class Results extends Component {
       for (var g in this.state.nf_shows) {
         showList = showList + this.state.nf_shows[g]["label"] + ", "
       }
+      showList = showList.substr(0, showList.length - 1);
       var movieList = " ";
-      var i = 0;
       for (var g in this.state.nf_movies) {
         movieList = movieList + this.state.nf_movies[g]["label"] + ", "
-        i++
       }
+      movieList = movieList.substr(0, movieList.length - 1);
+
       var netflixString = "Watch Count: " + watchCount + '\n\n' + 
-                          "Shows:" + showList + '\n\n' +
-                          "Movies:" + movieList + 
+                          "Shows:\n" + showList + '\n\n' +
+                          "Movies:\n" + movieList + 
                           '\n\n';
                       
       var netflixAddString;
@@ -526,11 +527,11 @@ export default class Results extends Component {
                               this.state.ap_artists_list[g]["label"] + ": " + 
                               this.state.ap_artists_list[g]["value"] + "\n\t";
       }
-      var track_list = " \n\n\t";
+      var track_list = " \n\n    ";
       for (var g in this.state.ap_tracks_list) {
         track_list = track_list + this.state.ap_tracks_list[g]["id"] + ") " + 
                                   this.state.ap_tracks_list[g]["label"] + ": " + 
-                                  this.state.ap_tracks_list[g]["value"] + "\n\t";
+                                  this.state.ap_tracks_list[g]["value"] + "\n    ";
       }
 
       var appleString = "Total Size of Data Dump: " + totalSize + '\n\n' + 
