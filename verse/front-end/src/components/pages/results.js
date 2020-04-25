@@ -514,19 +514,19 @@ export default class Results extends Component {
       }
       
       // this.state.ap_genres_list = [['hiphop'],['classical'],['rock'],['instrumental']];
-      var gen_list = " \n\n";
+      var gen_list = " \n\n\t";
       for (var g in this.state.ap_genres_list) {
         gen_list = gen_list + this.state.ap_genres_list[g]["id"] + ") " + 
                               this.state.ap_genres_list[g]["label"] + ": " + 
                               this.state.ap_genres_list[g]["value"] + "\n\t";
       }
-      var art_list = " \n\n";
+      var art_list = " \n\n\t";
       for (var g in this.state.ap_artists_list) {
         art_list = art_list + this.state.ap_artists_list[g]["id"] + ") " + 
                               this.state.ap_artists_list[g]["label"] + ": " + 
                               this.state.ap_artists_list[g]["value"] + "\n\t";
       }
-      var track_list = " \n\n";
+      var track_list = " \n\n\t";
       for (var g in this.state.ap_tracks_list) {
         track_list = track_list + this.state.ap_tracks_list[g]["id"] + ") " + 
                                   this.state.ap_tracks_list[g]["label"] + ": " + 
@@ -652,7 +652,7 @@ export default class Results extends Component {
       }
       var siteList = " ";
       for (var g in this.state.fb_sites) {
-        siteList = siteList + this.state.fb_sites[g] + ", ";
+        siteList = siteList + this.state.fb_sites[g]["label"] + ", ";
       }
       var off_list = " ";
       for (var g in this.state.fb_off) {
