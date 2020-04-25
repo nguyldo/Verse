@@ -455,6 +455,7 @@ export default class Results extends Component {
       } else {
         totalSize = JSON.stringify(this.state.ap_total_size_GB) + " GB";
       }
+
       var listen;
       
       var hour = Math.round(this.state.ap_listen_time['hours']);
@@ -651,18 +652,21 @@ export default class Results extends Component {
       } else {
         advertisersCount = JSON.stringify(this.state.fb_advs_ct);
       }
-      var siteList = " ";
+      var siteList = " \n";
       for (var g in this.state.fb_sites) {
         siteList = siteList + this.state.fb_sites[g]["name"] + ", ";
       }
-      var off_list = " ";
+      siteList = siteList.substr(0, siteList.length - 1);
+      var off_list = " \n";
       for (var g in this.state.fb_off) {
         off_list = off_list + this.state.fb_off[g] + ", "
       }
-      var advList = " ";
+      off_list = off_list.substr(0, off_list.length - 1);
+      var advList = " \n";
       for (var g in this.state.fb_advs) {
         advList = advList + this.state.fb_advs[g] + ", ";
       }
+      advList = advList.substr(0, advList.length - 1);
 
       var facebookString = "Facebook Name: " + this.state.fb_name + '\n\n' + 
                           "Category: " + this.state.fb_category + '\n\n' +
@@ -795,23 +799,25 @@ export default class Results extends Component {
       } else {
         searchCount = JSON.stringify(this.state.gg_search_count);
       }
-      var prof = " ";
-      prof = "Name: " + this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
-      var savedPlace = " ";
+      var prof = "Name ";
+      prof = this.state.gg_profile_info_header["name"] + "\n\nEmail: " + this.state.gg_profile_info_header['email'];
+      var savedPlace = " \n";
       for (var g in this.state.gg_saved_places_map) {
         savedPlace = savedPlace + this.state.gg_saved_places_map[g]["label"];
       }
-      var adList = " ";
+      savedPlace = savedPlace.substr(0, savedPlace.length - 1);
+      var adList = " \n";
       for (var g in this.state.gg_ads_list) {
         adList = adList + this.state.gg_ads_list[g]["label"];
       }
+      adList = adList.substr(0, adList.length - 1);
         
       var googleString = "Total Size of Data Dump: " + totalSizeGG + ' GB\n\n' + 
                         prof + '\n\n' +
                         "Number of Bookmarks: " + bookmarksCount + '\n\n' + 
-                        "Saved Places on Your Map: " + savedPlace + '\n\n' + 
+                        "Saved Places on Your Map:" + savedPlace + '\n\n' + 
                         "Number of Advertisers Served by Google: " + advertisersCountGG + '\n\n' + 
-                        "List of Advertisers Served by Google: " + adList + '\n\n' +
+                        "List of Advertisers Served by Google:" + adList + '\n\n' +
                         "Number of Routes Input Into Google Maps: " + routeCount + '\n\n' + 
                         "Number of Searches You've Made on Google: " + searchCount + 
                         '\n\n';
