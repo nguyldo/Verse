@@ -417,7 +417,7 @@ export default class Results extends Component {
       }
     }
     
-    if ("applegeneral" in this.state.compiledRequest) {
+    if ("apple" in this.state.compiledRequest) {
       docPdf.addPage();
       docPdf.setDrawColor("#F0A3A3");
       docPdf.setLineWidth(1.5);
