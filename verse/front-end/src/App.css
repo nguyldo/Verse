@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css?family=Karla&display=swap');
+
+:root {
+  --main-background-color: #F0F0F0;
+  --primary-color: #29648A;
+  --secondary-color: #2E9CCA;
+  --facebook-color: #3B5998;
+  --google-color: #F4B400;
+  --apple-color: #F0A3A3;
+  --netflix-color: #E50A15;
+  --sidebar-chosen-color: #D3D3D3;
+  --sidebar-notchosen-color: #F0F0F0;
+}
+
+li {
+  overflow-wrap: break-word;
+}
+
+body {
+  background-color: var(--main-background-color);
+  font-family: 'Karla', sans-serif;
+}
+
+#uploadpage, #resultspage, #mainpage, #aboutpage, #helppage {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h1 {
+  color: black;
+  font-size: 40px;
+}
+
+.pagetitle {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+#uploadslink, #uploadsdlink:visited {
+  background-color: var(--secondary-color);
+  font-size: 20px;
+  text-decoration: none;
+  padding: 12px;
+  color: var(--main-background-color);
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 8px;
+}
+
+#uploadslink:hover {
+  background-color: var(--main-background-color);
+  color: var(--secondary-color);
+}
+
+.uploadoption {
+  background-color: var(--secondary-color);
+  margin: 0px 100px 50px 100px;
+  text-align: center;
+  border-width: 5px;
+}
+
+.uploadtitle {
+  font-size: 30px;
+  width: 100%;
+  padding: 5px 0px 5px 0px;
+  background-color: var(--primary-color);
+  color: var(--main-background-color);
+}
+
+.customupload, button, .link, .link:visited {
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  color: black;
+  padding: 8px;
+  margin: 5px 10px 25px 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.ubutton, .ubutton:hover {
+  border-radius: 5px;
+}
+
+.customupload:hover, button:hover, .link:hover {
+  cursor: pointer;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  padding: 7px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+#sidebar {
+  width: 150px;
+  position: fixed;
+  z-index: 1;
+  background-color: #333333;
+  color: var(--main-background-color);
+  overflow-x: hidden;
+  padding: 10px 0px 0px 0px;
+  margin-left: 0px;
+  border-style: solid;
+  border-width: 1px 1px 1px 0px;
+}
+
+#mainvisuals {
+  margin-left: 150px;
+  margin-right: 20px;
+  padding: 0px 10px;
+}
+
+.visualssection {
+  background-color: #FFFFFF;
+  border-style: solid;
+  border-radius: 15px;
+  margin: 0px 40px 40px 40px;
+  padding: 0px 10px 10px 10px;
+}
+
+#facebookvisuals {
+  border-color: var(--facebook-color);
+}
+
+#googlevisuals {
+  border-color: var(--google-color);
+}
+
+#applevisuals {
+  border-color: var(--apple-color);
+}
+
+#netflixvisuals {
+  border-color: var(--netflix-color);
+}
+
+.showvisualsbutton, .showvisualsbutton:hover {
+  padding: 7px;
+  width: 100%;
+  border-width: 0px;
+}
+
+.visualstitle {
+  width: 100%;
+  color: var(--main-background-color);
+  padding: 5px 0px 5px 0px;
+  margin: 10px 0px 5px 0px;
+  font-size: 35px;
+  border-radius: 15px;
+}
+
+#facebooktitle {
+  background-color: var(--facebook-color);
+}
+
+#googletitle {
+  background-color: var(--google-color);
+}
+
+#appletitle {
+  background-color: var(--apple-color);
+}
+
+#netflixtitle {
+  background-color: var(--netflix-color);
+}
+
+#exportedvisuals {
+  margin-top: 40px;
+}

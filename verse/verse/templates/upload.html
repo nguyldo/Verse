@@ -1,0 +1,80 @@
+<!-- 
+    UPLOAD PORTAL PAGE (this is temporary, we can use React later on)
+    Learned from this tutorial: https://www.youtube.com/watch?v=Zx09vcYq1oc
+    $('#document').replaceWith($('#document').val('').clone(true))
+ -->
+
+ 
+ <!DOCTYPE html>
+ <html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <!-- Show message on page load -->
+        <script>
+            $(document).ready(function(){
+                $("#exampleModal").modal('show');
+            });
+        </script>
+    </head>
+    <body>
+        <div id="root"></div>
+
+
+        <h1>Upload Page</h1>
+        <label for="data-type">Choose a data type:</label>
+        <select type="menu" name="data-type" id="data-type">
+            <option value="facebook">FaceBook</option>
+            <option value="google">Google</option>
+            <option value="apple">Apple</option>
+        </select>
+        <p>
+            
+        </p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="document" id="document" multiple>
+            <button type="submit" onclick="checkType()">Upload</button>
+            <button type="button" onclick="clearUpload()">Delete Upload</button>
+        </form>
+        {% load static %}
+        <a href="{% static 'facebook_tutorial.pdf' %}">Link to facebook tutorial</a>
+        <!--
+        <a href="https://drive.google.com/file/d/1fQPsknv3G_hxiGKkyOeUYXfTrBU3qYbL/view?usp=sharing">Tutorial to download your Facebook data</a>
+        -->
+    </body>
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script language="javascript" type="text/javascript">
+        
+        // Tutorial here: https://css-tricks.com/snippets/jquery/clear-a-file-input/
+        function clearUpload() {
+            var input = $("#document");
+            input.replaceWith(input.val('').clone(true));
+        }
+        function checkType() {
+            var filename = document.getElementById("document").value;
+            var data = document.getElementById("data-type").value;
+            if (data.includes("facebook")) {
+                if (!filename.includes("facebook")) {
+                    alert("You are not uploading facebook data!");
+                    clearUpload();
+                }
+            }
+            else if (data.includes("google")) {
+                if (!filename.includes("takeout")) {
+                    alert("You are not uploading google data!");
+                    clearUpload();
+                }
+            }
+            else {
+                if (!filename.includes("apple")) {
+                    alert("You are not uploading apple data!");
+                    clearUpload();
+                }
+            }
+        }
+    </script>
+    
+</html>
